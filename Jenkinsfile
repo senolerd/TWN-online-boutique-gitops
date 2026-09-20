@@ -1,7 +1,8 @@
 pipeline{
-    stage("__init__"){
-        steps{
-            script{
+    agent any
+    stages{
+        stage("__init__"){
+            steps{
                 echo "test the repo"
             }
         }
