@@ -3,14 +3,15 @@ pipeline{
     agent any 
     environment{
         // Boutique Source
-        SRC_SCM_BRANCH = "release/v0.10.2" // like; "release/v0.10.2"
+        BOUTIQUE_REPO = "https://github.com/GoogleCloudPlatform/microservices-demo.git"
+        BOUTIQUE_BRANCH = "release/v0.10.2" // like; "release/v0.10.2"
     }
     stages{
         stage("init"){ 
             steps{  
                 script{
                     echo "init" 
-                    utils = load "utils.groovy"
+                    utils = load "libs/utils.groovy"
                 }
             } 
         }
@@ -19,16 +20,21 @@ pipeline{
             steps{
                 script{
                     echo "Download Souce" 
-                    utils.downloadSource($SRC_SCM_BRANCH)
+                    utils.downloadSource(BOUTIQUE_BRANCH)
                 }
             } 
-        } // If downloaded before, just git pull
+        } 
+
+        stage("Build Images"){ 
+            steps{  
+                script{
+                    echo "Build Images" 
+                    utils.buildImages()
+                }
+            } } //CVE check, too
 
 
 
-
-
-        stage("Build Images"){ steps{  echo "Build Images" } } //CVE check, too
         stage("Push Images"){ steps{  echo "Push Images" } }
         // create helm and plan manifest from helm template
 
