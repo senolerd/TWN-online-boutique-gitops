@@ -5,7 +5,7 @@ pipeline{
         // Boutique Source
         BOUTIQUE_REPO = "https://github.com/GoogleCloudPlatform/microservices-demo.git"
         BOUTIQUE_BRANCH = "release/v0.10.2"
-        AWS_CRED_ID = aws_devops_cred
+        AWS_CRED_ID = "aws_devops_cred"
         AWS_REGION = "us-east-1"
     }
     stages{
