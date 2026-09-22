@@ -4,13 +4,15 @@ pipeline{
     environment{
         // Boutique Source
         BOUTIQUE_REPO = "https://github.com/GoogleCloudPlatform/microservices-demo.git"
-        BOUTIQUE_BRANCH = "release/v0.10.2" // like; "release/v0.10.2"
+        BOUTIQUE_BRANCH = "release/v0.10.2"
+        AWS_CRED_ID = aws_devops_cred
+        AWS_REGION = "us-east-1"
     }
     stages{
         stage("init"){ 
             steps{  
                 script{
-                    echo "init" 
+                    echo "init for Boutique ${BOUTIQUE_BRANCH} has started" 
                     utils = load "libs/utils.groovy"
                 }
             } 
