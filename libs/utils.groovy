@@ -10,39 +10,58 @@ def downloadSource(branch){
 }
 
 def buildImages(){
-    imgRegistryLogin()
+    ecrLogin()
     def services = [
-        adservice:[name: "adservice", srcDir: "adservice"], 
-        // cartservice:[name: "cartservice", srcDir: "cartservice/src"],
-        // checkoutservice:[name: "checkoutservice", srcDir: "checkoutservice"],
-        // currencyservice:[name: "currencyservice", srcDir: "currencyservice"],
-        // emailservice:[name: "emailservice", srcDir: "emailservice"],
-        // frontend:[name: "frontend", srcDir: "frontend"],
-        // paymentservice:[name: "paymentservice", srcDir: "paymentservice"],
-        // productcatalogservice:[name: "productcatalogservice", srcDir: "productcatalogservice"],
-        // recommendationservice:[name: "recommendationservice", srcDir: "recommendationservice"],
-        // shippingservice:[name: "shippingservice", srcDir: "shippingservice"],
-        // shoppingassistantservice:[name: "shoppingassistantservice", srcDir: "shoppingassistantservice"],
+        // adservice:[repo: "adservice", srcDir: "adservice"], 
+        // cartservice:[repo: "cartservice", srcDir: "cartservice/src"],
+        // checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice"],
+        // currencyservice:[repo: "currencyservice", srcDir: "currencyservice"],
+        // emailservice:[repo: "emailservice", srcDir: "emailservice"],
+        frontend:[repo: "frontend", srcDir: "frontend"],
+        // paymentservice:[repo: "paymentservice", srcDir: "paymentservice"],
+        // productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice"],
+        // recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice"],
+        // shippingservice:[repo: "shippingservice", srcDir: "shippingservice"],
+        // shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice"],
     ]
 
     def imageVersion = "${GIT_COMMIT[0..6]}-b${BUILD_NUMBER}"
 
+
     for (service in services.entrySet()){
+        def imageTag = "${AWS_USER_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${service.value.repo}:${BOUTIQUE_BRANCH.replace('/','-')}-${imageVersion}"
         dir("${WORKSPACE}/microservices-demo/src/$service.value.srcDir"){
             sh """ podman build \
-                -t ${service.value.name}:${BOUTIQUE_BRANCH.replace('/','-')}-${imageVersion} \
+                -t ${imageTag} \
                 --label "SCM_VERSION=${BOUTIQUE_BRANCH}" .
             """
         }
+        pushImage(service.value.repo, imageTag)
     }
 }
 
 def ecrLogin(){
     echo "ecrLogin"
+    withCredentials([usernamePassword(credentialsId: 'aws_devops_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+        env.AWS_USER_ID = sh(script:'aws sts get-caller-identity --query "Account" --output text', returnStdout: true).trim()
+        echo "CALLER ID: $AWS_USER_ID"
+        sh '''
+            aws ecr get-login-password \
+            --region $AWS_REGION | podman login --username AWS --password-stdin ${AWS_USER_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+        '''
+    }
 }
 
-def getAwsCallerIdentity(){
-    echo "getAwsCallerIdentity"
+def pushImage(repo, imageTag){
+    // Checking whether the repository is exist
+    withCredentials([usernamePassword(credentialsId: 'aws_devops_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+        def isRepoExist =  sh(script:"aws ecr describe-repositories --repository-names ${repo} --region ${AWS_REGION} > /dev/null 2>&1", returnStatus: true)
+        if (isRepoExist != 0){
+            sh "aws ecr create-repository --repository-name ${repo} --region ${AWS_REGION}  > /dev/null 2>&1"
+        }
+    }
+    sh (script:"podman push $imageTag", returnStdout:true)
 }
+
 
 return this

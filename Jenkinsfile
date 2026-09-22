@@ -33,12 +33,7 @@ pipeline{
                     echo "Build Images" 
                     utils.buildImages()
                 }
-            } } //CVE check, too
-
-
-
-        stage("Push Images"){ steps{  echo "Push Images" } }
-        // create helm and plan manifest from helm template
-
+            } 
+        } //CVE check, too
     }
 }
