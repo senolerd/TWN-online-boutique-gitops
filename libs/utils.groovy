@@ -27,13 +27,12 @@ def buildImages(){
 
     def imageVersion = "${GIT_COMMIT[0..6]}-b${BUILD_NUMBER}"
 
-
     for (service in services.entrySet()){
         def imageTag = "${AWS_USER_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${service.value.repo}:${BOUTIQUE_BRANCH.replace('/','-')}-${imageVersion}"
         dir("${WORKSPACE}/microservices-demo/src/$service.value.srcDir"){
-            sh """ podman build \
-                -t ${imageTag} \
-                --label "SCM_VERSION=${BOUTIQUE_BRANCH}" .
+            sh """ 
+            sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
+            podman build -t ${imageTag} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
             """
         }
         pushImage(service.value.repo, imageTag)
