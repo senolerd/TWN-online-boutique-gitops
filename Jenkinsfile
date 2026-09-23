@@ -45,7 +45,7 @@ pipeline{
         stage("Push images to ECR"){ 
             steps{  
                 script{
-                    pushImages()
+                    utils.pushImages()
                 }
             } 
         } 
