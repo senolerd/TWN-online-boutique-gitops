@@ -21,7 +21,6 @@ pipeline{
         stage("Download Source"){ 
             steps{
                 script{
-                    echo "Download Souce" 
                     utils.downloadSource(BOUTIQUE_BRANCH)
                 }
             } 
@@ -30,10 +29,25 @@ pipeline{
         stage("Build Images"){ 
             steps{  
                 script{
-                    echo "Build Images" 
                     utils.buildImages()
                 }
             } 
-        } //CVE check, too
+        } 
+
+        stage("CVE Scan"){ 
+            steps{  
+                script{
+                    echo "ToDo: Check images CVE"
+                }
+            } 
+        } 
+
+        stage("Push images to ECR"){ 
+            steps{  
+                script{
+                    pushImages()
+                }
+            } 
+        } 
     }
 }
