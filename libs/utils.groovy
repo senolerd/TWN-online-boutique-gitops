@@ -60,14 +60,13 @@ def ecrLogin(){
 
 def pushImages(){
     withCredentials([usernamePassword(credentialsId: 'aws_devops_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-
-        // Checking whether the repository is exist
-        def isRepoExist =  sh(script:"aws ecr describe-repositories --repository-names ${repo} --region ${AWS_REGION} > /dev/null 2>&1", returnStatus: true)
-        if (isRepoExist != 0){
-            sh "aws ecr create-repository --repository-name ${repo} --region ${AWS_REGION}  > /dev/null 2>&1"
-        }
-
         for (service in services.entrySet()){
+            // Checking whether the repository is exist
+            def isRepoExist =  sh(script:"aws ecr describe-repositories --repository-names ${service.value.repo} --region ${AWS_REGION} > /dev/null 2>&1", returnStatus: true)
+            if (isRepoExist != 0){
+                sh "aws ecr create-repository --repository-name ${service.value.repo} --region ${AWS_REGION}  > /dev/null 2>&1"
+            }
+    
             sh "podman push $service.value.imguri"
         }
     }
