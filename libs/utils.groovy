@@ -1,15 +1,15 @@
 services = [
-    // adservice:[repo: "adservice", srcDir: "adservice", port: "9555"],
-    // cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: "7070"],
-    // checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: "5050"],
-    // currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: "7000"],
-    // emailservice:[repo: "emailservice", srcDir: "emailservice", port: "8080"],
+    adservice:[repo: "adservice", srcDir: "adservice", port: "9555"],
+    cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: "7070"],
+    checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: "5050"],
+    currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: "7000"],
+    emailservice:[repo: "emailservice", srcDir: "emailservice", port: "8080"],
     frontend:[repo: "frontend", srcDir: "frontend", port: "8080"],
-    // paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: "50051"],
-    // productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: "3550"],
-    // recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: "8080"],
-    // shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: "50051"],
-    // shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: "8080"],
+    paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: "50051"],
+    productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: "3550"],
+    recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: "8080"],
+    shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: "50051"],
+    shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: "8080"],
 ]
 
 def downloadSource(branch){
@@ -30,11 +30,10 @@ def buildImages(){
 
         dir("${WORKSPACE}/microservices-demo/src/$service.value.srcDir"){
             sh """ 
-            sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
-            podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
+                sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
+                podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
             """
         }
-        // pushImage(service.value.repo, service.value.imguri)
     }
 }
 
@@ -52,12 +51,6 @@ def ecrLogin(){
     }
 }
 
-// 
-// 
-// Pushing can be moved as stage
-// 
-// 
-
 def pushImages(){
     withCredentials([usernamePassword(credentialsId: 'aws_devops_cred', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
         for (service in services.entrySet()){
@@ -70,9 +63,46 @@ def pushImages(){
             sh "podman push $service.value.imguri"
         }
     }
-    
+}
+
+def helmChart(){
+
+    def isChartExist = sh(script: "stat ${BOUTIQUE_HELM_CHART} > /dev/null 2>&1", returnStatus: true)
+    if (1) { // create new helm chart
+    // if (isChartExist != 0) { // create new helm chart
+        echo 'CREATING HELM CHART'
+        sh "helm create ${BOUTIQUE_HELM_CHART}"
+
+        dir(env.BOUTIQUE_HELM_CHART) {
+            // Cleaning new chart
+            sh """
+                rm -rf templates/*
+                echo "" > values.yaml
+            """
+            // Creating templates
+            // Creating values.yaml
+
+        for (service in services.entrySet()){ 
+        sh """
+            cat <<- EOF >> values.yaml
+            # $service.key variables
+            ${service.key}-port: ${service.value.port}
+            ${service.key}-imguri: ${service.value.imguri}
+            
+            EOF
+        """.stripIndent()
+
+        }
+
+            // Updating Chart and App version
+        }
+
+    }
+    else { // update chart
+        echo "UPDATING EXIST HELM CHART"
+    }
 }
 
 
-
 return this
+
