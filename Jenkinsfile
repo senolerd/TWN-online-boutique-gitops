@@ -6,6 +6,7 @@ pipeline{
         BOUTIQUE_REPO = "https://github.com/GoogleCloudPlatform/microservices-demo.git"
         BOUTIQUE_BRANCH = "release/v0.10.7"
         BOUTIQUE_HELM_CHART = "boutique-helm"
+        BOUTIQUE_HELM_CHART_VER = "0.1.0"
         AWS_CRED_ID = "aws_devops_cred"
         AWS_REGION = "us-east-1"
     }
@@ -27,13 +28,13 @@ pipeline{
             } 
         } 
 
-        // stage("Build Images"){ 
-        //     steps{  
-        //         script{
-        //             utils.buildImages()
-        //         }
-        //     } 
-        // } 
+        stage("Build Images"){ 
+            steps{  
+                script{
+                    utils.buildImages()
+                }
+            } 
+        } 
 
         // stage("CVE Scan"){ 
         //     steps{  
