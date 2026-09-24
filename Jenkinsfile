@@ -44,13 +44,13 @@ pipeline{
         //     } 
         // } 
 
-        // stage("Push images to ECR"){ 
-        //     steps{  
-        //         script{
-        //             utils.pushImages()
-        //         }
-        //     } 
-        // } 
+        stage("Push images to ECR"){ 
+            steps{  
+                script{
+                    utils.pushImages()
+                }
+            } 
+        } 
 
         stage("Helm chart creating"){ 
             steps{  
