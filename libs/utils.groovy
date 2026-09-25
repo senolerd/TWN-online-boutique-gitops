@@ -132,42 +132,42 @@ def _addDeploymentAndServiceTemplate(Map service){
                 ports:
                 - containerPort: {{ .Values.${service.repo}.port }}
                 env:
-                    - mame: AD_SERVICE_ADDR: 
-                      value: "${services.adservice.repo}:${services.adservice.port}"
-                    - mame: CART_SERVICE_ADDR: 
-                      value: "${services.cartservice.repo}:${services.cartservice.port}"
-                    - mame: CHECKOUT_SERVICE_ADDR: 
-                      value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
-                    - mame: CURRENCY_SERVICE_ADDR: 
-                      value: "${services.currencyservice.repo}:${services.currencyservice.port}"
-                    - mame: EMAIL_SERVICE_ADDR: 
-                      value: "${services.emailservice.repo}:${services.emailservice.port}"
-                    - mame: FRONTEND_SERVICE_ADDR: 
-                      value: "${services.frontend.repo}:${services.frontend.port}"
-                    - mame: PAYMENT_SERVICE_ADDR: 
-                      value: "${services.paymentservice.repo}:${services.paymentservice.port}"
-                    - mame: PRODUCT_CATALOG_SERVICE_ADDR: 
-                      value: "${services.productcatalogservice.repo}:${services.productcatalogservice.port}" 
-                    - mame: RECOMMENDATION_SERVICE_ADDR: 
-                      value: "${services.recommendationservice.repo}:${services.recommendationservice.port}" 
-                    - mame: SHIPPING_SERVICE_ADDR: 
-                      value: "${services.shippingservice.repo}:${services.shippingservice.port}" 
-                    - mame: SHOPPING_ASSISTANT_SERVICE_ADDR: 
-                      value: "${services.shoppingassistantservice.repo}:${services.shoppingassistantservice.port}"
-                    - mame: REDIS_ADDR: 
-                      value: "redis-cart:6379"
-                    - mame: ENABLE_SHOPPING_ASSISTANT: 
-                      value: "false"
-                    - mame: DISABLE_PROFILER: 
-                      value: "1"
-                    - mame: DISABLE_TRACING: 
-                      value: "1"
-                    - mame: DISABLE_DEBUGGER: 
-                      value: "1"
-                    - mame: GCP_PROJECT: 
-                      value: "hello"
-                    - mame: GOOGLE_CLOUD_PROJECT: 
-                      value: "jello"
+                - name: AD_SERVICE_ADDR
+                  value: "${services.adservice.repo}:${services.adservice.port}"
+                - name: CART_SERVICE_ADDR
+                  value: "${services.cartservice.repo}:${services.cartservice.port}"
+                - name: CHECKOUT_SERVICE_ADDR
+                  value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
+                - name: CURRENCY_SERVICE_ADDR
+                  value: "${services.currencyservice.repo}:${services.currencyservice.port}"
+                - name: EMAIL_SERVICE_ADDR: 
+                  value: "${services.emailservice.repo}:${services.emailservice.port}"
+                - name: FRONTEND_SERVICE_ADDR
+                  value: "${services.frontend.repo}:${services.frontend.port}"
+                - name: PAYMENT_SERVICE_ADDR
+                  value: "${services.paymentservice.repo}:${services.paymentservice.port}"
+                - name: PRODUCT_CATALOG_SERVICE_ADDR
+                  value: "${services.productcatalogservice.repo}:${services.productcatalogservice.port}" 
+                - name: RECOMMENDATION_SERVICE_ADDR
+                  value: "${services.recommendationservice.repo}:${services.recommendationservice.port}" 
+                - name: SHIPPING_SERVICE_ADDR
+                  value: "${services.shippingservice.repo}:${services.shippingservice.port}" 
+                - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+                  value: "${services.shoppingassistantservice.repo}:${services.shoppingassistantservice.port}"
+                - name: REDIS_ADDR
+                  value: "redis-cart:6379"
+                - name: ENABLE_SHOPPING_ASSISTANT
+                  value: "false"
+                - name: DISABLE_PROFILER
+                  value: "1"
+                - name: DISABLE_TRACING
+                  value: "1"
+                - name: DISABLE_DEBUGGER
+                  value: "1"
+                - name: GCP_PROJECT
+                  value: "hello"
+                - name: GOOGLE_CLOUD_PROJECT
+                  value: "jello"
         ---
         apiVersion: v1
         kind: Service
@@ -201,6 +201,40 @@ def _updateChartYaml(appver){
 
 return this
 
-// {{- range $key, $value := .Values.yourMap }}
-// {{ $key }}: {{ $value }}
-// {{- end }}
+
+        - name: AD_SERVICE_ADDR
+          value: "adservice:9555"
+        - name: CART_SERVICE_ADDR
+          value: "cartservice:7070"
+        - name: CHECKOUT_SERVICE_ADDR
+          value: "checkoutservice:5050"
+        - name: CURRENCY_SERVICE_ADDR
+          value: "currencyservice:7000"
+        - name: EMAIL_SERVICE_ADDR
+          value: "emailservice:8080"
+        - name: FRONTEND_SERVICE_ADDR
+          value: "frontend:8080"
+        - name: PAYMENT_SERVICE_ADDR
+          value: "paymentservice:50051"
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "productcatalogservice:3550"
+        - name: RECOMMENDATION_SERVICE_ADDR
+          value: "recommendationservice:8080"
+        - name: SHIPPING_SERVICE_ADDR
+          value: "shippingservice:50051"
+        - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+          value: "shoppingassistantservice:8080"
+        - name: REDIS_ADDR
+          value: "redis-cart:6379"
+        - name: ENABLE_SHOPPING_ASSISTANT
+          value: "false"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_DEBUGGER
+          value: "1"
+        - name: GCP_PROJECT
+          value: "hello"
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "jello"
