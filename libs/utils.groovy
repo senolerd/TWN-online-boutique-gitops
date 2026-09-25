@@ -32,6 +32,7 @@ def buildImages(){
             sh """ 
                 sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
                 podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
+                podman image prune -f
             """
         }
     }
@@ -68,37 +69,30 @@ def pushImages(){
 def helmChart(){
 
     def isChartExist = sh(script: "stat ${BOUTIQUE_HELM_CHART} > /dev/null 2>&1", returnStatus: true)
-    if (1) { // create new helm chart
-    // if (isChartExist != 0) { // create new helm chart
-        echo 'CREATING HELM CHART'
-        sh "helm create ${BOUTIQUE_HELM_CHART}"
 
-        // Cleaning new chart
-        dir(env.BOUTIQUE_HELM_CHART) {
-            sh """
-                rm -rf templates/*
-                echo "" > values.yaml
-            """
+    echo 'CREATING HELM CHART'
+    sh "rm -rf  ${BOUTIQUE_HELM_CHART}"
+    sh "helm create ${BOUTIQUE_HELM_CHART}"
 
-            // Creating templates and values.yaml 
-            for (service in services.entrySet()){ 
-                _addValuesYamlLine(service.value)
-                _addDeploymentAndServiceTemplate(service.value)
-            }
+    // Cleaning the new chart
+    dir(env.BOUTIQUE_HELM_CHART) {
+        sh """
+            rm -rf templates/*
+            echo "" > values.yaml
+        """
 
-            // Create new Chart.yaml
-            _updateChartYaml(env.APP_VERSION)
-
+        // Creating templates and values.yaml 
+        for (service in services.entrySet()){ 
+            _addServiceVarToValuesYaml(service.value)
+            _addDeploymentAndServiceTemplate(service.value)
         }
 
-    }
-    else { // update chart
-        echo "UPDATING EXIST HELM CHART"
+        // Create new Chart.yaml
+        _updateChartYaml(env.APP_VERSION)
     }
 }
 
-
-def _addValuesYamlLine(Map service){
+def _addServiceVarToValuesYaml(Map service){
     // Modifying values.yaml
     sh """
         cat <<- EOF >> values.yaml
@@ -137,6 +131,43 @@ def _addDeploymentAndServiceTemplate(Map service){
                 image: "{{ .Values.${service.repo}.imguri }}"
                 ports:
                 - containerPort: {{ .Values.${service.repo}.port }}
+                env:
+                    - mame: AD_SERVICE_ADDR: 
+                      value: "${services.adservice.repo}:${services.adservice.port}"
+                    - mame: CART_SERVICE_ADDR: 
+                      value: "${services.cartservice.repo}:${services.cartservice.port}"
+                    - mame: CHECKOUT_SERVICE_ADDR: 
+                      value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
+                    - mame: CURRENCY_SERVICE_ADDR: 
+                      value: "${services.currencyservice.repo}:${services.currencyservice.port}"
+                    - mame: EMAIL_SERVICE_ADDR: 
+                      value: "${services.emailservice.repo}:${services.emailservice.port}"
+                    - mame: FRONTEND_SERVICE_ADDR: 
+                      value: "${services.frontend.repo}:${services.frontend.port}"
+                    - mame: PAYMENT_SERVICE_ADDR: 
+                      value: "${services.paymentservice.repo}:${services.paymentservice.port}"
+                    - mame: PRODUCT_CATALOG_SERVICE_ADDR: 
+                      value: "${services.productcatalogservice.repo}:${services.productcatalogservice.port}" 
+                    - mame: RECOMMENDATION_SERVICE_ADDR: 
+                      value: "${services.recommendationservice.repo}:${services.recommendationservice.port}" 
+                    - mame: SHIPPING_SERVICE_ADDR: 
+                      value: "${services.shippingservice.repo}:${services.shippingservice.port}" 
+                    - mame: SHOPPING_ASSISTANT_SERVICE_ADDR: 
+                      value: "${services.shoppingassistantservice.repo}:${services.shoppingassistantservice.port}"
+                    - mame: REDIS_ADDR: 
+                      value: "redis-cart:6379"
+                    - mame: ENABLE_SHOPPING_ASSISTANT: 
+                      value: "false"
+                    - mame: DISABLE_PROFILER: 
+                      value: "1"
+                    - mame: DISABLE_TRACING: 
+                      value: "1"
+                    - mame: DISABLE_DEBUGGER: 
+                      value: "1"
+                    - mame: GCP_PROJECT: 
+                      value: "hello"
+                    - mame: GOOGLE_CLOUD_PROJECT: 
+                      value: "jello"
         ---
         apiVersion: v1
         kind: Service
@@ -149,7 +180,6 @@ def _addDeploymentAndServiceTemplate(Map service){
           - protocol: TCP
             port: {{ .Values.${service.repo}.port }}
             targetPort: {{ .Values.${service.repo}.port }}
-
         EOF
     """.stripIndent()
 }
@@ -164,10 +194,13 @@ def _updateChartYaml(appver){
         type: application
         version: ${env.BOUTIQUE_HELM_CHART_VER}
         appVersion: "${env.APP_VERSION}"
-
         EOF
     """.stripIndent()
 }
 
+
 return this
 
+// {{- range $key, $value := .Values.yourMap }}
+// {{ $key }}: {{ $value }}
+// {{- end }}

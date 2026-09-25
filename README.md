@@ -8,6 +8,9 @@ This portfolio project:
 
 
 
+AWS 
+
+
 
 Jenkins server/agent requirements:
 - awscli
@@ -22,3 +25,5 @@ Jenkins server/agent requirements:
     -e "TZ=America/Chicago" \
     -p 8080:8080 \
     docker.io/jenkins/jenkins:2.568.3-lts
+
+

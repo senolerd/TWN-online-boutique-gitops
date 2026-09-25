@@ -1,0 +1,21 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: test-cluster
+  region: us-east-1
+  version: "1.36"
+nodeGroups:
+  - name: ng1
+    instanceType: t3.small
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2
+    volumeSize: 20
+addons:
+  - name: eks-pod-identity-agent
+  - name: vpc-cni
+    podIdentityAssociations:
+      - namespace: kube-system
+        serviceAccountName: aws-node
+        permissionPolicyARNs:
+          - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
