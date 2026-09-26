@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "cartservice-deployment"
+  labels:
+    app: "cartservice"
+spec:
+  replicas: {{ .Values.cartservice.replica }}
+  selector:
+    matchLabels:
+      app: "cartservice"
+  template:
+    metadata:
+      labels:
+        app: "cartservice"
+    spec:
+      containers:
+      - name: "cartservice"
+        image: "{{ .Values.cartservice.imguri }}"
+        ports:
+        - containerPort: {{ .Values.cartservice.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.cartservice.port }}"
+        - name: AD_SERVICE_ADDR
+          value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
+        - name: CART_SERVICE_ADDR
+          value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"
+        - name: CHECKOUT_SERVICE_ADDR
+          value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
+        - name: CURRENCY_SERVICE_ADDR
+          value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
+        - name: EMAIL_SERVICE_ADDR
+          value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
+        - name: FRONTEND_SERVICE_ADDR
+          value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
+        - name: PAYMENT_SERVICE_ADDR
+          value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
+        - name: RECOMMENDATION_SERVICE_ADDR
+          value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
+        - name: SHIPPING_SERVICE_ADDR
+          value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
+        - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+          value: "{{ .Values.shoppingassistantservice.name }}:{{ .Values.shoppingassistantservice.port }}"
+        - name: REDIS_ADDR
+          value: "redis-cart:6379"
+        - name: ENABLE_SHOPPING_ASSISTANT
+          value: "false"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_DEBUGGER
+          value: "1"
+        - name: GCP_PROJECT
+          value: "hello"
+        - name: GOOGLE_CLOUD_PROJECT
+          value: "world"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "cartservice"
+spec:
+  selector:
+    app: "cartservice"
+  ports:
+  - protocol: TCP
+    port: {{ .Values.cartservice.port }}
+    targetPort: {{ .Values.cartservice.port }}
