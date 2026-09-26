@@ -134,28 +134,28 @@ def _addDeploymentAndServiceTemplate(Map service){
                 env:
                 - name: PORT
                   value: "{{ .Values.${service.repo}.port }}"
-                - name: AD_SERVICE_ADDR
-                  value: "${services.adservice.repo}:${services.adservice.port}"
-                - name: CART_SERVICE_ADDR
-                  value: "${services.cartservice.repo}:${services.cartservice.port}"
-                - name: CHECKOUT_SERVICE_ADDR
-                  value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
-                - name: CURRENCY_SERVICE_ADDR
-                  value: "${services.currencyservice.repo}:${services.currencyservice.port}"
-                - name: EMAIL_SERVICE_ADDR
-                  value: "${services.emailservice.repo}:${services.emailservice.port}"
+                # - name: AD_SERVICE_ADDR
+                #   value: "${services.adservice.repo}:${services.adservice.port}"
+                # - name: CART_SERVICE_ADDR
+                #   value: "${services.cartservice.repo}:${services.cartservice.port}"
+                # - name: CHECKOUT_SERVICE_ADDR
+                #   value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
+                # - name: CURRENCY_SERVICE_ADDR
+                #   value: "${services.currencyservice.repo}:${services.currencyservice.port}"
+                # - name: EMAIL_SERVICE_ADDR
+                #   value: "${services.emailservice.repo}:${services.emailservice.port}"
                 - name: FRONTEND_SERVICE_ADDR
                   value: "${services.frontend.repo}:${services.frontend.port}"
-                - name: PAYMENT_SERVICE_ADDR
-                  value: "${services.paymentservice.repo}:${services.paymentservice.port}"
-                - name: PRODUCT_CATALOG_SERVICE_ADDR
-                  value: "${services.productcatalogservice.repo}:${services.productcatalogservice.port}" 
-                - name: RECOMMENDATION_SERVICE_ADDR
-                  value: "${services.recommendationservice.repo}:${services.recommendationservice.port}" 
-                - name: SHIPPING_SERVICE_ADDR
-                  value: "${services.shippingservice.repo}:${services.shippingservice.port}" 
-                - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-                  value: "${services.shoppingassistantservice.repo}:${services.shoppingassistantservice.port}"
+                # - name: PAYMENT_SERVICE_ADDR
+                #   value: "${services.paymentservice.repo}:${services.paymentservice.port}"
+                # - name: PRODUCT_CATALOG_SERVICE_ADDR
+                #   value: "${services.productcatalogservice.repo}:${services.productcatalogservice.port}" 
+                # - name: RECOMMENDATION_SERVICE_ADDR
+                #   value: "${services.recommendationservice.repo}:${services.recommendationservice.port}" 
+                # - name: SHIPPING_SERVICE_ADDR
+                #   value: "${services.shippingservice.repo}:${services.shippingservice.port}" 
+                # - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+                #   value: "${services.shoppingassistantservice.repo}:${services.shoppingassistantservice.port}"
                 - name: REDIS_ADDR
                   value: "redis-cart:6379"
                 - name: ENABLE_SHOPPING_ASSISTANT
@@ -200,7 +200,7 @@ def _updateChartYaml(appver){
     """.stripIndent()
 }
 
-def updateHelmChart(){
+def updateGithubHelmChart(){
     sh """ 
         git config user.email = ${env.CI_BOT_EMAIL}
         git config user.name = ${env.CI_BOT_USERNAME}

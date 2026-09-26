@@ -69,7 +69,7 @@ pipeline{
         stage("Helm Chart Version Bump Up"){ 
             steps{  
                 script{
-                    utils.updateHelmChart()
+                    utils.updateGithubHelmChart()
                 }
             } 
         } 
