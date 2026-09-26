@@ -6,9 +6,14 @@ This portfolio project:
 - creates a helm chart and a monolithic manifest
 - expects ArgoCD updates with the new chart or manifest
 
+"While this pipeline handles artifact creation and Helm packaging, the actual Ingress workflow (Ingress/Gateway API resources) is out of scope for this CD process."
+"The core application pipeline handles artifact creation and Helm packaging, while infrastructure-level networking (Ingress/Gateway API resources) is separated into a dedicated ArgoCD configuration."
 
-
-AWS 
+If the EKS cluster will be created via AWS EKS web console, at node group creation stage, role named "AmazonEKSNodeRole" should be exist and can be used. If the role is not exist, it can be created manually with some AWS managed permission to make node group EC2 instances can interact with AWS service endpoints. eksctl handles role works by itself. With this role, node group instances can pull ECR images without any ECR credentials and login steps. Required permissions for node group role;
+- AmazonEKS_CNI_Policy 
+- AmazonEC2ContainerRegistryReadOnly
+- AmazonEKSWorkerNodePolicy
+- AmazonElasticContainerRegistryPublicReadOnly
 
 
 

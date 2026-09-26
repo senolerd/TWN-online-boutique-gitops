@@ -5,10 +5,16 @@ pipeline{
         // Boutique Source
         BOUTIQUE_REPO = "https://github.com/GoogleCloudPlatform/microservices-demo.git"
         BOUTIQUE_BRANCH = "release/v0.10.7"
-        BOUTIQUE_HELM_CHART = "boutique-helm"
+        BOUTIQUE_HELM_CHART_NAME = "boutique-helm"
         BOUTIQUE_HELM_CHART_VER = "0.1.0"
-        AWS_CRED_ID = "aws_devops_cred"
+        // AWS
+        AWS_CRED_ID = "aws_devops_cred" // *
         AWS_REGION = "us-east-1"
+        // Jenkins server's GitHub identity for helm chart version bump Up
+        GITHUB_CRED = 'mac_rsa_priv' // *
+        CI_BOT_USERNAME = "Alfred Pennyworth"
+        CI_BOT_EMAIL = "alfred_pennyworth@wayneenterprises.com"
+        CI_BOT_COMMIT_SIGN = "[skip ci]"
     }
     stages{
         stage("init"){ 
@@ -60,7 +66,13 @@ pipeline{
             } 
         } 
 
-
+        stage("Helm Chart Version Bump Up"){ 
+            steps{  
+                script{
+                    utils.updateHelmChart()
+                }
+            } 
+        } 
 
     }
 }

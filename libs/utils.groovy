@@ -1,15 +1,15 @@
 services = [
-    adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
-    cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
-    checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
-    currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
-    emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
+    // adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
+    // cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
+    // checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
+    // currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
+    // emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
     frontend:[repo: "frontend", srcDir: "frontend", port: 8080, rep: 1],
-    paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
-    productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
-    recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
-    shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
-    shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1]
+//     paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
+//     productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
+//     recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
+//     shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
+//     shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1]
 ]
 
 def downloadSource(branch){
@@ -72,7 +72,7 @@ def helmChart(){
 
     echo 'CREATING HELM CHART'
     sh "rm -rf  ${BOUTIQUE_HELM_CHART}"
-    sh "helm create ${BOUTIQUE_HELM_CHART}"
+    sh "helm create ${BOUTIQUE_HELM_CHART_NAME}"
 
     // Cleaning the new chart
     dir(env.BOUTIQUE_HELM_CHART) {
@@ -132,6 +132,8 @@ def _addDeploymentAndServiceTemplate(Map service){
                 ports:
                 - containerPort: {{ .Values.${service.repo}.port }}
                 env:
+                - name: PORT
+                  value: "{{ .Values.${service.repo}.port }}"
                 - name: AD_SERVICE_ADDR
                   value: "${services.adservice.repo}:${services.adservice.port}"
                 - name: CART_SERVICE_ADDR
@@ -140,7 +142,7 @@ def _addDeploymentAndServiceTemplate(Map service){
                   value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
                 - name: CURRENCY_SERVICE_ADDR
                   value: "${services.currencyservice.repo}:${services.currencyservice.port}"
-                - name: EMAIL_SERVICE_ADDR: 
+                - name: EMAIL_SERVICE_ADDR
                   value: "${services.emailservice.repo}:${services.emailservice.port}"
                 - name: FRONTEND_SERVICE_ADDR
                   value: "${services.frontend.repo}:${services.frontend.port}"
@@ -167,7 +169,7 @@ def _addDeploymentAndServiceTemplate(Map service){
                 - name: GCP_PROJECT
                   value: "hello"
                 - name: GOOGLE_CLOUD_PROJECT
-                  value: "jello"
+                  value: "world"
         ---
         apiVersion: v1
         kind: Service
@@ -192,11 +194,26 @@ def _updateChartYaml(appver){
         name: boutique-helm
         description: A Helm chart for Kubernetes
         type: application
-        version: ${env.BOUTIQUE_HELM_CHART_VER}
+        version: "${env.BOUTIQUE_HELM_CHART_VER}+${env.APP_VERSION}"
         appVersion: "${env.APP_VERSION}"
         EOF
     """.stripIndent()
 }
+
+def updateHelmChart(){
+    sh """ 
+        git config user.email = ${env.CI_BOT_EMAIL}
+        git config user.name = ${env.CI_BOT_USERNAME}
+        git add .
+        git commit -m "Helm chart update for ${env.APP_VERSION} ${CI_BOT_COMMIT_SIGN}"
+    """
+    sshagent(credentials: ['mac_rsa_priv'], executable: '') {
+        sh 'git push origin HEAD:main'
+    }
+
+}
+
+
 
 
 return this
