@@ -68,14 +68,14 @@ def pushImages(){
 
 def helmChart(){
 
-    def isChartExist = sh(script: "stat ${BOUTIQUE_HELM_CHART} > /dev/null 2>&1", returnStatus: true)
+    def isChartExist = sh(script: "stat ${BOUTIQUE_HELM_CHART_NAME} > /dev/null 2>&1", returnStatus: true)
 
     echo 'CREATING HELM CHART'
-    sh "rm -rf  ${BOUTIQUE_HELM_CHART}"
+    sh "rm -rf  ${BOUTIQUE_HELM_CHART_NAME}"
     sh "helm create ${BOUTIQUE_HELM_CHART_NAME}"
 
     // Cleaning the new chart
-    dir(env.BOUTIQUE_HELM_CHART) {
+    dir(env.BOUTIQUE_HELM_CHART_NAME) {
         sh """
             rm -rf templates/*
             echo "" > values.yaml
