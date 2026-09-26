@@ -98,6 +98,7 @@ def _addServiceVarToValuesYaml(Map service){
         cat <<- EOF >> values.yaml
         # ${service.repo} variables
         ${service.repo}:
+            name: ${service.repo}
             port: ${service.port}
             imguri: ${service.imguri}
             replica: ${service.rep}
@@ -135,27 +136,27 @@ def _addDeploymentAndServiceTemplate(Map service){
                 - name: PORT
                   value: "{{ .Values.${service.repo}.port }}"
                 # - name: AD_SERVICE_ADDR
-                #   value: "${services.adservice.repo}:${services.adservice.port}"
+                #   value: "${services.adservice.name}:${services.adservice.port}"
                 # - name: CART_SERVICE_ADDR
-                #   value: "${services.cartservice.repo}:${services.cartservice.port}"
+                #   value: "${services.cartservice.name}:${services.cartservice.port}"
                 # - name: CHECKOUT_SERVICE_ADDR
-                #   value: "${services.checkoutservice.repo}:${services.checkoutservice.port}"
+                #   value: "${services.checkoutservice.name}:${services.checkoutservice.port}"
                 # - name: CURRENCY_SERVICE_ADDR
-                #   value: "${services.currencyservice.repo}:${services.currencyservice.port}"
+                #   value: "${services.currencyservice.name}:${services.currencyservice.port}"
                 # - name: EMAIL_SERVICE_ADDR
-                #   value: "${services.emailservice.repo}:${services.emailservice.port}"
+                #   value: "${services.emailservice.name}:${services.emailservice.port}"
                 - name: FRONTEND_SERVICE_ADDR
-                  value: "${services.frontend.repo}:${services.frontend.port}"
+                  value: "${services.frontend.name}:${services.frontend.port}"
                 # - name: PAYMENT_SERVICE_ADDR
-                #   value: "${services.paymentservice.repo}:${services.paymentservice.port}"
+                #   value: "${services.paymentservice.name}:${services.paymentservice.port}"
                 # - name: PRODUCT_CATALOG_SERVICE_ADDR
-                #   value: "${services.productcatalogservice.repo}:${services.productcatalogservice.port}" 
+                #   value: "${services.productcatalogservice.name}:${services.productcatalogservice.port}" 
                 # - name: RECOMMENDATION_SERVICE_ADDR
-                #   value: "${services.recommendationservice.repo}:${services.recommendationservice.port}" 
+                #   value: "${services.recommendationservice.name}:${services.recommendationservice.port}" 
                 # - name: SHIPPING_SERVICE_ADDR
-                #   value: "${services.shippingservice.repo}:${services.shippingservice.port}" 
+                #   value: "${services.shippingservice.name}:${services.shippingservice.port}" 
                 # - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-                #   value: "${services.shoppingassistantservice.repo}:${services.shoppingassistantservice.port}"
+                #   value: "${services.shoppingassistantservice.name}:${services.shoppingassistantservice.port}"
                 - name: REDIS_ADDR
                   value: "redis-cart:6379"
                 - name: ENABLE_SHOPPING_ASSISTANT
