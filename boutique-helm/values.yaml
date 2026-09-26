@@ -3,6 +3,6 @@
 frontend:
     name: frontend
     port: 8080
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/frontend:release-v0.10.7-6f42300-b187
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/frontend:release-v0.10.7-4e27360-b188
     replica: 1
 
