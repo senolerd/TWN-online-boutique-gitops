@@ -18,9 +18,9 @@ spec:
     #     - name: installCRDs 
     #       value: 'true'
   destination:
-    server: https://kubernetes.default.svc
+    # server: https://kubernetes.default.svc
     namespace: default
-    name: destination-name 
+    name: in-cluster 
     syncPolicy:
       automated: () 
       syncOptions:
