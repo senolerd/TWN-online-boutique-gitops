@@ -46,7 +46,7 @@ def _minorPatches(service){
   
   // shoppingasistanceservice is missin "asyncio", adding to requirements.txt
   if ( service == "shoppingassistantservice" ) {
-    sh 'echo asyncio >> requirements.txt'
+    sh 'echo aiohttp >> requirements.txt'
   }
 }
 
