@@ -40,7 +40,7 @@ resource "kubernetes_manifest" "smoke_test" {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
-      name       = "is-it-app-of-apps"
+      name       = "app-of-apps-tf"
       namespace  = "argocd"
       finalizers = ["resources-finalizer.argocd.argoproj.io"]
     }
@@ -48,7 +48,7 @@ resource "kubernetes_manifest" "smoke_test" {
       project = "default"
       destination = {
         server    = "https://kubernetes.default.svc"
-        namespace = "default"
+        namespace = "argocd"
       }
       source = {
         repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
@@ -60,7 +60,13 @@ resource "kubernetes_manifest" "smoke_test" {
           prune    = true
           selfHeal = true
         }
+        syncOptions= [
+          "CreateNamespace=true",
+          "ServerSideApply=true"
+        ]
       }
     }
   }
 }
+
+

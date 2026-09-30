@@ -14,8 +14,8 @@ spec:
   destination:
     namespace: default
     name: in-cluster 
-    syncPolicy:
-      automated: () 
-      syncOptions:
-        - CreateNamespace=true
-        - ServerSideApply=true
+  syncPolicy:
+    automated: {} 
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
