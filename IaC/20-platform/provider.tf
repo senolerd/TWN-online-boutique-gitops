@@ -52,7 +52,7 @@ resource "kubernetes_manifest" "smoke_test" {
       }
       source = {
         repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
-        path           = "argo-cd-app-of-apps/apps"
+        path           = "argocd-app-of-apps/apps"
         targetRevision = "HEAD"
       }
       syncPolicy = {
