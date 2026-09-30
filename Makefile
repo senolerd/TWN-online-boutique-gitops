@@ -10,23 +10,23 @@ help:
 	4 - make dns: dns works,\n"
 
 infra:
-	terraform -chdirIaC/=00-infra init
-	terraform -chdirIaC/=00-infra apply
+	terraform -chdir=IaC/00-infra init
+	terraform -chdir=IaC/00-infra apply
 
 bootstrap:
-	terraform -chdirIaC/=10-bootstrap-argocd init
-	terraform -chdirIaC/=10-bootstrap-argocd apply
+	terraform -chdir=IaC/10-bootstrap-argocd init
+	terraform -chdir=IaC/10-bootstrap-argocd apply
 
 platform:
 	echo "platform"
-	terraform -chdirIaC/=20-platform init
-	terraform -chdirIaC/=20-platform apply
+	terraform -chdir=IaC/20-platform init
+	terraform -chdir=IaC/20-platform apply
 
 # dns:
 # 	echo "platform"
 
 clean:
 	echo "kill'm all"
-	terraform -chdirIaC/=20-platform destroy -auto-approve
-	terraform -chdirIaC/=10-bootstrap-argocd destroy -auto-approve
-	terraform -chdirIaC/=00-infra destroy -auto-approve
+	terraform -chdir=IaC/20-platform destroy -auto-approve
+	terraform -chdir=IaC/10-bootstrap-argocd destroy -auto-approve
+	terraform -chdir=IaC/00-infra destroy -auto-approve

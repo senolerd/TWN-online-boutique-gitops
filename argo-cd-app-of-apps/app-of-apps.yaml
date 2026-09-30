@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/vialpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application 
 metadata:
   name: app-of-apps
@@ -7,8 +7,8 @@ spec:
     name: in-cluster 
     namespace: argocd
   source:
-    path: apps
-    repoURL: 'https://github.com/senolerd/TWN-online-boutique-gitops/tree/main/argo-cd-app-of-apps'
+    path: argo-cd-app-of-apps/apps
+    repoURL: 'https://github.com/senolerd/TWN-online-boutique-gitops.git'
     targetRevision: HEAD
   project: default
     # syncPolicy:

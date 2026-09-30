@@ -40,7 +40,7 @@ resource "kubernetes_manifest" "smoke_test" {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
-      name       = "terraform-smoke-test"
+      name       = "is-it-app-of-apps"
       namespace  = "argocd"
       finalizers = ["resources-finalizer.argocd.argoproj.io"]
     }
@@ -52,7 +52,7 @@ resource "kubernetes_manifest" "smoke_test" {
       }
       source = {
         repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
-        path           = "boutique-helm"
+        path           = "argo-cd-app-of-apps/apps"
         targetRevision = "HEAD"
       }
       syncPolicy = {
