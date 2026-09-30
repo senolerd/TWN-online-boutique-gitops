@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "frontend-deployment"
+  name: "shoppingassistantservice-deployment"
   labels:
-    app: "frontend"
+    app: "shoppingassistantservice"
 spec:
-  replicas: {{ .Values.frontend.replica }}
+  replicas: {{ .Values.shoppingassistantservice.replica }}
   selector:
     matchLabels:
-      app: "frontend"
+      app: "shoppingassistantservice"
   template:
     metadata:
       labels:
-        app: "frontend"
+        app: "shoppingassistantservice"
     spec:
       containers:
-      - name: "frontend"
-        image: "{{ .Values.frontend.imguri }}"
+      - name: "shoppingassistantservice"
+        image: "{{ .Values.shoppingassistantservice.imguri }}"
         ports:
-        - containerPort: {{ .Values.frontend.port }}
+        - containerPort: {{ .Values.shoppingassistantservice.port }}
         env:
         - name: PORT
-          value: "{{ .Values.frontend.port }}"
+          value: "{{ .Values.shoppingassistantservice.port }}"
         - name: AD_SERVICE_ADDR
           value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
         - name: CART_SERVICE_ADDR
@@ -60,11 +60,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: "frontend"
+  name: "shoppingassistantservice"
 spec:
   selector:
-    app: "frontend"
+    app: "shoppingassistantservice"
   ports:
   - protocol: TCP
-    port: {{ .Values.frontend.port }}
-    targetPort: {{ .Values.frontend.port }}
+    port: {{ .Values.shoppingassistantservice.port }}
+    targetPort: {{ .Values.shoppingassistantservice.port }}
