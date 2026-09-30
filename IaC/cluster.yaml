@@ -20,4 +20,5 @@ addons:
         permissionPolicyARNs:
           - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
 
+
 # If the remove stuck with "unevictable pods", coredns and metric addons needs to be deleted manually, then removing will resume
