@@ -9,7 +9,7 @@ services = [
     productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
     recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
     shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
-    // shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1] ToDo: missing module in requirements.txt (asyncio)
+    shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1]
 ]
 
 def downloadSource(branch){
@@ -29,14 +29,27 @@ def buildImages(){
         service.value.imguri = "${ECR_REGISTER}/${service.value.repo}:${env.APP_VERSION}"
 
         dir("${WORKSPACE}/microservices-demo/src/$service.value.srcDir"){
-            sh """ 
-                sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
-                podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
-                podman image prune -f
-            """
+          // small fixes per service
+          _minorPatches(service.key)
+
+          sh """ 
+              sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
+              podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
+              podman image prune -f
+          """
         }
     }
 }
+
+
+def _minorPatches(service.key){
+  
+  // shoppingasistanceservice is missin "asyncio", adding to requirements.txt
+  if (service.key == "shoppingassistantservice" ) {
+    sh 'echo -e "\n#patch\nasyncio" >> requirements.txt '
+  }
+}
+
 
 def ecrLogin(){
     // "env.AWS_USER_ID" and "env.ECR_REGISTER" are defined here, too with registry login

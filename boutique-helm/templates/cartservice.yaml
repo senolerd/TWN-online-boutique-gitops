@@ -42,6 +42,8 @@ spec:
           value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
         - name: SHIPPING_SERVICE_ADDR
           value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
+        - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+          value: "{{ .Values.shoppingassistantservice.name }}:{{ .Values.shoppingassistantservice.port }}"
         - name: REDIS_ADDR
           value: "redis-cart:6379"
         - name: ENABLE_SHOPPING_ASSISTANT
