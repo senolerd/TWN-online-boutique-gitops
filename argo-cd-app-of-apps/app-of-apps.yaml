@@ -3,15 +3,16 @@ kind: Application
 metadata:
   name: app-of-apps
 spec:
-  destination:
-    name: in-cluster 
-    namespace: argocd
+  project: default
   source:
     path: argo-cd-app-of-apps/apps
     repoURL: 'https://github.com/senolerd/TWN-online-boutique-gitops.git'
     targetRevision: HEAD
-  project: default
-    # syncPolicy:
-    #   automated:
-    #     prune: true 
-    #     selfHeal: true
+  destination:
+    name: in-cluster 
+    namespace: argocd
+    syncPolicy:
+      automated: () 
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true    

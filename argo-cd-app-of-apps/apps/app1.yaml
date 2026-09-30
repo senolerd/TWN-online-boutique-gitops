@@ -11,14 +11,7 @@ spec:
     repoURL: https://github.com/senolerd/TWN-online-boutique-gitops.git
     path: boutique-helm
     targetRevision: HEAD
-    # chart: chart-name-here-of-there-is-helm-chart
-    # targetRevision: 'v1.11.0'
-    # helm:
-    #   parameters:
-    #     - name: installCRDs 
-    #       value: 'true'
   destination:
-    # server: https://kubernetes.default.svc
     namespace: default
     name: in-cluster 
     syncPolicy:
