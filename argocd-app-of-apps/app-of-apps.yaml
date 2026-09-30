@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: app-of-apps
 spec:
-  project: argocd
+  project: default
   source:
     path: argo-cd-app-of-apps/apps
     repoURL: 'https://github.com/senolerd/TWN-online-boutique-gitops.git'
