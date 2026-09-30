@@ -1,15 +1,15 @@
 services = [
-    // adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
-    // cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
-    // checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
-    // currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
-    // emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
+    adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
+    cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
+    checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
+    currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
+    emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
     frontend:[repo: "frontend", srcDir: "frontend", port: 8080, rep: 1],
-//     paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
-//     productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
-//     recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
-//     shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
-//     shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1]
+    paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
+    productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
+    recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
+    shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
+    // shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1]
 ]
 
 def downloadSource(branch){
@@ -135,28 +135,28 @@ def _addDeploymentAndServiceTemplate(Map service){
                 env:
                 - name: PORT
                   value: "{{ .Values.${service.repo}.port }}"
-                # - name: AD_SERVICE_ADDR
-                #   value: "${services.adservice.name}:${services.adservice.port}"
-                # - name: CART_SERVICE_ADDR
-                #   value: "${services.cartservice.name}:${services.cartservice.port}"
-                # - name: CHECKOUT_SERVICE_ADDR
-                #   value: "${services.checkoutservice.name}:${services.checkoutservice.port}"
-                # - name: CURRENCY_SERVICE_ADDR
-                #   value: "${services.currencyservice.name}:${services.currencyservice.port}"
-                # - name: EMAIL_SERVICE_ADDR
-                #   value: "${services.emailservice.name}:${services.emailservice.port}"
+                - name: AD_SERVICE_ADDR
+                  value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
+                - name: CART_SERVICE_ADDR
+                  value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"
+                - name: CHECKOUT_SERVICE_ADDR
+                  value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
+                - name: CURRENCY_SERVICE_ADDR
+                  value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
+                - name: EMAIL_SERVICE_ADDR
+                  value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
                 - name: FRONTEND_SERVICE_ADDR
-                  value: "${services.frontend.name}:${services.frontend.port}"
-                # - name: PAYMENT_SERVICE_ADDR
-                #   value: "${services.paymentservice.name}:${services.paymentservice.port}"
-                # - name: PRODUCT_CATALOG_SERVICE_ADDR
-                #   value: "${services.productcatalogservice.name}:${services.productcatalogservice.port}" 
-                # - name: RECOMMENDATION_SERVICE_ADDR
-                #   value: "${services.recommendationservice.name}:${services.recommendationservice.port}" 
-                # - name: SHIPPING_SERVICE_ADDR
-                #   value: "${services.shippingservice.name}:${services.shippingservice.port}" 
-                # - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-                #   value: "${services.shoppingassistantservice.name}:${services.shoppingassistantservice.port}"
+                  value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
+                - name: PAYMENT_SERVICE_ADDR
+                  value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
+                - name: PRODUCT_CATALOG_SERVICE_ADDR
+                  value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
+                - name: RECOMMENDATION_SERVICE_ADDR
+                  value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
+                - name: SHIPPING_SERVICE_ADDR
+                  value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
+                - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+                  value: "{{ .Values.shoppingassistantservice.name }}:{{ .Values.shoppingassistantservice.port }}"
                 - name: REDIS_ADDR
                   value: "redis-cart:6379"
                 - name: ENABLE_SHOPPING_ASSISTANT
@@ -203,8 +203,8 @@ def _updateChartYaml(appver){
 
 def updateGithubHelmChart(){
     sh """ 
-        git config user.email = ${env.CI_BOT_EMAIL}
-        git config user.name = ${env.CI_BOT_USERNAME}
+        git config --replace-all user.email ${env.CI_BOT_EMAIL}
+        git config --replace-all user.name ${env.CI_BOT_USERNAME}
         git add .
         git commit -m "Helm chart update for ${env.APP_VERSION} ${CI_BOT_COMMIT_SIGN}"
     """

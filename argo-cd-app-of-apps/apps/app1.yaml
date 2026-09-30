@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/vialphal
+kind: Application 
+metadata:
+  name: boutique 
+  namespace: argocd 
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default 
+  source:
+    repoURL: https://github.com/senolerd/TWN-online-boutique-gitops.git
+    path: boutique-helm
+    targetRevision: HEAD
+    # chart: chart-name-here-of-there-is-helm-chart
+    # targetRevision: 'v1.11.0'
+    # helm:
+    #   parameters:
+    #     - name: installCRDs 
+    #       value: 'true'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+    name: destination-name 
+    syncPolicy:
+      automated: () 
+      syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true

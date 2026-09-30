@@ -1,4 +1,3 @@
-microservices-demo
 .terraform
 .terraform.lock.hcl
 terraform.tfstate
