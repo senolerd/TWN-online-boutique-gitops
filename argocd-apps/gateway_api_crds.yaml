@@ -5,7 +5,6 @@
     "argocd.argoproj.io/sync-wave": "1"
   "name": "gateway-api-crds"
   "namespace": "argocd"
-"regionSilBeni": "us-east-1"
 "spec":
   "destination":
     "server": "https://kubernetes.default.svc"
