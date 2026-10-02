@@ -3,10 +3,11 @@
 "metadata":
   "annotations":
     "argocd.argoproj.io/sync-wave": "1"
-  "name": "gateway-api-crds"
+  "name": "gateway-api-crds-tf"
   "namespace": "argocd"
 "spec":
   "destination":
+    "namespace": "kube-system"
     "server": "https://kubernetes.default.svc"
   "project": "default"
   "source":

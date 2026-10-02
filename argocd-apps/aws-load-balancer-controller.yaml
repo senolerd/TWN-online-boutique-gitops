@@ -1,0 +1,38 @@
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "2"
+  "name": "aws-load-balancer-controller-tf"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "namespace": "kube-system"
+    "server": "https://kubernetes.default.svc"
+  "project": "default"
+  "source":
+    "chart": "aws-load-balancer-controller"
+    "helm":
+      "releaseName": "aws-load-balancer-controller"
+      "valuesObject":
+        "clusterName": "my-proj-dev"
+        "controllerConfig":
+          "featureGates":
+            "ALBGatewayAPI": true
+        "region": "us-east-1"
+        "serviceAccount":
+          "create": true
+          "name": "aws-load-balancer-controller"
+        "vpcId": "vpc-01715c72bd68e7d06"
+    "repoURL": "https://aws.github.io/eks-charts"
+    "targetRevision": "x.y.z"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "retry":
+      "backoff":
+        "duration": "10s"
+        "factor": 2
+        "maxDuration": "2m"
+      "limit": 5

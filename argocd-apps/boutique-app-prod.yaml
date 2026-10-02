@@ -1,0 +1,25 @@
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "3"
+  "finalizers":
+  - "resources-finalizer.argocd.argoproj.io"
+  "name": "boutique-prod-tf"
+  "namespace": "argocd"
+"spec":
+  "destination":
+    "name": "in-cluster"
+    "namespace": "default"
+  "project": "default"
+  "source":
+    "path": "boutique-helm"
+    "repoURL": "https://github.com/senolerd/TWN-online-boutique-gitops.git"
+    "targetRevision": "HEAD"
+  "syncPolicy":
+    "automated":
+      "prune": true
+      "selfHeal": true
+    "syncOptions":
+    - "CreateNamespace=true"
+    - "ServerSideApply=true"

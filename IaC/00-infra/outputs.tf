@@ -1,11 +1,10 @@
-output "environment" {
+output "env" {
   value = var.environment
 }
 
 output "region" {
   value = var.region
 }
-
 
 output "vpc_id" {
   value = module.vpc.vpc_id
@@ -27,4 +26,7 @@ output "eks_cluster_region" {
   value = module.eks.eks_cluster_region
 }
 
+output "argocd_app_dir" {
+  value = var.argocd-apps_dir
+}
 
