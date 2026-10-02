@@ -1,0 +1,28 @@
+"apiVersion": "argoproj.io/v1alpha1"
+"kind": "Application"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "1"
+  "name": "gateway-api-crds"
+  "namespace": "argocd"
+"regionSilBeni": "us-east-1"
+"spec":
+  "destination":
+    "server": "https://kubernetes.default.svc"
+  "project": "default"
+  "source":
+    "path": "config/crd/standard"
+    "repoURL": "https://github.com/kubernetes-sigs/gateway-api.git"
+    "targetRevision": "v1.6.1"
+  "syncPolicy":
+    "automated":
+      "prune": false
+      "selfHeal": true
+    "retry":
+      "backoff":
+        "duration": "10s"
+        "factor": 2
+        "maxDuration": "2m"
+      "limit": 5
+    "syncOptions":
+    - "ServerSideApply=true"
