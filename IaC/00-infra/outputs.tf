@@ -1,5 +1,14 @@
-output "Environment" {
-  value = "${var.environment}"
+output "environment" {
+  value = var.environment
+}
+
+output "region" {
+  value = var.region
+}
+
+
+output "vpc_id" {
+  value = module.vpc.vpc_id
 }
 
 output "eks_cluster_name" {

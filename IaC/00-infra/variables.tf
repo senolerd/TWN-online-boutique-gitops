@@ -1,6 +1,6 @@
+variable "project_name" { type = string }
 variable "region" { type = string }
 variable "vpc_cidr" { type = string }
-variable "project_name" { type = string }
 
 variable "environment" {
   # dev: Node Group nodes air tight, no internet access. Access to only AWS services (ecr, s3 etc) via Endpoints

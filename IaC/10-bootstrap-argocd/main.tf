@@ -31,3 +31,5 @@ resource "helm_release" "argocd" {
         }
     })]    
 }
+# Argocd CRD resources can be created after the custom CRDs are exist on Cluster. 
+# So, Adding something to Argo has to bo sone on different terraform module

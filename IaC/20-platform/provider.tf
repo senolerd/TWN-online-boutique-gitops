@@ -26,16 +26,13 @@ data "aws_eks_cluster_auth" "cluster" {
   name = data.terraform_remote_state.eks_core.outputs.eks_cluster_name
 }
 
-
 provider "kubernetes" {
     host = data.terraform_remote_state.eks_core.outputs.eks_cluster_endpoint
     cluster_ca_certificate = base64decode(data.terraform_remote_state.eks_core.outputs.eks_cluster_ca_data)
     token = data.aws_eks_cluster_auth.cluster.token  
 }
 
-
-
-resource "kubernetes_manifest" "smoke_test" {
+resource "kubernetes_manifest" "app-of-apps" {
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
@@ -52,7 +49,7 @@ resource "kubernetes_manifest" "smoke_test" {
       }
       source = {
         repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
-        path           = "argocd-app-of-apps/apps"
+        path           = "argocd-apps"
         targetRevision = "HEAD"
       }
       syncPolicy = {

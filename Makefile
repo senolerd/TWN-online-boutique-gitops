@@ -1,3 +1,4 @@
+# A helper for IaC automation stages. 
 # If you looking what this file is, it is Makefile, the commands are working on the console writing "make {command}, like "make infra". 
 # The "make" command reads Makefile to find what to run.
 
@@ -26,7 +27,9 @@ platform:
 # 	echo "platform"
 
 clean:
-	echo "kill'm all"
 	terraform -chdir=IaC/20-platform destroy -auto-approve
 	terraform -chdir=IaC/10-bootstrap-argocd destroy -auto-approve
-	terraform -chdir=IaC/00-infra destroy -auto-approve
+	terraform -chdir=IaC/00-infra destroy -auto-approve; \
+	if [ $$? != 0 ] ; then \
+		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
+	fi 
