@@ -25,7 +25,7 @@
           "name": "aws-load-balancer-controller"
         "vpcId": "vpc-05ce5063cb5ac11f4"
     "repoURL": "https://aws.github.io/eks-charts"
-    "targetRevision": "x.y.z"
+    "targetRevision": "3.5.0"
   "syncPolicy":
     "automated":
       "prune": true
