@@ -2,7 +2,7 @@
 "kind": "Application"
 "metadata":
   "annotations":
-    "argocd.argoproj.io/sync-wave": "2"
+    "argocd.argoproj.io/sync-wave": "20"
   "name": "aws-load-balancer-controller-tf"
   "namespace": "argocd"
 "spec":
@@ -23,7 +23,7 @@
         "serviceAccount":
           "create": true
           "name": "aws-load-balancer-controller"
-        "vpcId": "vpc-01715c72bd68e7d06"
+        "vpcId": "vpc-05ce5063cb5ac11f4"
     "repoURL": "https://aws.github.io/eks-charts"
     "targetRevision": "x.y.z"
   "syncPolicy":

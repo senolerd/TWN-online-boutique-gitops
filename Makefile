@@ -12,6 +12,7 @@ help:
 
 infra:
 	terraform -chdir=IaC/00-infra init
+	terraform -chdir=IaC/00-infra refresh
 	terraform -chdir=IaC/00-infra apply
 
 bootstrap:

@@ -33,7 +33,7 @@ variable "instance_types" {
   type = map(list(string))
 }
 
-variable "argocd-apps_dir" {
+variable "argocd-dir" {
   description = "ArgoCD apps yaml file landing directory created at platform module"
   type = string
 }

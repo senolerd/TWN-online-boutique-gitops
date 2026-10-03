@@ -2,7 +2,7 @@
 "kind": "Application"
 "metadata":
   "annotations":
-    "argocd.argoproj.io/sync-wave": "3"
+    "argocd.argoproj.io/sync-wave": "50"
   "finalizers":
   - "resources-finalizer.argocd.argoproj.io"
   "name": "boutique-prod-tf"

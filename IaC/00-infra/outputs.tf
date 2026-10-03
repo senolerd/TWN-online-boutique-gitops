@@ -26,7 +26,7 @@ output "eks_cluster_region" {
   value = module.eks.eks_cluster_region
 }
 
-output "argocd_app_dir" {
-  value = var.argocd-apps_dir
+output "argocd-dir" {
+  value = var.argocd-dir
 }
 

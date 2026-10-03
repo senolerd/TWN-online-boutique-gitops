@@ -27,9 +27,27 @@ resource "helm_release" "argocd" {
             end
             return hs
             EOT
+
+            "resource.customizations.health.gateway.networking.k8s.io_Gateway" = <<-EOT
+            hs = { status = "Progressing", message = "Waiting for Gateway to be Programmed" }
+            if obj.status ~= nil and obj.status.conditions ~= nil then
+                for _, c in ipairs(obj.status.conditions) do
+                if c.type == "Programmed" then
+                    if c.status == "True" then
+                    hs.status = "Healthy"
+                    end
+                    hs.message = c.message or hs.message
+                end
+                end
+            end
+            return hs
+            EOT
         }
         }
     })]    
 }
 # Argocd CRD resources can be created after the custom CRDs are exist on Cluster. 
 # So, Adding something to Argo has to bo sone on different terraform module
+# I'm not Lua person. Those Lua's are suggested from ai.
+
+

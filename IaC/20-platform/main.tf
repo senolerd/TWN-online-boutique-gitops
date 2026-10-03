@@ -15,7 +15,7 @@ resource "kubernetes_manifest" "app-of-apps" {
       }
       source = {
         repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
-        path           = "argocd-apps"
+        path           = "argocd/apps"
         targetRevision = "HEAD"
       }
       syncPolicy = {
@@ -23,7 +23,7 @@ resource "kubernetes_manifest" "app-of-apps" {
           prune    = true
           selfHeal = true
         }
-        syncOptions= [
+        syncOptions = [
           "CreateNamespace=true",
           "ServerSideApply=true"
         ]
@@ -33,14 +33,14 @@ resource "kubernetes_manifest" "app-of-apps" {
 }
 
 resource "local_file" "gateway-api-crds-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd_app_dir}/gateway_api_crds.yaml"
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/10-gateway-api-crds.app.yaml"
   content = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
       name        = "gateway-api-crds-tf"
       namespace   = "argocd"
-      annotations = { "argocd.argoproj.io/sync-wave" = "1" }
+      annotations = { "argocd.argoproj.io/sync-wave" = "10" }
     }
     spec = {
       project = "default"
@@ -50,8 +50,8 @@ resource "local_file" "gateway-api-crds-app" {
         targetRevision = "v1.6.1"
       }
       destination = {
-        server = "https://kubernetes.default.svc"
-        namespace =  "kube-system"
+        server    = "https://kubernetes.default.svc"
+        namespace = "kube-system"
       }
       syncPolicy = {
         automated = {
@@ -73,32 +73,32 @@ resource "local_file" "gateway-api-crds-app" {
 }
 
 resource "local_file" "aws-load-balancer-controller-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd_app_dir}/aws-load-balancer-controller.yaml"
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/20-aws-load-balancer-controller.app.yaml"
   content = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
-    kind =  "Application"
+    kind       = "Application"
     metadata = {
-      name = "aws-load-balancer-controller-tf"
+      name      = "aws-load-balancer-controller-tf"
       namespace = "argocd"
       annotations = {
-        "argocd.argoproj.io/sync-wave" =  "2"
+        "argocd.argoproj.io/sync-wave" = "20"
       }
     }
     spec = {
       project = "default"
       source = {
-        repoURL = "https://aws.github.io/eks-charts"
-        chart =  "aws-load-balancer-controller"
-        targetRevision =  "x.y.z"
+        repoURL        = "https://aws.github.io/eks-charts"
+        chart          = "aws-load-balancer-controller"
+        targetRevision = "x.y.z"
         helm = {
-          releaseName =  "aws-load-balancer-controller"
+          releaseName = "aws-load-balancer-controller"
           valuesObject = {
-            clusterName =  "my-proj-dev"
-            region = data.terraform_remote_state.eks_core.outputs.region
-            vpcId =  data.terraform_remote_state.eks_core.outputs.vpc_id
+            clusterName = "my-proj-dev"
+            region      = data.terraform_remote_state.eks_core.outputs.region
+            vpcId       = data.terraform_remote_state.eks_core.outputs.vpc_id
             serviceAccount = {
-              create =  true
-              name =  "aws-load-balancer-controller"
+              create = true
+              name   = "aws-load-balancer-controller"
             }
             controllerConfig = {
               featureGates = {
@@ -109,17 +109,122 @@ resource "local_file" "aws-load-balancer-controller-app" {
         }
       }
       destination = {
-        server =  "https://kubernetes.default.svc"
-        namespace =  "kube-system"
+        server    = "https://kubernetes.default.svc"
+        namespace = "kube-system"
       }
       syncPolicy = {
         automated = {
-          prune =  true
-          selfHeal =  true
+          prune    = true
+          selfHeal = true
         }
         retry = {
-          limit =  5
-          backoff =  { duration =  "10s", factor =  2, maxDuration =  "2m" }
+          limit   = 5
+          backoff = { duration = "10s", factor = 2, maxDuration = "2m" }
+        }
+      }
+    }
+  })
+}
+
+######## Platform's k8s resources manifests
+
+
+
+resource "local_file" "gatewayclass-yaml" {
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/platform/gatewayclass.app.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "GatewayClass"
+    metadata = {
+      name        = "aws-alb"
+      annotations = { "argocd.argoproj.io/sync-wave" = "0" }
+    }
+    spec = { controllerName = "gateway.k8s.aws/alb" }
+
+  })
+}
+
+resource "local_file" "loadbalancerconfiguration-yaml" {
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/platform/loadbalancerconfiguration.app.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.k8s.aws/v1beta1"
+    kind       = "LoadBalancerConfiguration"
+    metadata = {
+      name        = "public-alb"
+      namespace   = "gateway-system"
+      annotations = { "argocd.argoproj.io/sync-wave" = "0" }
+    }
+    spec = { scheme = "internet-facing" }
+
+  })
+}
+
+resource "local_file" "gateway-yaml" {
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/platform/gateway.app.yaml"
+  content = yamlencode({
+
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "Gateway"
+    metadata = {
+      name      = "public"
+      namespace = "gateway-system"
+    }
+    spec = {
+      gatewayClassName = "aws-alb"
+      infrastructure = {
+        parametersRef = {
+          group = "gateway.k8s.aws"
+          kind  = "LoadBalancerConfiguration"
+          name  = "public-alb"
+        }
+      }
+      listeners = [
+        {
+          name     = "http"
+          protocol = "HTTP"
+          port     = 80
+          allowedRoutes = {
+            namespaces = { from = "All" }
+          }
+        }
+      ]
+    }
+  })
+}
+
+######## /Platform's k8s resources manifests
+
+
+resource "local_file" "gateway-app" {
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/30-gateway.app.yaml"
+  content = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name        = "gateway-tf"
+      namespace   = "argocd"
+      annotations = { "argocd.argoproj.io/sync-wave" = "30" }
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
+        path           = "argocd/platform"
+        targetRevision = "HEAD"
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
+        namespace = "kube-system"
+      }
+      syncPolicy = {
+        automated   = { prune = true, selfHeal = true }
+        syncOptions = ["CreateNamespace=true"]
+        retry = {
+          limit   = 5
+          backoff = { duration = "10s", factor = 2, maxDuration = "2m" }
         }
       }
     }
@@ -127,39 +232,40 @@ resource "local_file" "aws-load-balancer-controller-app" {
 }
 
 resource "local_file" "boutique-helm-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd_app_dir}/boutique-app-${data.terraform_remote_state.eks_core.outputs.env}.yaml"
+  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/50-boutique-app-${data.terraform_remote_state.eks_core.outputs.env}.app.yaml"
   content = yamlencode({
-    apiVersion= "argoproj.io/v1alpha1"
-    kind= "Application"
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
     metadata = {
-      name = "boutique-${data.terraform_remote_state.eks_core.outputs.env}-tf" 
-      namespace = "argocd" 
+      name      = "boutique-${data.terraform_remote_state.eks_core.outputs.env}-tf"
+      namespace = "argocd"
       annotations = {
-        "argocd.argoproj.io/sync-wave": "3"
+        "argocd.argoproj.io/sync-wave" : "50"
       }
-      finalizers = [ "resources-finalizer.argocd.argoproj.io" ]
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
     }
     spec = {
       project = "default"
       source = {
-        repoURL =  "https://github.com/senolerd/TWN-online-boutique-gitops.git"
-        path = "boutique-helm"
+        repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
+        path           = "boutique-helm"
         targetRevision = "HEAD"
       }
       destination = {
         namespace = "default"
-        name =  "in-cluster" 
+        name      = "in-cluster"
       }
       syncPolicy = {
         automated = {
-          prune = true
-          selfHeal = true 
+          prune    = true
+          selfHeal = true
         }
         syncOptions = [
-          "CreateNamespace=true", 
+          "CreateNamespace=true",
           "ServerSideApply=true"
         ]
       }
     }
   })
 }
+

@@ -20,4 +20,4 @@ instance_types = {
   prod = ["t3.small"]
 } 
 
-argocd-apps_dir= "../../argocd-apps"
+argocd-dir= "../../argocd"
