@@ -207,6 +207,7 @@ resource "local_file" "gateway-app" {
       name        = "gateway-tf"
       namespace   = "argocd"
       annotations = { "argocd.argoproj.io/sync-wave" = "30" }
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
     }
     spec = {
       project = "default"
