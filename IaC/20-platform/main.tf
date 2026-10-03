@@ -217,7 +217,7 @@ resource "local_file" "gateway-app" {
       }
       destination = {
         server    = "https://kubernetes.default.svc"
-        namespace = "kube-system"
+        namespace = "gateway-system" 
       }
       syncPolicy = {
         automated   = { prune = true, selfHeal = true }
