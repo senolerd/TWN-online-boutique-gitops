@@ -89,7 +89,7 @@ resource "local_file" "aws-load-balancer-controller-app" {
       source = {
         repoURL        = "https://aws.github.io/eks-charts"
         chart          = "aws-load-balancer-controller"
-        targetRevision = "x.y.z"
+        targetRevision = "3.5.0"
         helm = {
           releaseName = "aws-load-balancer-controller"
           valuesObject = {
