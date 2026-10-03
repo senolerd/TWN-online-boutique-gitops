@@ -169,7 +169,7 @@ resource "local_file" "gateway-yaml" {
     apiVersion = "gateway.networking.k8s.io/v1"
     kind       = "Gateway"
     metadata = {
-      name      = "public"
+      name      = "public-gw"
       namespace = "gateway-system"
     }
     spec = {
@@ -194,6 +194,45 @@ resource "local_file" "gateway-yaml" {
     }
   })
 }
+
+resource "local_file" "HTTPRoute-boutique" {
+  filename = "../../boutique-helm/templates/httproute.yaml"
+  content = yamlencode({
+
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name =  "boutique-${data.terraform_remote_state.eks_core.outputs.env}"
+    }
+    spec = {
+      parentRefs = [
+        {name = "public-gw", namespace = "gateway-system" }
+      ]
+      rules = [
+        {
+          matches = [ { path = { type = "PathPrefix", value = "/" } } ]
+          backendRefs = [ { name="frontend", port= 8080}]
+        }
+      ]
+    }
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ######## /Platform's k8s resources manifests
 
@@ -253,7 +292,7 @@ resource "local_file" "boutique-helm-app" {
         targetRevision = "HEAD"
       }
       destination = {
-        namespace = "default"
+        namespace = "boutique-${data.terraform_remote_state.eks_core.outputs.env}"
         name      = "in-cluster"
       }
       syncPolicy = {
@@ -269,4 +308,6 @@ resource "local_file" "boutique-helm-app" {
     }
   })
 }
+
+
 

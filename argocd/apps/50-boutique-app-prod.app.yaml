@@ -10,7 +10,7 @@
 "spec":
   "destination":
     "name": "in-cluster"
-    "namespace": "default"
+    "namespace": "boutique-prod"
   "project": "default"
   "source":
     "path": "boutique-helm"

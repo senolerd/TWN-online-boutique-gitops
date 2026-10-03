@@ -23,7 +23,7 @@
         "serviceAccount":
           "create": true
           "name": "aws-load-balancer-controller"
-        "vpcId": "vpc-015ba9a9c55b5c2fc"
+        "vpcId": "vpc-09b8447f1fb9516b5"
     "repoURL": "https://aws.github.io/eks-charts"
     "targetRevision": "3.5.0"
   "syncPolicy":
