@@ -34,3 +34,4 @@ clean:
 	if [ $$? != 0 ] ; then \
 		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
 	fi 
+	@echo "\n Don't forget to push newly created argocd application yaml files to repository \n\n\n "
