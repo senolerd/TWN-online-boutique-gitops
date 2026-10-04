@@ -220,20 +220,6 @@ resource "local_file" "HTTPRoute-boutique" {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ######## /Platform's k8s resources manifests
 
 
