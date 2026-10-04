@@ -3,69 +3,69 @@
 adservice:
     name: adservice
     port: 9555
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/adservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/adservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # cartservice variables
 cartservice:
     name: cartservice
     port: 7070
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # checkoutservice variables
 checkoutservice:
     name: checkoutservice
     port: 5050
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/checkoutservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/checkoutservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # currencyservice variables
 currencyservice:
     name: currencyservice
     port: 7000
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/currencyservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/currencyservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # emailservice variables
 emailservice:
     name: emailservice
     port: 8080
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/emailservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/emailservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # frontend variables
 frontend:
     name: frontend
     port: 8080
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/frontend:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/frontend:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # paymentservice variables
 paymentservice:
     name: paymentservice
     port: 50051
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/paymentservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/paymentservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # productcatalogservice variables
 productcatalogservice:
     name: productcatalogservice
     port: 3550
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/productcatalogservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/productcatalogservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # recommendationservice variables
 recommendationservice:
     name: recommendationservice
     port: 8080
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/recommendationservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/recommendationservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
 # shippingservice variables
 shippingservice:
     name: shippingservice
     port: 50051
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/shippingservice:release-v0.10.7-237b503-b197
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/shippingservice:release-v0.10.7-99c7b60-b199
     replica: 1
 
