@@ -8,8 +8,11 @@
     "namespace": "gateway-system"
   "rules":
   - "backendRefs":
-    - "name": "frontend"
+    - "group": ""
+      "kind": "Service"
+      "name": "frontend"
       "port": 8080
+      "weight": 1
     "matches":
     - "path":
         "type": "PathPrefix"

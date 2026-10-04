@@ -211,7 +211,13 @@ resource "local_file" "HTTPRoute-boutique" {
       rules = [
         {
           matches = [ { path = { type = "PathPrefix", value = "/" } } ]
-          backendRefs = [ { name="frontend", port= 8080}]
+          backendRefs = [ { 
+            name="frontend"
+            port= 8080 
+            group = "" 
+            kind = "Service"
+            weight = 1
+          }]
         }
       ]
     }
@@ -220,7 +226,7 @@ resource "local_file" "HTTPRoute-boutique" {
 
 
 resource "local_file" "TargetGroupConfiguration-boutique" {
-  filename = "../../boutique-helm/templates/targetGroupcCnfig.yaml"
+  filename = "../../boutique-helm/templates/targetGroupConfig.yaml"
   content = yamlencode({
 
     apiVersion = "gateway.k8s.aws/v1beta1"
