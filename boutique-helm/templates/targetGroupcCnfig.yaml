@@ -1,0 +1,9 @@
+"apiVersion": "gateway.k8s.aws/v1beta1"
+"kind": "TargetGroupConfiguration"
+"metadata":
+  "name": "frontend-tg"
+"spec":
+  "defaultConfiguration":
+    "targetType": "ip"
+  "targetReference":
+    "name": "frontend"
