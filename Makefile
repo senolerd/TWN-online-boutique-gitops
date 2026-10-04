@@ -23,6 +23,9 @@ platform:
 	echo "platform"
 	terraform -chdir=IaC/20-platform init
 	terraform -chdir=IaC/20-platform apply
+	git add .
+	git commit -m "Deployment removed ArgoCD apps added [skip ci]"
+	git push origin main
 
 # dns:
 # 	echo "platform"
@@ -34,4 +37,6 @@ clean:
 	if [ $$? != 0 ] ; then \
 		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
 	fi 
-	@echo "\n Don't forget to push newly created argocd application yaml files to repository \n\n\n "
+	git add .
+	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
+	git push origin main

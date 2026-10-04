@@ -33,7 +33,7 @@ resource "kubernetes_manifest" "app-of-apps" {
 }
 
 resource "local_file" "gateway-api-crds-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/10-gateway-api-crds.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/10-gateway-api-crds.app.yaml"
   content = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
@@ -73,7 +73,7 @@ resource "local_file" "gateway-api-crds-app" {
 }
 
 resource "local_file" "aws-load-balancer-controller-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/20-aws-load-balancer-controller.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/20-aws-load-balancer-controller.app.yaml"
   content = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
@@ -94,8 +94,8 @@ resource "local_file" "aws-load-balancer-controller-app" {
           releaseName = "aws-load-balancer-controller"
           valuesObject = {
             clusterName = "my-proj-dev"
-            region      = data.terraform_remote_state.eks_core.outputs.region
-            vpcId       = data.terraform_remote_state.eks_core.outputs.vpc_id
+            region      = data.terraform_remote_state.infra.outputs.region
+            vpcTags     = { Name = data.terraform_remote_state.infra.outputs.vpc_name}
             serviceAccount = {
               create = true
               name   = "aws-load-balancer-controller"
@@ -131,7 +131,7 @@ resource "local_file" "aws-load-balancer-controller-app" {
 
 
 resource "local_file" "gatewayclass-yaml" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/platform/gatewayclass.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/gatewayclass.app.yaml"
   content = yamlencode({
 
     apiVersion = "gateway.networking.k8s.io/v1"
@@ -146,7 +146,7 @@ resource "local_file" "gatewayclass-yaml" {
 }
 
 resource "local_file" "loadbalancerconfiguration-yaml" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/platform/loadbalancerconfiguration.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/loadbalancerconfiguration.app.yaml"
   content = yamlencode({
 
     apiVersion = "gateway.k8s.aws/v1beta1"
@@ -162,7 +162,7 @@ resource "local_file" "loadbalancerconfiguration-yaml" {
 }
 
 resource "local_file" "gateway-yaml" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/platform/gateway.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/gateway.app.yaml"
   content = yamlencode({
 
 
@@ -203,7 +203,7 @@ resource "local_file" "HTTPRoute-boutique" {
     apiVersion = "gateway.networking.k8s.io/v1"
     kind       = "HTTPRoute"
     metadata = {
-      name =  "boutique-${data.terraform_remote_state.eks_core.outputs.env}"
+      name =  "boutique-${data.terraform_remote_state.infra.outputs.env}"
     }
     spec = {
       parentRefs = [
@@ -224,7 +224,7 @@ resource "local_file" "HTTPRoute-boutique" {
 
 
 resource "local_file" "gateway-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/30-gateway.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/30-gateway.app.yaml"
   content = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
@@ -258,12 +258,12 @@ resource "local_file" "gateway-app" {
 }
 
 resource "local_file" "boutique-helm-app" {
-  filename = "${data.terraform_remote_state.eks_core.outputs.argocd-dir}/apps/50-boutique-app-${data.terraform_remote_state.eks_core.outputs.env}.app.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/50-boutique-app-${data.terraform_remote_state.infra.outputs.env}.app.yaml"
   content = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
-      name      = "boutique-${data.terraform_remote_state.eks_core.outputs.env}-tf"
+      name      = "boutique-${data.terraform_remote_state.infra.outputs.env}-tf"
       namespace = "argocd"
       annotations = {
         "argocd.argoproj.io/sync-wave" : "50"
@@ -278,7 +278,7 @@ resource "local_file" "boutique-helm-app" {
         targetRevision = "HEAD"
       }
       destination = {
-        namespace = "boutique-${data.terraform_remote_state.eks_core.outputs.env}"
+        namespace = "boutique-${data.terraform_remote_state.infra.outputs.env}"
         name      = "in-cluster"
       }
       syncPolicy = {

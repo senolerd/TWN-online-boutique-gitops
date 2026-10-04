@@ -12,10 +12,10 @@ terraform {
 }
 
 provider "aws" {
-  region = data.terraform_remote_state.eks_core.outputs.eks_cluster_region
+  region = data.terraform_remote_state.infra.outputs.eks_cluster_region
 }
 
-data "terraform_remote_state" "eks_core" {
+data "terraform_remote_state" "infra" {
   backend = "local"
   config = {
     path = "../00-infra/terraform.tfstate"
@@ -23,12 +23,12 @@ data "terraform_remote_state" "eks_core" {
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = data.terraform_remote_state.eks_core.outputs.eks_cluster_name
+  name = data.terraform_remote_state.infra.outputs.eks_cluster_name
 }
 
 provider "kubernetes" {
-  host                   = data.terraform_remote_state.eks_core.outputs.eks_cluster_endpoint
-  cluster_ca_certificate = base64decode(data.terraform_remote_state.eks_core.outputs.eks_cluster_ca_data)
+  host                   = data.terraform_remote_state.infra.outputs.eks_cluster_endpoint
+  cluster_ca_certificate = base64decode(data.terraform_remote_state.infra.outputs.eks_cluster_ca_data)
   token                  = data.aws_eks_cluster_auth.cluster.token
 }
 

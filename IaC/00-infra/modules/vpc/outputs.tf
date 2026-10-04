@@ -3,6 +3,11 @@ output "vpc_id" {
   value = aws_vpc.project_vpc.id
 }
 
+output "vpc_name" {
+  description = "VPC NAME"
+  value = "${var.environment}-${var.project_name}"
+}
+
 output "private_subnets" {
   value = local.private_subnets
 }
