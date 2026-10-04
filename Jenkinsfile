@@ -6,7 +6,7 @@ pipeline{
         BOUTIQUE_REPO = "https://github.com/GoogleCloudPlatform/microservices-demo.git"
         BOUTIQUE_BRANCH = "release/v0.10.7"
         BOUTIQUE_HELM_CHART_NAME = "boutique-helm"
-        BOUTIQUE_HELM_CHART_VER = "0.1.0"
+        BOUTIQUE_HELM_CHART_VER = "0.1.1"
         // AWS
         AWS_CRED_ID = "aws_devops_cred" // *
         AWS_REGION = "us-east-1"
