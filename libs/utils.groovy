@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////
+// 
+// ToDo: Add redis
+// 
+////////////////////////////////////////////////////
+
+
 services = [
     adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
     cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
@@ -231,8 +238,5 @@ def updateGithubHelmChart(){
 
 }
 
-
-// - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-//   value: "{{ .Values.shoppingassistantservice.name }}:{{ .Values.shoppingassistantservice.port }}"
 
 return this

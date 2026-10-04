@@ -247,8 +247,6 @@ resource "local_file" "TargetGroupConfiguration-boutique" {
   })
 }
 
-
-
 ######## /Platform's k8s resources manifests
 
 
@@ -326,3 +324,5 @@ resource "local_file" "boutique-helm-app" {
 
 
 
+# ToDo: Add redis
+# ToDo: Add two url suffix for argo and boutique
