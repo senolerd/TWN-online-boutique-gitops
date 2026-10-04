@@ -94,7 +94,7 @@ def helmChart(){
             rm -rf templates/*
             echo "" > values.yaml
         """
-
+        
         // Creating templates and values.yaml 
         for (service in services.entrySet()){ 
             _addServiceVarToValuesYaml(service.value)
@@ -103,11 +103,10 @@ def helmChart(){
 
         // Create new Chart.yaml
         _createHelmChartYaml(env.APP_VERSION)
-
-        // Adding aux services template
-        _addRedis()
-
     }
+
+    // Adding aux services template
+    _addRedis()
 }
 
 def _addServiceVarToValuesYaml(Map service){
