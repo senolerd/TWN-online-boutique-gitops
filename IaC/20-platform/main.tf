@@ -206,7 +206,11 @@ resource "local_file" "HTTPRoute-boutique" {
     }
     spec = {
       parentRefs = [
-        {name = "public-gw", namespace = "gateway-system" }
+        { 
+          group = "gateway.networking.k8s.io"
+          kind = "Gateway"
+          name = "public-gw", 
+          namespace = "gateway-system" }
       ]
       rules = [
         {

@@ -4,7 +4,9 @@
   "name": "boutique-prod"
 "spec":
   "parentRefs":
-  - "name": "public-gw"
+  - "group": "gateway.networking.k8s.io"
+    "kind": "Gateway"
+    "name": "public-gw"
     "namespace": "gateway-system"
   "rules":
   - "backendRefs":
