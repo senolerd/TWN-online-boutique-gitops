@@ -37,6 +37,6 @@ clean:
 	if [ $$? != 0 ] ; then \
 		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
 	fi 
-	git add .
-	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
-	git push origin main
+# 	git add .
+# 	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
+# 	git push origin main
