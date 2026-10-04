@@ -239,7 +239,10 @@ resource "local_file" "TargetGroupConfiguration-boutique" {
       
     spec = {
       targetReference = {  name =  "frontend"  }
-      defaultConfiguration = {  targetType = "ip"  }
+      defaultConfiguration = { 
+        targetType = "ip"
+        healthCheckConfig = {healthCheckPath =  "/_healthz" }
+      }
     }
   })
 }
