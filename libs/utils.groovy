@@ -1,9 +1,3 @@
-////////////////////////////////////////////////////
-// 
-// ToDo: Add redis
-// 
-////////////////////////////////////////////////////
-
 
 services = [
     adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
@@ -20,6 +14,7 @@ services = [
 ]
 
 def downloadSource(branch){
+  // A fresh start
     sh"""
         rm -rf microservices-demo
         git clone --depth 1 --branch $branch ${env.BOUTIQUE_REPO}
@@ -93,7 +88,6 @@ def helmChart(){
     echo 'CREATING HELM CHART'
     sh "rm -rf  ${BOUTIQUE_HELM_CHART_NAME}"
     sh "helm create ${BOUTIQUE_HELM_CHART_NAME}"
-
     // Cleaning the new chart
     dir(env.BOUTIQUE_HELM_CHART_NAME) {
         sh """
@@ -108,7 +102,11 @@ def helmChart(){
         }
 
         // Create new Chart.yaml
-        _updateChartYaml(env.APP_VERSION)
+        _createHelmChartYaml(env.APP_VERSION)
+
+        // Adding aux services template
+        _addRedis()
+
     }
 }
 
@@ -211,7 +209,7 @@ def _addDeploymentAndServiceTemplate(Map service){
     """.stripIndent()
 }
 
-def _updateChartYaml(appver){
+def _createHelmChartYaml(appver){
 
     sh """
         cat << EOF > Chart.yaml
@@ -225,6 +223,58 @@ def _updateChartYaml(appver){
     """.stripIndent()
 }
 
+
+
+def _addRedis(){
+
+    sh """
+      cat << EOF > ${env.BOUTIQUE_HELM_CHART_NAME}/templates/redis-cart.yaml
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: "redis-cart-deployment"
+        labels:
+          app: "redis-cart"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: "redis-cart"
+        template:
+          metadata:
+            labels:
+              app: "redis-cart"
+          spec:
+            containers:
+            - name: "redis-cart"
+              image: "docker.io/redis:latest"
+              ports:
+              - containerPort: 6379
+      ---
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: "redis-cart"
+      spec:
+        selector:
+          app: "redis-cart"
+        ports:
+        - protocol: TCP
+          port: 6379
+          targetPort: 6379
+      EOF
+    """.stripIndent()
+
+
+
+
+
+
+
+
+}
+
+
 def updateGithubHelmChart(){
     sh """ 
         git config --replace-all user.email ${env.CI_BOT_EMAIL}
@@ -237,6 +287,11 @@ def updateGithubHelmChart(){
     }
 
 }
+
+
+
+
+
 
 
 return this
