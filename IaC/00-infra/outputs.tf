@@ -34,3 +34,8 @@ output "argocd-dir" {
   value = var.argocd-dir
 }
 
+output "hosted_zone_name" {
+  value = var.hosted_zone_name
+}
+
+

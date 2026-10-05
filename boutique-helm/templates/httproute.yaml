@@ -3,6 +3,8 @@
 "metadata":
   "name": "boutique-prod"
 "spec":
+  "hostnames":
+  - "senolerd.xyz"
   "parentRefs":
   - "group": "gateway.networking.k8s.io"
     "kind": "Gateway"
