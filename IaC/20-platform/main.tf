@@ -93,7 +93,7 @@ resource "local_file" "aws-load-balancer-controller-app" {
         helm = {
           releaseName = "aws-load-balancer-controller"
           valuesObject = {
-            clusterName = "my-proj-dev"
+            clusterName = data.terraform_remote_state.infra.outputs.vpc_name
             region      = data.terraform_remote_state.infra.outputs.region
             vpcTags     = { Name = data.terraform_remote_state.infra.outputs.vpc_name}
             serviceAccount = {
@@ -324,17 +324,17 @@ resource "local_file" "boutique-helm-app" {
 
 ####### Route 53  
 
-data "aws_lbs" "project_lb" {
-  # region = data.terraform_remote_state.infra.outputs.region
-  tags = {
-    "elbv2.k8s.aws/cluster" = data.terraform_remote_state.infra.outputs.eks_cluster_name
-  }
-}
+# data "aws_lb" "project_lb" {
+#   region = data.terraform_remote_state.infra.outputs.region
+#   tags = {
+#     "elbv2.k8s.aws/cluster" = "my-proj-dev"
+#   }
+# }
 
 
-output "LB_INFO" {
-  value = data.aws_lbs.project_lb
-}
+# output "LB_INFO" {
+#   value = data.aws_lb.project_lb
+# }
 
 
 # data "aws_route53_zone" "my-hosted-zone" {
@@ -351,5 +351,106 @@ output "LB_INFO" {
 
 
 
-# ToDo: Add redis
 # ToDo: Add two url suffix for argo and boutique
+
+
+# LB_INFO = {
+#   "access_logs" = tolist([
+#     {
+#       "bucket" = ""
+#       "enabled" = false
+#       "prefix" = ""
+#     },
+#   ])
+#   "arn" = "arn:aws:elasticloadbalancing:us-east-1:823899318117:loadbalancer/app/k8s-gateways-publicgw-ac898c8fca/b29e095aa976c5db"
+#   "arn_suffix" = "app/k8s-gateways-publicgw-ac898c8fca/b29e095aa976c5db"
+#   "client_keep_alive" = 3600
+#   "connection_logs" = tolist([
+#     {
+#       "bucket" = ""
+#       "enabled" = false
+#       "prefix" = ""
+#     },
+#   ])
+#   "customer_owned_ipv4_pool" = ""
+#   "desync_mitigation_mode" = "defensive"
+#   "dns_name" = "k8s-gateways-publicgw-ac898c8fca-914920390.us-east-1.elb.amazonaws.com"
+#   "dns_record_client_routing_policy" = tostring(null)
+#   "drop_invalid_header_fields" = false
+#   "enable_cross_zone_load_balancing" = true
+#   "enable_deletion_protection" = false
+#   "enable_http2" = true
+#   "enable_prefix_for_ipv6_source_nat" = "off"
+#   "enable_tls_version_and_cipher_suite_headers" = false
+#   "enable_waf_fail_open" = false
+#   "enable_xff_client_port" = false
+#   "enable_zonal_shift" = false
+#   "enforce_security_group_inbound_rules_on_private_link_traffic" = ""
+#   "health_check_logs" = tolist([
+#     {
+#       "bucket" = ""
+#       "enabled" = false
+#       "prefix" = ""
+#     },
+#   ])
+#   "id" = "arn:aws:elasticloadbalancing:us-east-1:823899318117:loadbalancer/app/k8s-gateways-publicgw-ac898c8fca/b29e095aa976c5db"
+#   "idle_timeout" = 60
+#   "internal" = false
+#   "ip_address_type" = "ipv4"
+#   "ipam_pools" = tolist([])
+#   "load_balancer_type" = "application"
+#   "name" = "k8s-gateways-publicgw-ac898c8fca"
+#   "preserve_host_header" = false
+#   "region" = "us-east-1"
+#   "secondary_ips_auto_assigned_per_subnet" = tonumber(null)
+#   "security_groups" = toset([
+#     "sg-00c0ddfe60fd5f38a",
+#     "sg-074522fdee6519116",
+#   ])
+#   "subnet_mapping" = toset([
+#     {
+#       "allocation_id" = ""
+#       "ipv6_address" = ""
+#       "outpost_id" = ""
+#       "private_ipv4_address" = ""
+#       "subnet_id" = "subnet-04db35c633196fc15"
+#     },
+#     {
+#       "allocation_id" = ""
+#       "ipv6_address" = ""
+#       "outpost_id" = ""
+#       "private_ipv4_address" = ""
+#       "subnet_id" = "subnet-071f56a6a0aedfa16"
+#     },
+#     {
+#       "allocation_id" = ""
+#       "ipv6_address" = ""
+#       "outpost_id" = ""
+#       "private_ipv4_address" = ""
+#       "subnet_id" = "subnet-08b93d57b3228a4cf"
+#     },
+#     {
+#       "allocation_id" = ""
+#       "ipv6_address" = ""
+#       "outpost_id" = ""
+#       "private_ipv4_address" = ""
+#       "subnet_id" = "subnet-0b48fe1478d46462c"
+#     },
+#   ])
+#   "subnets" = toset([
+#     "subnet-04db35c633196fc15",
+#     "subnet-071f56a6a0aedfa16",
+#     "subnet-08b93d57b3228a4cf",
+#     "subnet-0b48fe1478d46462c",
+#   ])
+#   "tags" = tomap({
+#     "elbv2.k8s.aws/cluster" = "my-proj-dev"
+#     "gateway.k8s.aws.alb/resource" = "LoadBalancer"
+#     "gateway.k8s.aws.alb/stack" = "gateway-system/public-gw"
+#   })
+#   "timeouts" = null /* object */
+#   "vpc_id" = "vpc-027368ebcb64ecbd4"
+#   "xff_header_processing_mode" = "append"
+#   "zone_id" = "Z35SXDOTRQ7X7K"
+# }
+
