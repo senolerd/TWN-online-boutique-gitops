@@ -5,7 +5,7 @@ output "vpc_id" {
 
 output "vpc_name" {
   description = "VPC NAME"
-  value = "${var.environment}-${var.project_name}"
+  value = "${var.project_name}-${var.environment}"
 }
 
 output "private_subnets" {

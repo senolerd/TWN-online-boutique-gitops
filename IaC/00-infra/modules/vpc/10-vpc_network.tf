@@ -2,7 +2,7 @@ resource "aws_vpc" "project_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   tags = {
-    "Name" : "${var.environment}-${var.project_name}"
+    "Name" : "${var.project_name}-${var.environment}"
     "managedBy" : "terraform"
     "project": "${var.project_name}"
   }
