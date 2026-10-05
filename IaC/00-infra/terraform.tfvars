@@ -14,10 +14,11 @@ subnets = {
   subnet8 = { cidr = "10.10.8.0/24", az = "us-east-1d", is_public = true }
 }
 endpoints_interface = [ "ecr.api", "ecr.dkr", "ec2", "sts", "eks-auth", "elasticloadbalancing" ]
-
 instance_types = {
   dev =  ["t3.small"] 
   prod = ["t3.medium"]
 } 
-
 argocd-dir= "../../argocd"
+
+
+hosted_zone_name = "senolerd.xyz"

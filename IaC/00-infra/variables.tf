@@ -39,4 +39,7 @@ variable "argocd-dir" {
 }
 
 
-
+variable "hosted_zone_name" {
+  description = "Domain name that hosted from AWS account holder"
+  type = string
+}

@@ -129,7 +129,6 @@ resource "local_file" "aws-load-balancer-controller-app" {
 ######## Platform's k8s resources manifests
 
 
-
 resource "local_file" "gatewayclass-yaml" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/gatewayclass.app.yaml"
   content = yamlencode({
@@ -321,6 +320,34 @@ resource "local_file" "boutique-helm-app" {
     }
   })
 }
+
+
+####### Route 53  
+
+data "aws_lbs" "project_lb" {
+  # region = data.terraform_remote_state.infra.outputs.region
+  tags = {
+    "elbv2.k8s.aws/cluster" = data.terraform_remote_state.infra.outputs.eks_cluster_name
+  }
+}
+
+
+output "LB_INFO" {
+  value = data.aws_lbs.project_lb
+}
+
+
+# data "aws_route53_zone" "my-hosted-zone" {
+#   name         = "${data.terraform_remote_state.infra.outputs.hosted_zone_name}"
+# }
+
+# resource "aws_route53_record" "boutique-A-record" {
+#   zone_id = data.aws_route53_zone.my-hosted-zone.id
+#   name    = "boutique.${data.aws_route53_zone.selected.name}"
+#   type    = "A"
+#   ttl     = "300"
+# }
+
 
 
 
