@@ -124,7 +124,14 @@ resource "aws_eks_addon" "external-dns" {
     role_arn = aws_iam_role.external-dns-role.arn
     service_account = "external-dns"
   }
-  namespace_config { namespace = "external-dns" }
+
+  configuration_values = jsonencode({
+    sources = [ "gateway-httproute" ]
+    domainFilters = [ var.hosted_zone_name]
+  })
+  namespace_config { 
+    namespace = "external-dns" 
+  }
 }
 
 

@@ -13,3 +13,6 @@ variable "instance_types" {
   type = map(list(string))
   }
 
+variable "hosted_zone_name" {
+  type = string
+}
