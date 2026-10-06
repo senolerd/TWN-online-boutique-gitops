@@ -1,3 +1,5 @@
+
+#### APP of APPS
 resource "kubernetes_manifest" "app-of-apps" {
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
@@ -32,6 +34,7 @@ resource "kubernetes_manifest" "app-of-apps" {
   }
 }
 
+#### ArgoCD  (App of Apps pattern ) apps/ yaml files
 resource "local_file" "gateway-api-crds-app" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/10-gateway-api-crds.app.yaml"
   content = yamlencode({
@@ -126,177 +129,6 @@ resource "local_file" "aws-load-balancer-controller-app" {
   })
 }
 
-######## Platform's k8s resources manifests
-resource "local_file" "gatewayclass-yaml" {
-  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/gatewayclass.app.yaml"
-  content = yamlencode({
-
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "GatewayClass"
-    metadata = {
-      name        = "aws-alb"
-      annotations = { "argocd.argoproj.io/sync-wave" = "0" }
-    }
-    spec = { controllerName = "gateway.k8s.aws/alb" }
-
-  })
-}
-
-resource "local_file" "loadbalancerconfiguration-yaml" {
-  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/loadbalancerconfiguration.app.yaml"
-  content = yamlencode({
-
-    apiVersion = "gateway.k8s.aws/v1beta1"
-    kind       = "LoadBalancerConfiguration"
-    metadata = {
-      name        = "public-alb"
-      namespace   = "gateway-system"
-      annotations = { "argocd.argoproj.io/sync-wave" = "0" }
-    }
-    spec = { scheme = "internet-facing" }
-
-  })
-}
-
-data "aws_acm_certificate" "my-domain" {
-  domain   = data.terraform_remote_state.infra.outputs.hosted_zone_name
-  statuses = ["ISSUED"]
-}
-
-resource "local_file" "gateway-yaml" {
-  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/gateway.app.yaml"
-  content = yamlencode({
-
-
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "Gateway"
-    metadata = {
-      name      = "public-gw"
-      namespace = "gateway-system"
-      annotations = {
-        # "alb.ingress.kubernetes.io/scheme" =  "internet-facing" # done at LoadBalancerConfiguration
-        "alb.ingress.kubernetes.io/certificate-arn" = data.aws_acm_certificate.my-domain.arn
-        "alb.ingress.kubernetes.io/ssl-redirect"    = "443" # Auto redirect all domains to TLS... meh.. i don't know
-      }
-    }
-    spec = {
-      gatewayClassName = "aws-alb"
-      infrastructure = {
-        parametersRef = {
-          group = "gateway.k8s.aws"
-          kind  = "LoadBalancerConfiguration"
-          name  = "public-alb"
-        }
-      }
-      listeners = [
-        {
-          name     = "http"
-          protocol = "HTTP"
-          port     = 80
-          allowedRoutes = {
-            namespaces = { from = "All" }
-          }
-        },
-        {
-          name     = "https"
-          protocol = "HTTPS"
-          port     = 443
-          allowedRoutes = {
-            namespaces = { from = "All" }
-          }
-        }
-      ]
-    }
-  })
-}
-
-resource "local_file" "HTTPRoute-boutique" {
-  filename = "../../boutique-helm/templates/httproute.yaml"
-  content = yamlencode({
-
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "HTTPRoute"
-    metadata = {
-      name = "boutique-${data.terraform_remote_state.infra.outputs.env}"
-    }
-    spec = {
-      hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
-      parentRefs = [
-        {
-          group = "gateway.networking.k8s.io"
-          kind  = "Gateway"
-          name  = "public-gw",
-        namespace = "gateway-system" }
-      ]
-      rules = [
-        {
-          matches = [{ path = { type = "PathPrefix", value = "/" } }]
-          backendRefs = [{
-            name   = "frontend"
-            port   = 8080
-            group  = ""
-            kind   = "Service"
-            weight = 1
-          }]
-        }
-      ]
-    }
-  })
-}
-
-resource "local_file" "TargetGroupConfiguration-boutique" {
-  filename = "../../boutique-helm/templates/targetGroupConfig.yaml"
-  content = yamlencode({
-
-    apiVersion = "gateway.k8s.aws/v1beta1"
-    kind       = "TargetGroupConfiguration"
-    metadata   = { name = "frontend-tg" }
-
-    spec = {
-      targetReference = { name = "frontend" }
-      defaultConfiguration = {
-        targetType        = "ip"
-        healthCheckConfig = { healthCheckPath = "/_healthz" }
-      }
-    }
-  })
-}
-######## /Platform's k8s resources manifests
-
-resource "local_file" "gateway-app" {
-  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/30-gateway.app.yaml"
-  content = yamlencode({
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata = {
-      name        = "gateway-tf"
-      namespace   = "argocd"
-      annotations = { "argocd.argoproj.io/sync-wave" = "30" }
-      finalizers  = ["resources-finalizer.argocd.argoproj.io"]
-    }
-    spec = {
-      project = "default"
-      source = {
-        repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
-        path           = "argocd/platform"
-        targetRevision = "HEAD"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = "gateway-system"
-      }
-      syncPolicy = {
-        automated   = { prune = true, selfHeal = true }
-        syncOptions = ["CreateNamespace=true"]
-        retry = {
-          limit   = 5
-          backoff = { duration = "10s", factor = 2, maxDuration = "2m" }
-        }
-      }
-    }
-  })
-}
-
 resource "local_file" "boutique-helm-app" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/50-boutique-app-${data.terraform_remote_state.infra.outputs.env}.app.yaml"
   content = yamlencode({
@@ -335,8 +167,128 @@ resource "local_file" "boutique-helm-app" {
   })
 }
 
-######### ArgoCD route and TGC
 
+
+
+#### ArgoCD platform/ standalone (no App of Apps pattern) yaml files
+resource "local_file" "platform-app" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/30-gateway.app.yaml"
+  content = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name        = "platform-tf"
+      namespace   = "argocd"
+      finalizers  = ["resources-finalizer.argocd.argoproj.io"]
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = "https://github.com/senolerd/TWN-online-boutique-gitops.git"
+        path           = "argocd/platform"
+        targetRevision = "HEAD"
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
+        namespace = "gateway-system"
+      }
+      syncPolicy = {
+        automated   = { prune = true, selfHeal = true }
+        syncOptions = ["CreateNamespace=true"]
+        retry = {
+          limit   = 5
+          backoff = { duration = "10s", factor = 2, maxDuration = "2m" }
+        }
+      }
+    }
+  })
+}
+
+resource "local_file" "gatewayclass-yaml" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/10-gatewayclass.app.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "GatewayClass"
+    metadata = {
+      name        = "aws-alb"
+      annotations = { "argocd.argoproj.io/sync-wave" = "10" }
+    }
+    spec = { controllerName = "gateway.k8s.aws/alb" }
+
+  })
+}
+
+resource "local_file" "loadbalancerconfiguration-yaml" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/20-loadbalancerconfiguration.app.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.k8s.aws/v1beta1"
+    kind       = "LoadBalancerConfiguration"
+    metadata = {
+      name        = "public-alb-config"
+      namespace   = "gateway-system"
+      annotations = { "argocd.argoproj.io/sync-wave" = "20" }
+    }
+    spec = { scheme = "internet-facing" }
+
+  })
+}
+
+data "aws_acm_certificate" "my-domain" {
+  domain   = data.terraform_remote_state.infra.outputs.hosted_zone_name
+  statuses = ["ISSUED"]
+}
+
+resource "local_file" "gateway-yaml" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/30-platform/gateway.app.yaml"
+  content = yamlencode({
+
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "Gateway"
+    metadata = {
+      name      = "public-gw"
+      namespace = "gateway-system"
+      annotations = {
+        annotations = { "argocd.argoproj.io/sync-wave" = "30" }
+        # "alb.ingress.kubernetes.io/scheme" =  "internet-facing" # done at LoadBalancerConfiguration
+        "alb.ingress.kubernetes.io/certificate-arn" = data.aws_acm_certificate.my-domain.arn
+        "alb.ingress.kubernetes.io/ssl-redirect"    = "443" # Auto redirect all domains to TLS... meh.. i don't know
+      }
+    }
+    spec = {
+      gatewayClassName = "aws-alb"
+      infrastructure = {
+        parametersRef = {
+          group = "gateway.k8s.aws"
+          kind  = "LoadBalancerConfiguration"
+          name  = "public-alb"
+        }
+      }
+      listeners = [
+        {
+          name     = "http"
+          protocol = "HTTP"
+          port     = 80
+          allowedRoutes = {
+            namespaces = { from = "All" }
+          }
+        },
+        {
+          name     = "https"
+          protocol = "HTTPS"
+          port     = 443
+          allowedRoutes = {
+            namespaces = { from = "All" }
+          }
+        }
+      ]
+    }
+  })
+}
+
+# ArgoCD route and TGC
 resource "local_file" "targetGroupConfiguration-argocd-ui" {
   filename = "../../argocd/platform/argocd-tgc.yaml"
   content = yamlencode({
@@ -346,6 +298,8 @@ resource "local_file" "targetGroupConfiguration-argocd-ui" {
     metadata   = { 
       name = "argocd-tgc" 
       namespace = "argocd"
+      annotations = { "argocd.argoproj.io/sync-wave" = "40" }
+
     }
     spec = {
       targetReference = { name = "argocd-server" }
@@ -357,7 +311,6 @@ resource "local_file" "targetGroupConfiguration-argocd-ui" {
   })
 }
 
-
 resource "local_file" "HTTPRoute-argocd-ui" {
   filename = "../../argocd/platform/argocd-ui.yaml"
   content = yamlencode({
@@ -366,6 +319,8 @@ resource "local_file" "HTTPRoute-argocd-ui" {
     metadata = {
       name = "argocd-${data.terraform_remote_state.infra.outputs.env}-tgc"
       namespace = "argocd"
+      annotations = { "argocd.argoproj.io/sync-wave" = "50" }
+
     }
     spec = {
       hostnames = [ "argocd.${data.terraform_remote_state.infra.outputs.hosted_zone_name}" ]
@@ -394,4 +349,86 @@ resource "local_file" "HTTPRoute-argocd-ui" {
     }
   })
 }
+
+
+
+
+#### Boutique helm chart update for route and TGC
+resource "local_file" "HTTPRoute-boutique" {
+  filename = "../../boutique-helm/templates/httproute.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name = "boutique-${data.terraform_remote_state.infra.outputs.env}"
+      annotations = {
+        annotations = { "argocd.argoproj.io/sync-wave" = "10" }
+      }      
+    }
+    spec = {
+      hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
+      parentRefs = [
+        {
+          group = "gateway.networking.k8s.io"
+          kind  = "Gateway"
+          name  = "public-gw",
+        namespace = "gateway-system" }
+      ]
+      rules = [
+        {
+          matches = [{ path = { type = "PathPrefix", value = "/" } }]
+          backendRefs = [{
+            name   = "frontend"
+            port   = 8080
+            group  = ""
+            kind   = "Service"
+            weight = 1
+          }]
+        }
+      ]
+    }
+  })
+}
+
+resource "local_file" "TargetGroupConfiguration-boutique" {
+  filename = "../../boutique-helm/templates/targetGroupConfig.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.k8s.aws/v1beta1"
+    kind       = "TargetGroupConfiguration"
+    metadata   = { 
+      name = "frontend-tg" 
+      annotations = {
+        annotations = { "argocd.argoproj.io/sync-wave" = "20" }
+      } 
+    }
+
+    spec = {
+      targetReference = { name = "frontend" }
+      defaultConfiguration = {
+        targetType        = "ip"
+        healthCheckConfig = { healthCheckPath = "/_healthz" }
+      }
+    }
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

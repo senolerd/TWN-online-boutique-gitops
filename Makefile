@@ -3,12 +3,11 @@
 # The "make" command reads Makefile to find what to run.
 
 help:
-	reset
-	@echo "\n For sanity, follow numeric orders to create whole environment. To delete, for same reason follow the reverse order.  \n\n\n \
-	1 - make infra: creates AWS VPC and AWS EKS cluster,\n \
-	2 - make bootstrap: installs argo on eks,\n \
-	3 - make platform: creates app, \n \
-	4 - make dns: dns works,\n"
+	@printf "\nFollow the numeric order to build; reverse it to tear down.\n\n"
+	@printf "  1 - make infra      : VPC + EKS\n"
+	@printf "  2 - make bootstrap  : Argo CD on EKS\n"
+	@printf "  3 - make platform   : root app (platform + apps via Argo CD)\n"
+	@printf "      make clean      : ordered teardown\n\n"
 
 infra:
 	terraform -chdir=IaC/00-infra init
@@ -40,3 +39,7 @@ clean:
 	git add .
 	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
 	git push origin main
+
+argo-password:
+	@kubectl -n argocd get secret argocd-initial-admin-secret \
+	  -o jsonpath='{.data.password}' | base64 -d; echo

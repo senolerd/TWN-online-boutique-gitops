@@ -4,16 +4,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 3.3.0"
     }
-    
     aws = {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
-
-    # kubernetes = {
-    #   source  = "hashicorp/kubernetes"
-    #   version = "3.2.1"
-    # }
   }
 }
 
@@ -28,19 +22,9 @@ data "terraform_remote_state" "eks_core" {
   }
 }
 
-
 data "aws_eks_cluster_auth" "cluster" {
   name = data.terraform_remote_state.eks_core.outputs.eks_cluster_name
 }
-
-# provider "kubernetes" {
-#     host = data.terraform_remote_state.eks_core.outputs.eks_cluster_endpoint
-#     cluster_ca_certificate = base64decode(data.terraform_remote_state.eks_core.outputs.eks_cluster_ca_data)
-#     token = data.aws_eks_cluster_auth.cluster.token  
-# }
-
-
-
 
 provider "helm" {
   kubernetes = {
