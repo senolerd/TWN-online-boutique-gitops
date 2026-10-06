@@ -335,6 +335,27 @@ resource "local_file" "boutique-helm-app" {
   })
 }
 
+######### ArgoCD route and TGC
+
+resource "local_file" "targetGroupConfiguration-argocd-ui" {
+  filename = "../../argocd/platform/argocd-tgc.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.k8s.aws/v1beta1"
+    kind       = "TargetGroupConfiguration"
+    metadata   = { 
+      name = "argocd-tgc" 
+      namespace = "argocd"
+    }
+    spec = {
+      targetReference = { name = "argocd-server" }
+      defaultConfiguration = {
+        targetType        = "ip"
+        healthCheckConfig = { healthCheckPath = "/healthz" }
+      }
+    }
+  })
+}
 
 
 resource "local_file" "HTTPRoute-argocd-ui" {
@@ -373,3 +394,4 @@ resource "local_file" "HTTPRoute-argocd-ui" {
     }
   })
 }
+

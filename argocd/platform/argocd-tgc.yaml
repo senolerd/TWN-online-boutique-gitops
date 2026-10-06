@@ -1,0 +1,12 @@
+"apiVersion": "gateway.k8s.aws/v1beta1"
+"kind": "TargetGroupConfiguration"
+"metadata":
+  "name": "argocd-tgc"
+  "namespace": "argocd"
+"spec":
+  "defaultConfiguration":
+    "healthCheckConfig":
+      "healthCheckPath": "/healthz"
+    "targetType": "ip"
+  "targetReference":
+    "name": "argocd-server"
