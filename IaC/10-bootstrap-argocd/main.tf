@@ -14,35 +14,39 @@ resource "helm_release" "argocd" {
     create_namespace = true
     values = [yamlencode({
         configs = {
-        cm = {
-            "resource.customizations.health.argoproj.io_Application" = <<-EOT
-            hs = {}
-            hs.status = "Progressing"
-            hs.message = ""
-            if obj.status ~= nil and obj.status.health ~= nil then
-                hs.status = obj.status.health.status
-                if obj.status.health.message ~= nil then
-                hs.message = obj.status.health.message
-                end
-            end
-            return hs
-            EOT
-
-            "resource.customizations.health.gateway.networking.k8s.io_Gateway" = <<-EOT
-            hs = { status = "Progressing", message = "Waiting for Gateway to be Programmed" }
-            if obj.status ~= nil and obj.status.conditions ~= nil then
-                for _, c in ipairs(obj.status.conditions) do
-                if c.type == "Programmed" then
-                    if c.status == "True" then
-                    hs.status = "Healthy"
+            params = {
+                "server.insecure" = true
+            }
+            
+            cm = {
+                "resource.customizations.health.argoproj.io_Application" = <<-EOT
+                hs = {}
+                hs.status = "Progressing"
+                hs.message = ""
+                if obj.status ~= nil and obj.status.health ~= nil then
+                    hs.status = obj.status.health.status
+                    if obj.status.health.message ~= nil then
+                    hs.message = obj.status.health.message
                     end
-                    hs.message = c.message or hs.message
                 end
+                return hs
+                EOT
+
+                "resource.customizations.health.gateway.networking.k8s.io_Gateway" = <<-EOT
+                hs = { status = "Progressing", message = "Waiting for Gateway to be Programmed" }
+                if obj.status ~= nil and obj.status.conditions ~= nil then
+                    for _, c in ipairs(obj.status.conditions) do
+                    if c.type == "Programmed" then
+                        if c.status == "True" then
+                        hs.status = "Healthy"
+                        end
+                        hs.message = c.message or hs.message
+                    end
+                    end
                 end
-            end
-            return hs
-            EOT
-        }
+                return hs
+                EOT
+            }
         }
     })]    
 }
