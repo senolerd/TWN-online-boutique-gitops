@@ -160,6 +160,15 @@ resource "local_file" "loadbalancerconfiguration-yaml" {
   })
 }
 
+data "aws_acm_certificate" "my-domain" {
+  domain   = data.terraform_remote_state.infra.outputs.hosted_zone_name
+  statuses = ["ISSUED"]
+}
+
+output "VERT" {
+  value = data.aws_acm_certificate.my-domain.arn
+}
+
 resource "local_file" "gateway-yaml" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/gateway.app.yaml"
   content = yamlencode({
@@ -170,6 +179,11 @@ resource "local_file" "gateway-yaml" {
     metadata = {
       name      = "public-gw"
       namespace = "gateway-system"
+      annotations = {
+        # "alb.ingress.kubernetes.io/scheme" =  "internet-facing" # done at LoadBalancerConfiguration
+        # "alb.ingress.kubernetes.io/certificate-arn" = data.
+        # "alb.ingress.kubernetes.io/ssl-redirect" = "443" # Auto redirect all domains to TLS... meh.. i don't know
+      }
     }
     spec = {
       gatewayClassName = "aws-alb"
@@ -188,7 +202,15 @@ resource "local_file" "gateway-yaml" {
           allowedRoutes = {
             namespaces = { from = "All" }
           }
-        }
+        }, 
+        # {
+        #   name     = "https"
+        #   protocol = "HTTPS"
+        #   port     = 443
+        #   allowedRoutes = {
+        #     namespaces = { from = "All" }
+        #   }
+        # }
       ]
     }
   })
