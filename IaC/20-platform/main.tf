@@ -166,7 +166,7 @@ data "aws_acm_certificate" "my-domain" {
 }
 
 output "VERT" {
-  value = data.aws_acm_certificate.my-domain.arn
+  value = data.aws_acm_certificate.my-domain
 }
 
 resource "local_file" "gateway-yaml" {
