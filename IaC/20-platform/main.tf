@@ -204,7 +204,7 @@ resource "local_file" "HTTPRoute-boutique" {
       name =  "boutique-${data.terraform_remote_state.infra.outputs.env}"
     }
     spec = {
-      hostnames = [ "boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}." ]
+      hostnames = [ "boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}" ]
       parentRefs = [
         { 
           group = "gateway.networking.k8s.io"

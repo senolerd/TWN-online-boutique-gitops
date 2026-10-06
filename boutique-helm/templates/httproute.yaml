@@ -4,7 +4,7 @@
   "name": "boutique-prod"
 "spec":
   "hostnames":
-  - "boutique.senolerd.xyz."
+  - "boutique.senolerd.xyz"
   "parentRefs":
   - "group": "gateway.networking.k8s.io"
     "kind": "Gateway"
