@@ -138,7 +138,7 @@ resource "local_file" "platform-app" {
       name        = "platform-tf"
       namespace   = "argocd"
       finalizers  = ["resources-finalizer.argocd.argoproj.io"]
-      annotations = {"argocd.argoproj.io/sync-wave" = "30" }
+      annotations = { "argocd.argoproj.io/sync-wave" = "30" }
     }
     spec = {
       project = "default"
@@ -172,7 +172,7 @@ resource "local_file" "boutique-helm-app" {
       name      = "boutique-${data.terraform_remote_state.infra.outputs.env}-tf"
       namespace = "argocd"
       annotations = {
-        "argocd.argoproj.io/sync-wave" : "50"
+        "argocd.argoproj.io/sync-wave" = "50"
       }
       finalizers = ["resources-finalizer.argocd.argoproj.io"]
     }
@@ -253,7 +253,7 @@ resource "local_file" "gateway-yaml" {
       name      = "public-gw"
       namespace = "gateway-system"
       annotations = {
-        annotations = { "argocd.argoproj.io/sync-wave" = "30" }
+         "argocd.argoproj.io/sync-wave" = "30" 
         # "alb.ingress.kubernetes.io/scheme" =  "internet-facing" # done at LoadBalancerConfiguration
         "alb.ingress.kubernetes.io/certificate-arn" = data.aws_acm_certificate.my-domain.arn
         "alb.ingress.kubernetes.io/ssl-redirect"    = "443" # Auto redirect all domains to TLS... meh.. i don't know
@@ -362,9 +362,7 @@ resource "local_file" "HTTPRoute-boutique" {
     kind       = "HTTPRoute"
     metadata = {
       name = "boutique-${data.terraform_remote_state.infra.outputs.env}"
-      annotations = {
-        annotations = { "argocd.argoproj.io/sync-wave" = "10" }
-      }      
+      annotations = { "argocd.argoproj.io/sync-wave" = "10" }
     }
     spec = {
       hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
@@ -399,9 +397,7 @@ resource "local_file" "TargetGroupConfiguration-boutique" {
     kind       = "TargetGroupConfiguration"
     metadata   = { 
       name = "frontend-tg" 
-      annotations = {
-        annotations = { "argocd.argoproj.io/sync-wave" = "20" }
-      } 
+      annotations = { "argocd.argoproj.io/sync-wave" = "20" }
     }
 
     spec = {
