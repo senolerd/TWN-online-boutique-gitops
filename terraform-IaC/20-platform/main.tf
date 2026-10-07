@@ -1,5 +1,5 @@
 
-#### APP of APPS
+#### APP of APPS pattern root application
 resource "kubernetes_manifest" "app-of-apps" {
   manifest = {
     apiVersion = "argoproj.io/v1alpha1"
@@ -34,7 +34,7 @@ resource "kubernetes_manifest" "app-of-apps" {
   }
 }
 
-#### ArgoCD  (App of Apps pattern ) apps/ yaml files
+#### ArgoCD: Applications for "App of Apps pattern" 
 resource "local_file" "gateway-api-crds-app" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/10-gateway-api-crds.app.yaml"
   content = yamlencode({
@@ -135,7 +135,7 @@ resource "local_file" "platform-app" {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
-      name       = "platform-tf"
+      name       = "platform-app-tf"
       namespace  = "argocd"
       finalizers = ["resources-finalizer.argocd.argoproj.io"]
       annotations = {
@@ -171,7 +171,7 @@ resource "local_file" "boutique-helm-app" {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
-      name      = "boutique-${data.terraform_remote_state.infra.outputs.env}-tf"
+      name      = "boutique-helm-app-${data.terraform_remote_state.infra.outputs.env}-tf"
       namespace = "argocd"
       annotations = {
         "argocd.argoproj.io/sync-wave" = "50"
@@ -206,8 +206,7 @@ resource "local_file" "boutique-helm-app" {
 
 
 
-#### ArgoCD: platform/ standalone (no App of Apps pattern) yaml files
-
+# ArgoCD: Platform Application yaml files
 resource "local_file" "platform-gatewayclass-yaml" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/10-gatewayclass.app.yaml"
   content = yamlencode({
@@ -292,8 +291,8 @@ resource "local_file" "gateway-yaml" {
   })
 }
 
-# ArgoCD: route and TGC
-resource "local_file" "targetGroupConfiguration-argocd-ui" {
+# ArgoCD: ArgoCD UI HTTPRoute and Target Group Configuration
+resource "local_file" "argocd-ui-targetGroupConfiguration" {
   filename = "../../argocd/platform/50-argocd-tgc.yaml"
   content = yamlencode({
 
@@ -315,7 +314,7 @@ resource "local_file" "targetGroupConfiguration-argocd-ui" {
   })
 }
 
-resource "local_file" "HTTPRoute-argocd-ui" {
+resource "local_file" "argocd-ui-HTTPRoute" {
   filename = "../../argocd/platform/40-argocd-ui.yaml"
   content = yamlencode({
     apiVersion = "gateway.networking.k8s.io/v1"
@@ -355,8 +354,12 @@ resource "local_file" "HTTPRoute-argocd-ui" {
 }
 
 
-#### Boutique helm chart update for route and TGC
-resource "local_file" "TargetGroupConfiguration-boutique" {
+
+
+
+
+#### Boutique helm chart update for  HTTPRoute and Target Group Configuration
+resource "local_file" "boutique-TargetGroupConfiguration" {
   filename = "../../boutique-helm/templates/targetGroupConfig.yaml"
   content = yamlencode({
 
@@ -377,7 +380,7 @@ resource "local_file" "TargetGroupConfiguration-boutique" {
   })
 }
 
-resource "local_file" "HTTPRoute-boutique" {
+resource "local_file" "boutique-HTTPRoute" {
   filename = "../../boutique-helm/templates/httproute.yaml"
   content = yamlencode({
 

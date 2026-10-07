@@ -1,12 +1,22 @@
 
 This portfolio project: 
-- Pulls Google Online Boutique project source code branch, 
-- creates container images, 
-- pushes images to AWS ECR
-- creates a helm chart and a monolithic manifest
-- expects ArgoCD updates with the new chart or manifest
 
-"While this pipeline handles artifact creation and Helm packaging, the actual Ingress workflow (Ingress/Gateway API resources) is out of scope for this CD process."
+CI
+- Pulls Google Online Boutique project source code branch, 
+- Creates container images, 
+- Pushes images to AWS ECR
+- Creates a fresh/updated helm chart
+
+CD 
+- Expects ArgoCD to update EKS service and deployment with the new chart or infra manifest
+
+terraform-IAC (optional)
+- Creates AWS VPC Infrastructure and EKS
+- Installs ArgoCD on EKS. 
+- Installs Gateway API CRDs, Load Balancer Controller
+
+
+"While this pipeline handles artifact creation (OCI, helm chart), the actual Ingress workflow (Gateway API resources) is out of scope for this CD process."
 "The core application pipeline handles artifact creation and Helm packaging, while infrastructure-level networking (Ingress/Gateway API resources) is separated into a dedicated ArgoCD configuration."
 
 If the EKS cluster will be created via AWS EKS web console, at node group creation stage, role named "AmazonEKSNodeRole" should be exist and can be used. If the role is not exist, it can be created manually with some AWS managed permission to make node group EC2 instances can interact with AWS service endpoints. eksctl handles role works by itself. With this role, node group instances can pull ECR images without any ECR credentials and login steps. Required permissions for node group role;

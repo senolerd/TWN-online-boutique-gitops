@@ -1,6 +1,4 @@
-# A helper for IaC automation stages. 
-# If you looking what this file is, it is Makefile, the commands are working on the console writing "make {command}, like "make infra". 
-# The "make" command reads Makefile to find what to run.
+TARGET = terraform-IaC
 
 help:
 	@printf "\nFollow the numeric order to build; reverse it to tear down.\n\n"
@@ -10,18 +8,18 @@ help:
 	@printf "      make clean      : ordered teardown\n\n"
 
 infra:
-	terraform -chdir=IaC/00-infra init
-	terraform -chdir=IaC/00-infra refresh
-	terraform -chdir=IaC/00-infra apply
+	terraform -chdir=$(TARGET)/00-infra init
+	terraform -chdir=$(TARGET)/00-infra refresh
+	terraform -chdir=$(TARGET)/00-infra apply
 
 bootstrap:
-	terraform -chdir=IaC/10-bootstrap-argocd init
-	terraform -chdir=IaC/10-bootstrap-argocd apply
+	terraform -chdir=$(TARGET)/10-bootstrap-argocd init
+	terraform -chdir=$(TARGET)/10-bootstrap-argocd apply
 
 platform:
 	echo "platform"
-	terraform -chdir=IaC/20-platform init
-	terraform -chdir=IaC/20-platform apply
+	terraform -chdir=$(TARGET)/20-platform init
+	terraform -chdir=$(TARGET)/20-platform apply
 	git add .
 	git commit -m "ArgoCD apps added [skip ci]"
 	git push origin main
@@ -30,13 +28,13 @@ platform:
 # 	echo "platform"
 
 clean:
-	terraform -chdir=IaC/20-platform destroy -auto-approve
+	terraform -chdir=$(TARGET)/20-platform destroy -auto-approve
 	git add .
 	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
 	git push origin main
 
-	terraform -chdir=IaC/10-bootstrap-argocd destroy -auto-approve
-	terraform -chdir=IaC/00-infra destroy -auto-approve; \
+	terraform -chdir=$(TARGET)/10-bootstrap-argocd destroy -auto-approve
+	terraform -chdir=$(TARGET)/00-infra destroy -auto-approve; \
 	if [ $$? != 0 ] ; then \
 		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
 	fi 
