@@ -267,7 +267,7 @@ resource "local_file" "gateway-yaml" {
         parametersRef = {
           group = "gateway.k8s.aws"
           kind  = "LoadBalancerConfiguration"
-          name  = "public-alb"
+          name  = "public-alb-config"
         }
       }
       listeners = [
