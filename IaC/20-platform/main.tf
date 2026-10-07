@@ -299,7 +299,7 @@ resource "local_file" "HTTPRoute-argocd-ui" {
     apiVersion = "gateway.networking.k8s.io/v1"
     kind       = "HTTPRoute"
     metadata = {
-      name        = "argocd-${data.terraform_remote_state.infra.outputs.env}-tgc"
+      name        = "argocd-httproute"
       namespace   = "argocd"
       annotations = { "argocd.argoproj.io/sync-wave" = "40" }
 

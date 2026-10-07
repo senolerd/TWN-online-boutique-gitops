@@ -3,7 +3,7 @@
 "metadata":
   "annotations":
     "argocd.argoproj.io/sync-wave": "40"
-  "name": "argocd-prod-tgc"
+  "name": "argocd-httproute"
   "namespace": "argocd"
 "spec":
   "hostnames":
