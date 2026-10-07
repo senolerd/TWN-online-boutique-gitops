@@ -135,10 +135,12 @@ resource "local_file" "platform-app" {
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
     metadata = {
-      name        = "platform-tf"
-      namespace   = "argocd"
-      finalizers  = ["resources-finalizer.argocd.argoproj.io"]
-      annotations = { "argocd.argoproj.io/sync-wave" = "30" }
+      name       = "platform-tf"
+      namespace  = "argocd"
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
+      annotations = {
+        "argocd.argoproj.io/sync-wave" = "30"
+      }
     }
     spec = {
       project = "default"
@@ -253,9 +255,9 @@ resource "local_file" "gateway-yaml" {
       name      = "public-gw"
       namespace = "gateway-system"
       annotations = {
-         "argocd.argoproj.io/sync-wave" = "30" 
+        "argocd.argoproj.io/sync-wave" = "30"
         # "alb.ingress.kubernetes.io/scheme" =  "internet-facing" # done at LoadBalancerConfiguration
-        "alb.ingress.kubernetes.io/certificate-arn" = data.aws_acm_certificate.my-domain.arn
+        "alb.ingress.kubernetes.io/certificate-arn" = "${data.aws_acm_certificate.my-domain.arn}"
         "alb.ingress.kubernetes.io/ssl-redirect"    = "443" # Auto redirect all domains to TLS... meh.. i don't know
       }
     }
@@ -297,19 +299,19 @@ resource "local_file" "HTTPRoute-argocd-ui" {
     apiVersion = "gateway.networking.k8s.io/v1"
     kind       = "HTTPRoute"
     metadata = {
-      name = "argocd-${data.terraform_remote_state.infra.outputs.env}-tgc"
-      namespace = "argocd"
+      name        = "argocd-${data.terraform_remote_state.infra.outputs.env}-tgc"
+      namespace   = "argocd"
       annotations = { "argocd.argoproj.io/sync-wave" = "40" }
 
     }
     spec = {
-      hostnames = [ "argocd.${data.terraform_remote_state.infra.outputs.hosted_zone_name}" ]
+      hostnames = ["argocd.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
       parentRefs = [
-        { 
-          group = "gateway.networking.k8s.io"
-          kind  = "Gateway"
-          name  = "public-gw"
-          namespace = "gateway-system" 
+        {
+          group     = "gateway.networking.k8s.io"
+          kind      = "Gateway"
+          name      = "public-gw"
+          namespace = "gateway-system"
         }
       ]
       rules = [
@@ -336,9 +338,9 @@ resource "local_file" "targetGroupConfiguration-argocd-ui" {
 
     apiVersion = "gateway.k8s.aws/v1beta1"
     kind       = "TargetGroupConfiguration"
-    metadata   = { 
-      name = "argocd-tgc" 
-      namespace = "argocd"
+    metadata = {
+      name        = "argocd-tgc"
+      namespace   = "argocd"
       annotations = { "argocd.argoproj.io/sync-wave" = "50" }
 
     }
@@ -361,7 +363,7 @@ resource "local_file" "HTTPRoute-boutique" {
     apiVersion = "gateway.networking.k8s.io/v1"
     kind       = "HTTPRoute"
     metadata = {
-      name = "boutique-${data.terraform_remote_state.infra.outputs.env}"
+      name        = "boutique-${data.terraform_remote_state.infra.outputs.env}"
       annotations = { "argocd.argoproj.io/sync-wave" = "10" }
     }
     spec = {
@@ -395,8 +397,8 @@ resource "local_file" "TargetGroupConfiguration-boutique" {
 
     apiVersion = "gateway.k8s.aws/v1beta1"
     kind       = "TargetGroupConfiguration"
-    metadata   = { 
-      name = "frontend-tg" 
+    metadata = {
+      name        = "frontend-tg"
       annotations = { "argocd.argoproj.io/sync-wave" = "20" }
     }
 

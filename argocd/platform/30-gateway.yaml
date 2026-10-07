@@ -4,8 +4,7 @@
   "annotations":
     "alb.ingress.kubernetes.io/certificate-arn": "arn:aws:acm:us-east-1:823899318117:certificate/f44c21c2-e4c0-4917-9faf-e7159d91747d"
     "alb.ingress.kubernetes.io/ssl-redirect": "443"
-    "annotations":
-      "argocd.argoproj.io/sync-wave": "30"
+    "argocd.argoproj.io/sync-wave": "30"
   "name": "public-gw"
   "namespace": "gateway-system"
 "spec":

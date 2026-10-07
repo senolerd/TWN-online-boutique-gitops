@@ -2,8 +2,7 @@
 "kind": "TargetGroupConfiguration"
 "metadata":
   "annotations":
-    "annotations":
-      "argocd.argoproj.io/sync-wave": "20"
+    "argocd.argoproj.io/sync-wave": "20"
   "name": "frontend-tg"
 "spec":
   "defaultConfiguration":
