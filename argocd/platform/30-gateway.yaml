@@ -9,7 +9,7 @@
   "name": "public-gw"
   "namespace": "gateway-system"
 "spec":
-  "gatewayClassName": "aws-alb"
+  "gatewayClassName": "aws-alb-gc"
   "infrastructure":
     "parametersRef":
       "group": "gateway.k8s.aws"
