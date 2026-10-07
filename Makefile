@@ -31,14 +31,15 @@ platform:
 
 clean:
 	terraform -chdir=IaC/20-platform destroy -auto-approve
+	git add .
+	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
+	git push origin main
+
 	terraform -chdir=IaC/10-bootstrap-argocd destroy -auto-approve
 	terraform -chdir=IaC/00-infra destroy -auto-approve; \
 	if [ $$? != 0 ] ; then \
 		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
 	fi 
-	git add .
-	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
-	git push origin main
 
 argo-password:
 	@kubectl -n argocd get secret argocd-initial-admin-secret \

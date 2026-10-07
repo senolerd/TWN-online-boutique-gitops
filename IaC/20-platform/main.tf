@@ -293,6 +293,28 @@ resource "local_file" "gateway-yaml" {
 }
 
 # ArgoCD: route and TGC
+resource "local_file" "targetGroupConfiguration-argocd-ui" {
+  filename = "../../argocd/platform/50-argocd-tgc.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.k8s.aws/v1beta1"
+    kind       = "TargetGroupConfiguration"
+    metadata = {
+      name        = "argocd-tgc"
+      namespace   = "argocd"
+      annotations = { "argocd.argoproj.io/sync-wave" = "40" }
+
+    }
+    spec = {
+      targetReference = { name = "argocd-server" }
+      defaultConfiguration = {
+        targetType        = "ip"
+        healthCheckConfig = { healthCheckPath = "/healthz" }
+      }
+    }
+  })
+}
+
 resource "local_file" "HTTPRoute-argocd-ui" {
   filename = "../../argocd/platform/40-argocd-ui.yaml"
   content = yamlencode({
@@ -301,7 +323,7 @@ resource "local_file" "HTTPRoute-argocd-ui" {
     metadata = {
       name        = "argocd-httproute"
       namespace   = "argocd"
-      annotations = { "argocd.argoproj.io/sync-wave" = "40" }
+      annotations = { "argocd.argoproj.io/sync-wave" = "50" }
 
     }
     spec = {
@@ -332,30 +354,29 @@ resource "local_file" "HTTPRoute-argocd-ui" {
   })
 }
 
-resource "local_file" "targetGroupConfiguration-argocd-ui" {
-  filename = "../../argocd/platform/50-argocd-tgc.yaml"
+
+#### Boutique helm chart update for route and TGC
+resource "local_file" "TargetGroupConfiguration-boutique" {
+  filename = "../../boutique-helm/templates/targetGroupConfig.yaml"
   content = yamlencode({
 
     apiVersion = "gateway.k8s.aws/v1beta1"
     kind       = "TargetGroupConfiguration"
     metadata = {
-      name        = "argocd-tgc"
-      namespace   = "argocd"
-      annotations = { "argocd.argoproj.io/sync-wave" = "50" }
-
+      name        = "frontend-tg"
+      annotations = { "argocd.argoproj.io/sync-wave" = "10" }
     }
+
     spec = {
-      targetReference = { name = "argocd-server" }
+      targetReference = { name = "frontend" }
       defaultConfiguration = {
         targetType        = "ip"
-        healthCheckConfig = { healthCheckPath = "/healthz" }
+        healthCheckConfig = { healthCheckPath = "/_healthz" }
       }
     }
   })
 }
 
-
-#### Boutique helm chart update for route and TGC
 resource "local_file" "HTTPRoute-boutique" {
   filename = "../../boutique-helm/templates/httproute.yaml"
   content = yamlencode({
@@ -364,7 +385,7 @@ resource "local_file" "HTTPRoute-boutique" {
     kind       = "HTTPRoute"
     metadata = {
       name        = "boutique-${data.terraform_remote_state.infra.outputs.env}"
-      annotations = { "argocd.argoproj.io/sync-wave" = "10" }
+      annotations = { "argocd.argoproj.io/sync-wave" = "20" }
     }
     spec = {
       hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
@@ -390,29 +411,6 @@ resource "local_file" "HTTPRoute-boutique" {
     }
   })
 }
-
-resource "local_file" "TargetGroupConfiguration-boutique" {
-  filename = "../../boutique-helm/templates/targetGroupConfig.yaml"
-  content = yamlencode({
-
-    apiVersion = "gateway.k8s.aws/v1beta1"
-    kind       = "TargetGroupConfiguration"
-    metadata = {
-      name        = "frontend-tg"
-      annotations = { "argocd.argoproj.io/sync-wave" = "20" }
-    }
-
-    spec = {
-      targetReference = { name = "frontend" }
-      defaultConfiguration = {
-        targetType        = "ip"
-        healthCheckConfig = { healthCheckPath = "/_healthz" }
-      }
-    }
-  })
-}
-
-
 
 
 
