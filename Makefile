@@ -22,9 +22,9 @@ platform:
 	echo "platform"
 	terraform -chdir=IaC/20-platform init
 	terraform -chdir=IaC/20-platform apply
-	git add .
-	git commit -m "ArgoCD apps added [skip ci]"
-	git push origin main
+# 	git add .
+# 	git commit -m "ArgoCD apps added [skip ci]"
+# 	git push origin main
 
 # dns:
 # 	echo "platform"
