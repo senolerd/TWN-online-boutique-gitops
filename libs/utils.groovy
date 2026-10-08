@@ -31,30 +31,19 @@ def buildImages(){
         service.value.imguri = "${ECR_REGISTER}/${service.value.repo}:${env.APP_VERSION}"
 
         dir("${WORKSPACE}/microservices-demo/src/$service.value.srcDir"){
-          // small fixes per service
-          _minorPatches(service.key)
 
-          // comment out party ruiner arg
-          sh """
-              sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
-              podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
-            """
-          // Scan CVE with Trivy
-          if (env.CVE_SCAN_ENABLED) {
-            cveScan(service.value.imguri)
-          }
+            // small fixes per service
+            _minorPatches(service.key)
 
-          // Build image
-
-
-          // sh """ 
-          //     sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
-          //     podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
-          //     podman image prune -f
-          // """
-
-
-
+            // comment out party ruiner arg
+            sh  """
+                    sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
+                    podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
+                """
+            // Scan CVE with Trivy
+            if (env.CVE_SCAN_ENABLED) {
+                cveScan(repo: service.value.repo, ver: env.APP_VERSION, imguri:service.value.imguri  )
+            }
         }
     }
 }
@@ -289,9 +278,11 @@ def _addRedis(){
 
 }
 
-def cveScan(image){
+def cveScan(Map img){
+// repo: service.value.repo, ver: env.APP_VERSION, imguri:service.value.imguri
+String reportFile = "${img.repo}-${img.ver}.txt"
 
-  sh """
+sh """
     podman run --rm \
     --security-opt label=disable \
     -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
@@ -300,9 +291,9 @@ def cveScan(image){
     --image-src podman \
     --podman-host /run/podman/podman.sock \
     --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
-    ${image}
-  """
-  archiveArtifacts artifacts: "${image}.txt", allowEmptyArchive: true
+    ${img.imguri}
+"""
+archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
 
 }
 
