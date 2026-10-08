@@ -299,7 +299,7 @@ def cveScan(image){
     docker.io/aquasec/trivy:latest image \
     --image-src podman \
     --podman-host /run/podman/podman.sock \
-    --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_BREAK} --ignore-unfixed \
+    --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
     ${image}
   """
 

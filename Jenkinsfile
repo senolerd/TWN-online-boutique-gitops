@@ -17,7 +17,7 @@ pipeline{
         CI_BOT_COMMIT_SIGN = "[skip ci]"
         CVE_SCAN_ENABLED = true
         CVE_SEVERITY = "HIGH,CRITICAL"
-        CVE_BREAK = 0 // 1 if the pipeline should stop at failed scan
+        CVE_FAILED_SCAN_EXT_CODE = 0 // 1 if the pipeline should stop at failed scan
     }
     stages{
         stage("init"){ 
