@@ -2,14 +2,14 @@
 services = [
     adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
     cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
-    checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
-    currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
-    emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
-    frontend:[repo: "frontend", srcDir: "frontend", port: 8080, rep: 1],
-    paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
-    productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
-    recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
-    shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
+    // checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
+    // currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
+    // emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
+    // frontend:[repo: "frontend", srcDir: "frontend", port: 8080, rep: 1],
+    // paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
+    // productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
+    // recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
+    // shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
     // shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1] Asking google's alloydb (postgre)
 ]
 
@@ -83,10 +83,10 @@ def pushImages(){
             sh """
               podman push $service.value.imguri
               podman image rm $service.value.imguri
-              podman image prune -f
             """
         }
     }
+    sh "podman image prune -f"
 }
 
 def helmChart(){
@@ -280,7 +280,7 @@ def _addRedis(){
 }
 
 def cveScan(Map img){
-    String reportFile = "${img.repo}-${img.ver}.txt"
+    String reportFile = "${img.repo}-${img.ver}.json"
 
     sh """
         podman run --rm \
@@ -288,10 +288,10 @@ def cveScan(Map img){
         -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
         -v trivy-cache:/root/.cache \
         docker.io/aquasec/trivy:latest image \
-        --image-src podman \
+        --image-src podman --format json\
         --podman-host /run/podman/podman.sock \
         --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
-        ${img.imguri} > {}
+        ${img.imguri} > ${reportFile}
     """
     archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
 
