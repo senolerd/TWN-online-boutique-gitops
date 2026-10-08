@@ -302,7 +302,7 @@ def cveScan(image){
     --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
     ${image}
   """
-
+  archiveArtifacts artifacts: "${image}.txt", allowEmptyArchive: true
 
 }
 
