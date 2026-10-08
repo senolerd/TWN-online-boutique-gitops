@@ -40,7 +40,9 @@ def buildImages(){
               podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
             """
           // Scan CVE with Trivy
-          cveScan(service.value.imguri)
+          if (env.CVE_SCAN_ENABLED) {
+            cveScan(service.value.imguri)
+          }
 
           // Build image
 
@@ -297,7 +299,7 @@ def cveScan(image){
     docker.io/aquasec/trivy:latest image \
     --image-src podman \
     --podman-host /run/podman/podman.sock \
-    --severity HIGH,CRITICAL --ignore-unfixed \
+    --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_BREAK} --ignore-unfixed \
     ${image}
   """
 
