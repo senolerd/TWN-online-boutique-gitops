@@ -44,6 +44,7 @@ def buildImages(){
             if (env.CVE_SCAN_ENABLED) {
                 cveScan(repo: service.value.repo, ver: env.APP_VERSION, imguri:service.value.imguri  )
             }
+
         }
     }
 }
