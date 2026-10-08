@@ -49,37 +49,29 @@ pipeline{
             } 
         } 
 
-        // stage("CVE Scan"){ 
-        //     steps{  
-        //         script{
-        //             echo "ToDo: Check images CVE"
-        //         }
-        //     } 
-        // } 
+        stage("Push images to ECR"){ 
+            steps{  
+                script{
+                    utils.pushImages()
+                }
+            } 
+        } 
 
-        // stage("Push images to ECR"){ 
-        //     steps{  
-        //         script{
-        //             utils.pushImages()
-        //         }
-        //     } 
-        // } 
+        stage("Helm chart creating"){ 
+            steps{  
+                script{
+                    utils.helmChart()
+                }
+            } 
+        } 
 
-        // stage("Helm chart creating"){ 
-        //     steps{  
-        //         script{
-        //             utils.helmChart()
-        //         }
-        //     } 
-        // } 
-
-        // stage("Helm Chart Version Bump Up"){ 
-        //     steps{  
-        //         script{
-        //             utils.updateGithubHelmChart()
-        //         }
-        //     } 
-        // } 
+        stage("Helm Chart Version Bump Up"){ 
+            steps{  
+                script{
+                    utils.updateGithubHelmChart()
+                }
+            } 
+        } 
 
     }
 }

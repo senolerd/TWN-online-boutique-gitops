@@ -2,14 +2,14 @@
 services = [
     adservice:[repo: "adservice", srcDir: "adservice", port: 9555, rep: 1],
     cartservice:[repo: "cartservice", srcDir: "cartservice/src", port: 7070, rep: 1],
-    // checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
-    // currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
-    // emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
-    // frontend:[repo: "frontend", srcDir: "frontend", port: 8080, rep: 1],
-    // paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
-    // productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
-    // recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
-    // shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
+    checkoutservice:[repo: "checkoutservice", srcDir: "checkoutservice", port: 5050, rep: 1],
+    currencyservice:[repo: "currencyservice", srcDir: "currencyservice", port: 7000, rep: 1],
+    emailservice:[repo: "emailservice", srcDir: "emailservice", port: 8080, rep: 1],
+    frontend:[repo: "frontend", srcDir: "frontend", port: 8080, rep: 1],
+    paymentservice:[repo: "paymentservice", srcDir: "paymentservice", port: 50051, rep: 1],
+    productcatalogservice:[repo: "productcatalogservice", srcDir: "productcatalogservice", port: 3550, rep: 1],
+    recommendationservice:[repo: "recommendationservice", srcDir: "recommendationservice", port: 8080, rep: 1],
+    shippingservice:[repo: "shippingservice", srcDir: "shippingservice", port: 50051, rep: 1],
     // shoppingassistantservice:[repo: "shoppingassistantservice", srcDir: "shoppingassistantservice", port: 8080, rep: 1] Asking google's alloydb (postgre)
 ]
 
@@ -48,7 +48,6 @@ def buildImages(){
     }
 }
 
-
 def _minorPatches(service){
   
   // shoppingasistanceservice is missin "asyncio", adding to requirements.txt
@@ -56,7 +55,6 @@ def _minorPatches(service){
     sh 'echo aiohttp >> requirements.txt'
   }
 }
-
 
 def ecrLogin(){
     // "env.AWS_USER_ID" and "env.ECR_REGISTER" are defined here, too with registry login
@@ -227,8 +225,6 @@ def _createHelmChartYaml(appver){
     """.stripIndent()
 }
 
-
-
 def _addRedis(){
 
     sh """
@@ -279,25 +275,22 @@ def _addRedis(){
 }
 
 def cveScan(Map img){
-// repo: service.value.repo, ver: env.APP_VERSION, imguri:service.value.imguri
-String reportFile = "${img.repo}-${img.ver}.txt"
+    String reportFile = "${img.repo}-${img.ver}.txt"
 
-sh """
-    podman run --rm \
-    --security-opt label=disable \
-    -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
-    -v trivy-cache:/root/.cache \
-    docker.io/aquasec/trivy:latest image \
-    --image-src podman \
-    --podman-host /run/podman/podman.sock \
-    --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
-    ${img.imguri}
-"""
-archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
+    sh """
+        podman run --rm \
+        --security-opt label=disable \
+        -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
+        -v trivy-cache:/root/.cache \
+        docker.io/aquasec/trivy:latest image \
+        --image-src podman \
+        --podman-host /run/podman/podman.sock \
+        --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
+        ${img.imguri} > {}
+    """
+    archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
 
 }
-
-
 
 def updateGithubHelmChart(){
     sh """ 
@@ -311,11 +304,5 @@ def updateGithubHelmChart(){
     }
 
 }
-
-
-
-
-
-
 
 return this
