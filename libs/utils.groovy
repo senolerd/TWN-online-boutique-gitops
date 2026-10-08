@@ -84,7 +84,7 @@ def pushImages(){
               podman push $service.value.imguri
               podman image rm $service.value.imguri
               podman image prune -f
-            "
+            """
         }
     }
 }
