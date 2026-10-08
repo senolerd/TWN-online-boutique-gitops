@@ -80,7 +80,11 @@ def pushImages(){
                 sh "aws ecr create-repository --repository-name ${service.value.repo} --region ${AWS_REGION}  > /dev/null 2>&1"
             }
     
-            sh "podman push $service.value.imguri"
+            sh """
+              podman push $service.value.imguri
+              podman image rm $service.value.imguri
+              podman image prune -f
+            "
         }
     }
 }
