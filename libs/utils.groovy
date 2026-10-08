@@ -294,7 +294,7 @@ def cveScan(image){
     --security-opt label=disable \
     -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
     -v trivy-cache:/root/.cache \
-    docker.io/aquasec/trivy:<pinned-version> image \
+    docker.io/aquasec/trivy:latest image \
     --image-src podman \
     --podman-host /run/podman/podman.sock \
     --severity HIGH,CRITICAL --ignore-unfixed \
