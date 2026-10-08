@@ -39,6 +39,7 @@ def buildImages(){
             sh  """
                     sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
                     podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
+                    podman image prune -f
                 """
             // Scan CVE with Trivy
             if (env.CVE_SCAN_ENABLED) {
@@ -86,7 +87,6 @@ def pushImages(){
             """
         }
     }
-    sh "podman image prune -f"
 }
 
 def helmChart(){
