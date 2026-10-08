@@ -1,9 +1,0 @@
-"apiVersion": "gateway.k8s.aws/v1beta1"
-"kind": "LoadBalancerConfiguration"
-"metadata":
-  "annotations":
-    "argocd.argoproj.io/sync-wave": "20"
-  "name": "public-alb-config"
-  "namespace": "gateway-system"
-"spec":
-  "scheme": "internet-facing"

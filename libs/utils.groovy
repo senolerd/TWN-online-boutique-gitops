@@ -34,11 +34,25 @@ def buildImages(){
           // small fixes per service
           _minorPatches(service.key)
 
-          sh """ 
+          // comment out party ruiner arg
+          sh """
               sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
               podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
-              podman image prune -f
-          """
+            """
+          // Scan CVE with Trivy
+          cveScan(service.value.imguri)
+
+          // Build image
+
+
+          // sh """ 
+          //     sed -i 's/^ARG BUILDPLATFORM.*/# &/' Dockerfile
+          //     podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
+          //     podman image prune -f
+          // """
+
+
+
         }
     }
 }
@@ -272,6 +286,24 @@ def _addRedis(){
 
 
 }
+
+def cveScan(image){
+
+  sh """
+    podman run --rm \
+    --security-opt label=disable \
+    -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
+    -v trivy-cache:/root/.cache \
+    docker.io/aquasec/trivy:<pinned-version> image \
+    --image-src podman \
+    --podman-host /run/podman/podman.sock \
+    --severity HIGH,CRITICAL --ignore-unfixed \
+    ${image}
+  """
+
+
+}
+
 
 
 def updateGithubHelmChart(){
