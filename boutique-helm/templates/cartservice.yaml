@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "adservice-deployment"
+  name: "cartservice-deployment"
   labels:
-    app: "adservice"
+    app: "cartservice"
 spec:
-  replicas: {{ .Values.adservice.replica }}
+  replicas: {{ .Values.cartservice.replica }}
   selector:
     matchLabels:
-      app: "adservice"
+      app: "cartservice"
   template:
     metadata:
       labels:
-        app: "adservice"
+        app: "cartservice"
     spec:
       containers:
-      - name: "adservice"
-        image: "{{ .Values.adservice.imguri }}"
+      - name: "cartservice"
+        image: "{{ .Values.cartservice.imguri }}"
         ports:
-        - containerPort: {{ .Values.adservice.port }}
+        - containerPort: {{ .Values.cartservice.port }}
         env:
         - name: PORT
-          value: "{{ .Values.adservice.port }}"
+          value: "{{ .Values.cartservice.port }}"
         - name: AD_SERVICE_ADDR
           value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
         - name: CART_SERVICE_ADDR
@@ -48,11 +48,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: "adservice"
+  name: "cartservice"
 spec:
   selector:
-    app: "adservice"
+    app: "cartservice"
   ports:
   - protocol: TCP
-    port: {{ .Values.adservice.port }}
-    targetPort: {{ .Values.adservice.port }}
+    port: {{ .Values.cartservice.port }}
+    targetPort: {{ .Values.cartservice.port }}
