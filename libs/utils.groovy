@@ -88,7 +88,7 @@ def pushImages(){
     }
 }
 
-def helmChart(){
+def helmChartCreate(){
 
     def isChartExist = sh(script: "stat ${BOUTIQUE_HELM_CHART_NAME} > /dev/null 2>&1", returnStatus: true)
 
@@ -115,6 +115,12 @@ def helmChart(){
     // Adding aux services template
     _addRedis()
 }
+
+def utils.helmChartLinting(){
+  sh "helm lint boutique-helm"
+}
+
+
 
 def _addServiceVarToValuesYaml(Map service){
     // Modifying values.yaml
@@ -162,25 +168,7 @@ def _addDeploymentAndServiceTemplate(Map service){
                 - name: AD_SERVICE_ADDR
                   value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
                 - name: CART_SERVICE_ADDR
-                  value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"
-                - name: CHECKOUT_SERVICE_ADDR
-                  value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
-                - name: CURRENCY_SERVICE_ADDR
-                  value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
-                - name: EMAIL_SERVICE_ADDR
-                  value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
-                - name: FRONTEND_SERVICE_ADDR
-                  value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
-                - name: PAYMENT_SERVICE_ADDR
-                  value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
-                - name: PRODUCT_CATALOG_SERVICE_ADDR
-                  value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
-                - name: RECOMMENDATION_SERVICE_ADDR
-                  value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
-                - name: SHIPPING_SERVICE_ADDR
-                  value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
-                - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-                  value: "null"                  
+                  value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"          
                 - name: REDIS_ADDR
                   value: "redis-cart:6379"
                 - name: ENABLE_SHOPPING_ASSISTANT
@@ -310,3 +298,24 @@ def updateGithubHelmChart(){
 }
 
 return this
+
+
+
+                // - name: CHECKOUT_SERVICE_ADDR
+                //   value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
+                // - name: CURRENCY_SERVICE_ADDR
+                //   value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
+                // - name: EMAIL_SERVICE_ADDR
+                //   value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
+                // - name: FRONTEND_SERVICE_ADDR
+                //   value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
+                // - name: PAYMENT_SERVICE_ADDR
+                //   value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
+                // - name: PRODUCT_CATALOG_SERVICE_ADDR
+                //   value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
+                // - name: RECOMMENDATION_SERVICE_ADDR
+                //   value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
+                // - name: SHIPPING_SERVICE_ADDR
+                //   value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
+                // - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+                //   value: "null"        

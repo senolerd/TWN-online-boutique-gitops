@@ -60,10 +60,20 @@ pipeline{
         stage("Helm chart creating"){ 
             steps{  
                 script{
-                    utils.helmChart()
+                    utils.helmChartCreate()
+                    utils.helmChartLinting()
+                    
                 }
             } 
         } 
+
+        stage("Helm chart linting"){ 
+            steps{  
+                script{
+                    utils.updateGithubHelmChart()
+                }
+            } 
+        }
 
         stage("Helm Chart Version Bump Up"){ 
             steps{  
