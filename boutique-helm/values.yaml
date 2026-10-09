@@ -3,6 +3,6 @@
 adservice:
     name: adservice
     port: 9555
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/adservice:release-v0.10.7-5533071-b227
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/adservice:release-v0.10.7-3df6184-b228
     replica: 1
 
