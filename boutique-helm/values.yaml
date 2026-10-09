@@ -3,13 +3,13 @@
 adservice:
     name: adservice
     port: 9555
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/adservice:release-v0.10.7-813bf77-b223
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/adservice:release-v0.10.7-1304e4b-b226
     replica: 1
 
 # cartservice variables
 cartservice:
     name: cartservice
     port: 7070
-    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-813bf77-b223
+    imguri: 823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-1304e4b-b226
     replica: 1
 
