@@ -1,5 +1,5 @@
 variable "region" { type = string }
-variable "cluster_name" { type = string }
+variable "project_name" { type = string }
 variable "private_subnets" { }
 variable "environment" {type = string }
 variable "vpc_endpoint_sg_for_eks_id" { type = string }

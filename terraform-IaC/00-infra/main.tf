@@ -13,7 +13,7 @@ module "vpc" {
 module "eks" {
   depends_on                 = [module.vpc]
   source                     = "./modules/eks"
-  cluster_name               = var.project_name
+  project_name               = var.project_name
   environment                = var.environment
   region                     = var.region
   private_subnets            = module.vpc.private_subnets

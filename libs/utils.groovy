@@ -303,7 +303,7 @@ def updateGithubHelmChart(){
         git add .
         git commit -m "Helm chart update for ${env.APP_VERSION} ${CI_BOT_COMMIT_SIGN}"
     """
-    sshagent(credentials: ['mac_rsa_priv'], executable: '') {
+    sshagent(credentials: [ env.CI_BOT_GITHUB_CRED ], executable: '') {
         sh 'git push origin HEAD:main'
     }
 

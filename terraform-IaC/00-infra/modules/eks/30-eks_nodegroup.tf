@@ -31,7 +31,7 @@ resource "aws_eks_node_group" "ng1" {
 }
 
 resource "aws_iam_role" "role_for_nodegroup" {
-  name = "eks-nodegroup-role"
+  name = "eks-nodegroup-role-${aws_eks_cluster.eks.name}"
 
   assume_role_policy = jsonencode({
     Statement = [{

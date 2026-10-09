@@ -9,11 +9,11 @@ pipeline{
         BOUTIQUE_HELM_CHART_VER = "0.1.1"
 
         // AWS
-        AWS_CRED_ID = "aws_devops_cred" // *
+        AWS_CRED_ID = "aws_devops_cred" //
         AWS_REGION = "us-east-1"
 
-        // Jenkins server's GitHub identity for helm chart version bump Up
-        GITHUB_CRED = 'mac_rsa_priv' // *
+        // Jenkins server's GitHub bot identity for helm chart version bump Up
+        CI_BOT_GITHUB_CRED = 'boutique_git_devops_bot' // GitHub repo scoped SSH key
         CI_BOT_USERNAME = "Alfred Pennyworth"
         CI_BOT_EMAIL = "alfred_pennyworth@wayneenterprises.com"
         CI_BOT_COMMIT_SIGN = "[skip ci]"
@@ -21,7 +21,7 @@ pipeline{
         // Trivy CVE scanner
         CVE_SCAN_ENABLED = true
         CVE_SEVERITY = "HIGH,CRITICAL" // "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
-        CVE_FAILED_SCAN_EXT_CODE = 0 // 1 for if the pipeline should stop at failed scan
+        CVE_FAILED_SCAN_EXT_CODE = 1 // 1 for stop at failed scan, 0 for just create report  
     }
     stages{
         stage("init"){ 

@@ -2,4 +2,4 @@ microservices-demo
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
-tmp
+.DS_Store

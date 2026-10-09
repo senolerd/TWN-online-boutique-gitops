@@ -1,10 +1,10 @@
 resource "aws_iam_policy" "lbc_json_policy" {
-  name        = "AWSLoadBalancerControllerIAMPolicy"
+  name        = "AWSLoadBalancerControllerIAMPolicy-${aws_eks_cluster.eks.name}"
   policy = file("${path.module}/iam_policy.json")
 }
 
 resource "aws_iam_role" "lbc_role" {
-  name = "lbc_role"
+  name = "lbc_role-${aws_eks_cluster.eks.name}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

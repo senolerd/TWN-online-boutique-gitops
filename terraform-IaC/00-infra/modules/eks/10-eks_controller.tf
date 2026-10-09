@@ -1,6 +1,6 @@
 
 resource "aws_eks_cluster" "eks" {
-  name = "${var.cluster_name}-${var.environment}"
+  name = "${var.project_name}-${var.environment}"
   role_arn = aws_iam_role.cluster_role.arn
   version  = "1.36"
 
@@ -27,7 +27,7 @@ resource "aws_eks_cluster" "eks" {
 ###############################################################################################
 resource "aws_iam_role" "cluster_role" {
   # Creating a role and associate policy for K8s service that can work on AWS.
-  name = "eks-cluster-role-for-${var.cluster_name}"
+  name = "eks-cluster-role-for-${var.project_name}-${var.environment}"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
