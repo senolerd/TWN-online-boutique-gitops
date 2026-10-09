@@ -24,8 +24,6 @@ spec:
           value: "{{ .Values.adservice.port }}"
         - name: AD_SERVICE_ADDR
           value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
-        - name: CART_SERVICE_ADDR
-          value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"          
         - name: REDIS_ADDR
           value: "redis-cart:6379"
         - name: ENABLE_SHOPPING_ASSISTANT
