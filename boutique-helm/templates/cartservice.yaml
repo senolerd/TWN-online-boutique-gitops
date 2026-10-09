@@ -25,25 +25,7 @@ spec:
         - name: AD_SERVICE_ADDR
           value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
         - name: CART_SERVICE_ADDR
-          value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"
-        - name: CHECKOUT_SERVICE_ADDR
-          value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
-        - name: CURRENCY_SERVICE_ADDR
-          value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
-        - name: EMAIL_SERVICE_ADDR
-          value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
-        - name: FRONTEND_SERVICE_ADDR
-          value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
-        - name: PAYMENT_SERVICE_ADDR
-          value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
-        - name: PRODUCT_CATALOG_SERVICE_ADDR
-          value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
-        - name: RECOMMENDATION_SERVICE_ADDR
-          value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
-        - name: SHIPPING_SERVICE_ADDR
-          value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
-        - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-          value: "null"                  
+          value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"          
         - name: REDIS_ADDR
           value: "redis-cart:6379"
         - name: ENABLE_SHOPPING_ASSISTANT
