@@ -1,3 +1,4 @@
+# It is a helper Makefile to bootstrap infrastructure. Not part of the Jenkins pipeline. 
 TARGET = terraform-IaC
 
 help:
