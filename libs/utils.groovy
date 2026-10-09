@@ -116,7 +116,7 @@ def helmChartCreate(){
     _addRedis()
 }
 
-def utils.helmChartLinting(){
+def helmChartLinting(){
   sh "helm lint boutique-helm"
 }
 
