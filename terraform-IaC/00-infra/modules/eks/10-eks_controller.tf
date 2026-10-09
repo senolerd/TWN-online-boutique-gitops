@@ -20,6 +20,7 @@ resource "aws_eks_cluster" "eks" {
   tags = { 
     "managedBy" : "terraform"
     "env": var.environment
+    "domain" = var.hosted_zone_name
   }  
 }
 

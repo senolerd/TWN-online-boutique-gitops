@@ -128,6 +128,8 @@ resource "aws_eks_addon" "external-dns" {
   configuration_values = jsonencode({
     sources = [ "gateway-httproute" ]
     domainFilters = [ var.hosted_zone_name]
+    #  "sync" (create/update/delete) or "upsert-only" (create/update only)
+    # policy = "sync" 
   })
   namespace_config { 
     namespace = "external-dns" 
