@@ -29,9 +29,9 @@ platform:
 
 clean:
 	terraform -chdir=$(TARGET)/20-platform destroy -auto-approve
-# 	git add .
-# 	git commit -m "Deployment removed ArgoCD apps cleared [skip ci]"
-# 	git push origin main
+	git add .
+	git commit -m "Deployment removed. ArgoCD apps are cleared. [skip ci]"
+	git push origin main
 
 	terraform -chdir=$(TARGET)/10-bootstrap-argocd destroy -auto-approve
 	terraform -chdir=$(TARGET)/00-infra destroy -auto-approve; \
