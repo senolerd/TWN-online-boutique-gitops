@@ -21,7 +21,7 @@ pipeline{
         // Trivy CVE scanner
         CVE_SCAN_ENABLED = true
         CVE_SEVERITY = "HIGH,CRITICAL" // "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
-        CVE_FAILED_SCAN_EXT_CODE = 0 // 1 for stop at failed scan, 0 for just create report  
+        CVE_FAILED_SCAN_EXT_CODE = 1 // 1 for stop at failed scan, 0 for just create report  
     }
     stages{
         stage("init"){ 
