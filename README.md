@@ -78,10 +78,11 @@ The point of this repo isn't the shopping app (that's Google's demo) — it's ev
 Defined in [`Jenkinsfile`](Jenkinsfile), stages run on a single Jenkins agent:
 
 1. **Download Source** — shallow-clones a pinned branch/release of `GoogleCloudPlatform/microservices-demo`.
-2. **Build Images** — builds each of the 11 boutique microservices with **Podman**, labels images with the source SCM version, and (if `CVE_SCAN_ENABLED`) runs a **Trivy** scan per image for `HIGH`/`CRITICAL` CVEs, archiving the JSON report as a build artifact.
+2. **Build Images** — builds each of the 11 boutique microservices with **Podman**, labels images with the source SCM version, and (if `CVE_SCAN_ENABLED`) runs a **Trivy** scan per image for `HIGH`/`CRITICAL` CVEs, archiving the JSON report as a build artifact. The scan is a hard gate, not just a report: `CVE_FAILED_SCAN_EXT_CODE` controls Trivy's own exit code and is set to fail the build on any `HIGH`/`CRITICAL` finding, so a vulnerable image never reaches ECR.
 3. **Push Images to ECR** — creates the ECR repository if missing, pushes, then prunes the local image.
 4. **Helm Chart Creation** — regenerates `boutique-helm/` from scratch for every build: one `Deployment`/`Service` manifest per microservice plus `redis-cart`, with image URIs and env vars (service discovery addresses) templated in via `values.yaml`.
-5. **Helm Chart Version Bump Up** — commits the regenerated chart back to this repo as the CI bot identity, with `[skip ci]` in the message to avoid a build loop, and pushes to `main`.
+5. **Helm Chart Linting** — runs `helm lint` against the freshly generated chart; a bad template render fails the build here instead of surfacing later as an ArgoCD sync failure on the live cluster.
+6. **Helm Chart Version Bump Up** — commits the regenerated chart back to this repo (authored as the CI bot identity) and pushes to `main` with `[skip ci]` in the message to avoid a build loop. The push authenticates with a **GitHub deploy key scoped to this one repository**, not a personal or account-wide credential, so a leaked Jenkins credential can't reach anything beyond this repo.
 
 Image tags follow `<boutique-branch>-<short-sha>-b<build-number>` (e.g. `release-v0.10.7-5018f0d-b218`), and the Helm chart version is stamped the same way, so every deployed chart is traceable back to the exact Jenkins build and upstream commit that produced it.
 
@@ -160,7 +161,9 @@ Both the ArgoCD UI and the boutique `frontend` get their own `HTTPRoute`, sharin
 
 ## Getting started
 
-> Prerequisites: an AWS account/credentials, Terraform, Helm, `kubectl`, and (for CI) a Jenkins instance with Podman, awscli, and Helm installed.
+> Prerequisites: an AWS account, Terraform, Helm, `kubectl`, and (for CI) a Jenkins instance with Podman, awscli, and Helm installed.
+
+**AWS credentials for Terraform:** none of the `provider "aws"` blocks under `terraform-IaC/` hardcode credentials. `make infra` / `make bootstrap` / `make platform` just shell out to `terraform`, which resolves AWS auth through the standard AWS SDK credential chain — so the shell you run `make` from needs one of: a default profile from `aws configure`, an exported `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` pair (plus `AWS_SESSION_TOKEN` if temporary), or an active `AWS_PROFILE`/SSO session. This is a separate credential from CI's: Jenkins authenticates with its own scoped `aws_devops_cred` for image pushes and never touches Terraform or cluster state.
 
 ```bash
 # 1. Provision VPC + EKS
@@ -181,14 +184,15 @@ Tear everything down in reverse with `make clean`.
 
 Before the first run, update `terraform-IaC/00-infra/terraform.tfvars` for your own environment (CIDR ranges, `hosted_zone_name`, instance types, etc.) — defaults in this repo are specific to the author's sandbox AWS account and domain.
 
-CI (Jenkins) is configured independently via the environment block at the top of [`Jenkinsfile`](Jenkinsfile) — AWS credentials ID, GitHub credentials for the chart-bump commit, target ECR region, and Trivy scan severity/behavior are all parameterized there.
+CI (Jenkins) is configured independently via the environment block at the top of [`Jenkinsfile`](Jenkinsfile) — the AWS credential ID, the GitHub deploy-key credential for the chart-bump push, target ECR region, and Trivy scan severity/behavior are all parameterized there.
 
 ## Security notes
 
-- Every built image is scanned with **Trivy** for `HIGH`/`CRITICAL` CVEs before being pushed; the scan report is archived as a Jenkins build artifact.
-- Node group and controller IAM roles follow least-privilege, service-specific policies (`AmazonEKS_CNI_Policy`, `AmazonEC2ContainerRegistryReadOnly`, `AmazonEKSWorkerNodePolicy`, a dedicated AWS Load Balancer Controller policy, etc.) via **EKS Pod Identity** rather than broad node-instance permissions.
+- Every built image is scanned with **Trivy** for `HIGH`/`CRITICAL` CVEs, and the scan **gates the pipeline** (`CVE_FAILED_SCAN_EXT_CODE=1`) — a vulnerable image fails the build instead of just being reported; the full report is still archived as a Jenkins build artifact either way.
+- The CI job's git push (Helm chart version bump) authenticates with a **GitHub deploy key scoped to this one repository**, not a personal or account-wide credential — compromising the Jenkins credential store can't leak push access beyond this repo.
+- Node group and controller IAM roles/policies follow least-privilege, service-specific policies (`AmazonEKS_CNI_Policy`, `AmazonEC2ContainerRegistryReadOnly`, `AmazonEKSWorkerNodePolicy`, a dedicated AWS Load Balancer Controller policy, etc.) via **EKS Pod Identity** rather than broad node-instance permissions — and every such IAM role/policy name is suffixed with the cluster name (`${project_name}-${environment}`) so `dev` and `prod`, or a second project, can coexist in the same AWS account without an `EntityAlreadyExists` collision.
 - In `dev`, node group egress is restricted to explicit VPC endpoints only — no default internet access.
-- ECR authentication for pulled images relies on the node group's IAM role (no static credentials baked into manifests).
+- ECR authentication for pulled images relies on the node group's IAM role (no static credentials baked into manifests); Terraform itself takes no AWS credentials as input either — it resolves auth from the standard AWS SDK credential chain active in the operator's shell (see [Getting started](#getting-started)).
 
 ## Credits
 
