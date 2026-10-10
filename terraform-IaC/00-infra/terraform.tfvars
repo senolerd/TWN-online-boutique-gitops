@@ -21,4 +21,4 @@ instance_types = {
 argocd-dir= "../../argocd"
 
 
-hosted_zone_name = "banupaints.com"
+hosted_zone_name = "senolerd.xyz"
