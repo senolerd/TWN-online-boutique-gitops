@@ -1,0 +1,787 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.75.0"
+  },
+  "ReportID": "01a12b95-7027-7538-a5e4-0ba1e2f2ea35",
+  "CreatedAt": "2026-10-11T15:29:36.295344987Z",
+  "ArtifactID": "sha256:2c31fdc8b4d1f82c29c1677a2548217277ae483c68a301ce56cf8b7be24589b4",
+  "ArtifactName": "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-a8e604d-b268",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "Size": 44093440,
+    "OS": {
+      "Family": "ubuntu",
+      "Name": "24.04"
+    },
+    "ImageID": "sha256:8eceb5464fcd6e2a9fa27e7e94a101c0914bd2293e76a627f82ba0c2986daf35",
+    "DiffIDs": [
+      "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "sha256:10ca2dc64eb1cdefefbe831a2782607fa4c2ae5578327f16bc5946a520c7d579"
+    ],
+    "RepoTags": [
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-a8e604d-b268",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-a8e604d-b267",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-293e5c0-b266",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b264",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b263",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b262",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b261",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b260",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b259",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b258",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b257",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b255",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b254",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b253",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b252",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b250",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b249",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b248",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b247",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b245",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b244",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b243",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b242",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b241",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b240",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b239",
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-2e63ce9-b238"
+    ],
+    "RepoDigests": [
+      "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice@sha256:5a6a580dd885fc69536a9d9a906f7deefe2237767f0ebffacd696cd075fb40de"
+    ],
+    "Reference": "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-a8e604d-b268",
+    "ImageConfig": {
+      "architecture": "amd64",
+      "created": "2026-10-11T02:31:43.599024785Z",
+      "history": [
+        {
+          "created": "2025-11-11T00:24:58Z",
+          "created_by": "COPY /rootfs / # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-11-11T00:24:58Z",
+          "created_by": "ENV APP_UID=1654 ASPNETCORE_HTTP_PORTS=8080 DOTNET_RUNNING_IN_CONTAINER=true DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2025-11-11T00:24:58Z",
+          "created_by": "COPY --chown=1654:1654 /rootfs/home/app /home/app # buildkit",
+          "comment": "buildkit.dockerfile.v0"
+        },
+        {
+          "created": "2025-11-11T00:24:58Z",
+          "created_by": "USER 1654",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-10-11T02:31:41Z",
+          "created_by": "/bin/sh -c #(nop) WORKDIR /app",
+          "comment": "FROM mcr.microsoft.com/dotnet/runtime-deps@sha256:b857c8cb8d929183cfe4c6dd9994abba92a2639dd2dbaf06005379f815991604",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-10-11T02:31:42Z",
+          "created_by": "/bin/sh -c #(nop) COPY dir:018a5b500fbeca7d2c961cc2dcc5134ac1dac5748a8f6aebd593b2b56979aea8 in .      "
+        },
+        {
+          "created": "2026-10-11T02:31:42Z",
+          "created_by": "/bin/sh -c #(nop) EXPOSE 7070",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-10-11T02:31:42Z",
+          "created_by": "/bin/sh -c #(nop) ENV DOTNET_EnableDiagnostics=0     ASPNETCORE_HTTP_PORTS=7070",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-10-11T02:31:43Z",
+          "created_by": "/bin/sh -c #(nop) USER 1000",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-10-11T02:31:43Z",
+          "created_by": "/bin/sh -c #(nop) ENTRYPOINT [\"/app/cartservice\"]",
+          "empty_layer": true
+        },
+        {
+          "created": "2026-10-11T02:31:43Z",
+          "created_by": "/bin/sh -c #(nop) LABEL \"SCM_VERSION\"=\"release/v0.10.7\"",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2",
+          "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+          "sha256:10ca2dc64eb1cdefefbe831a2782607fa4c2ae5578327f16bc5946a520c7d579"
+        ]
+      },
+      "config": {
+        "Entrypoint": [
+          "/app/cartservice"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+          "APP_UID=1654",
+          "DOTNET_RUNNING_IN_CONTAINER=true",
+          "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true",
+          "DOTNET_EnableDiagnostics=0",
+          "ASPNETCORE_HTTP_PORTS=7070"
+        ],
+        "Labels": {
+          "SCM_VERSION": "release/v0.10.7",
+          "io.buildah.version": "1.43.1"
+        },
+        "User": "1000",
+        "WorkingDir": "/app",
+        "ExposedPorts": {
+          "7070/tcp": {}
+        }
+      }
+    },
+    "Layers": [
+      {
+        "Size": 14255616,
+        "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+      },
+      {
+        "Size": 1024,
+        "DiffID": "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+      },
+      {
+        "Size": 29836800,
+        "DiffID": "sha256:10ca2dc64eb1cdefefbe831a2782607fa4c2ae5578327f16bc5946a520c7d579"
+      }
+    ]
+  },
+  "Results": [
+    {
+      "Target": "823899318117.dkr.ecr.us-east-1.amazonaws.com/cartservice:release-v0.10.7-a8e604d-b268 (ubuntu 24.04)",
+      "Class": "os-pkgs",
+      "Type": "ubuntu",
+      "Packages": [
+        {
+          "ID": "base-files@13ubuntu10.3",
+          "Name": "base-files",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/base-files@13ubuntu10.3?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "8a5d07b70671a33c"
+          },
+          "Version": "13ubuntu10.3",
+          "Arch": "amd64",
+          "SrcName": "base-files",
+          "SrcVersion": "13ubuntu10.3",
+          "Licenses": [
+            "GPL-2.0-or-later"
+          ],
+          "Maintainer": "Ubuntu Developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "libc6@2.39-0ubuntu8.6"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "ca-certificates@20240203",
+          "Name": "ca-certificates",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/ca-certificates@20240203?arch=all\u0026distro=ubuntu-24.04",
+            "UID": "86933122735a5101"
+          },
+          "Version": "20240203",
+          "Arch": "all",
+          "SrcName": "ca-certificates",
+          "SrcVersion": "20240203",
+          "Licenses": [
+            "GPL-2.0-or-later",
+            "GPL-2.0-only",
+            "MPL-2.0"
+          ],
+          "Maintainer": "Ubuntu Developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "openssl@3.0.13-0ubuntu3.6"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "gcc-14-base@14.2.0-4ubuntu2~24.04",
+          "Name": "gcc-14-base",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/gcc-14-base@14.2.0-4ubuntu2~24.04?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "4f60a7c212cdb52"
+          },
+          "Version": "14.2.0",
+          "Release": "4ubuntu2~24.04",
+          "Arch": "amd64",
+          "SrcName": "gcc-14",
+          "SrcVersion": "14.2.0",
+          "SrcRelease": "4ubuntu2~24.04",
+          "Licenses": [
+            "GPL-2.0-or-later",
+            "GPL-3.0-only",
+            "GFDL-1.2-only",
+            "Artistic-2.0",
+            "LGPL-2.0-or-later"
+          ],
+          "Maintainer": "Ubuntu Core developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "libc6@2.39-0ubuntu8.6",
+          "Name": "libc6",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/libc6@2.39-0ubuntu8.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "d2644ec28d9a7225"
+          },
+          "Version": "2.39",
+          "Release": "0ubuntu8.6",
+          "Arch": "amd64",
+          "SrcName": "glibc",
+          "SrcVersion": "2.39",
+          "SrcRelease": "0ubuntu8.6",
+          "Licenses": [
+            "LGPL-2.1-only",
+            "GPL-2.0-only",
+            "GFDL-1.3-only"
+          ],
+          "Maintainer": "Ubuntu Developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "libgcc-s1@14.2.0-4ubuntu2~24.04"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "libgcc-s1@14.2.0-4ubuntu2~24.04",
+          "Name": "libgcc-s1",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/libgcc-s1@14.2.0-4ubuntu2~24.04?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "aa6c08d677de9039"
+          },
+          "Version": "14.2.0",
+          "Release": "4ubuntu2~24.04",
+          "Arch": "amd64",
+          "SrcName": "gcc-14",
+          "SrcVersion": "14.2.0",
+          "SrcRelease": "4ubuntu2~24.04",
+          "Maintainer": "Ubuntu Core developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "gcc-14-base@14.2.0-4ubuntu2~24.04",
+            "libc6@2.39-0ubuntu8.6"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "libssl3t64@3.0.13-0ubuntu3.6",
+          "Name": "libssl3t64",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/libssl3t64@3.0.13-0ubuntu3.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "5677a0e459171b26"
+          },
+          "Version": "3.0.13",
+          "Release": "0ubuntu3.6",
+          "Arch": "amd64",
+          "SrcName": "openssl",
+          "SrcVersion": "3.0.13",
+          "SrcRelease": "0ubuntu3.6",
+          "Licenses": [
+            "Apache-2.0",
+            "Artistic-2.0",
+            "GPL-1.0-or-later",
+            "GPL-1.0-only"
+          ],
+          "Maintainer": "Ubuntu Developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "libc6@2.39-0ubuntu8.6"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "libstdc++6@14.2.0-4ubuntu2~24.04",
+          "Name": "libstdc++6",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/libstdc%2B%2B6@14.2.0-4ubuntu2~24.04?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "16950687a12defdb"
+          },
+          "Version": "14.2.0",
+          "Release": "4ubuntu2~24.04",
+          "Arch": "amd64",
+          "SrcName": "gcc-14",
+          "SrcVersion": "14.2.0",
+          "SrcRelease": "4ubuntu2~24.04",
+          "Maintainer": "Ubuntu Core developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "gcc-14-base@14.2.0-4ubuntu2~24.04",
+            "libc6@2.39-0ubuntu8.6",
+            "libgcc-s1@14.2.0-4ubuntu2~24.04"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        },
+        {
+          "ID": "openssl@3.0.13-0ubuntu3.6",
+          "Name": "openssl",
+          "Identifier": {
+            "PURL": "pkg:deb/ubuntu/openssl@3.0.13-0ubuntu3.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "37896f69d9c875e8"
+          },
+          "Version": "3.0.13",
+          "Release": "0ubuntu3.6",
+          "Arch": "amd64",
+          "SrcName": "openssl",
+          "SrcVersion": "3.0.13",
+          "SrcRelease": "0ubuntu3.6",
+          "Maintainer": "Ubuntu Developers \u003cubuntu-devel-discuss@lists.ubuntu.com\u003e",
+          "Repository": {
+            "Class": "official"
+          },
+          "DependsOn": [
+            "libc6@2.39-0ubuntu8.6",
+            "libssl3t64@3.0.13-0ubuntu3.6"
+          ],
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "AnalyzedBy": "dpkg"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2026-45447",
+          "PkgID": "libssl3t64@3.0.13-0ubuntu3.6",
+          "PkgName": "libssl3t64",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/ubuntu/libssl3t64@3.0.13-0ubuntu3.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "5677a0e459171b26"
+          },
+          "InstalledVersion": "3.0.13-0ubuntu3.6",
+          "FixedVersion": "3.0.13-0ubuntu3.11",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "SeveritySource": "ubuntu",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-45447",
+          "DataSource": {
+            "ID": "ubuntu",
+            "Name": "Ubuntu CVE Tracker",
+            "URL": "https://git.launchpad.net/ubuntu-cve-tracker"
+          },
+          "Fingerprint": "sha256:8cbb7782344e2926a14f0e166a705d28b5e3271d28a2e49f8a496b83971b06c9",
+          "Title": "openssl: Heap Use-After-Free in OpenSSL PKCS7_verify()",
+          "Description": "Issue summary: A specially crafted PKCS#7 or S/MIME signed message could\ntrigger a use-after-free during PKCS#7 signature verification.\n\nImpact summary: A use-after-free may result in process crashes, heap\ncorruption, or potentially remote code execution.\n\nWhen processing a PKCS#7 or S/MIME signed message, if the SignedData\ndigestAlgorithms field is present as an empty ASN.1 SET, OpenSSL may\nincorrectly free a caller-owned BIO during PKCS7_verify(). A subsequent\nuse of the BIO by the calling application results in a use-after-free\ncondition.\n\nIn the common case this occurs when the application later calls\nBIO_free() on the BIO originally passed to PKCS7_verify(). Depending\non allocator behavior and application-specific BIO usage patterns, this\nmay result in a crash or other memory corruption. In some application\ncontexts this may potentially be exploitable for remote code execution.\n\nApplications that process PKCS#7 or S/MIME signed messages using OpenSSL\nPKCS#7 APIs may be affected. Applications using the CMS APIs for this\nprocessing are not affected.\n\nThe FIPS modules in 4.0, 3.6, 3.5, 3.4, and 3.0 are not affected by this\nissue, as the affected code is outside the OpenSSL FIPS module boundary.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-416",
+            "CWE-825"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 3,
+            "julia": 3,
+            "oracle-oval": 2,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 3
+          },
+          "CVSS": {
+            "julia": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:25237",
+            "https://access.redhat.com/errata/RHSA-2026:25239",
+            "https://access.redhat.com/errata/RHSA-2026:26275",
+            "https://access.redhat.com/errata/RHSA-2026:26319",
+            "https://access.redhat.com/errata/RHSA-2026:29197",
+            "https://access.redhat.com/errata/RHSA-2026:34102",
+            "https://access.redhat.com/errata/RHSA-2026:35869",
+            "https://access.redhat.com/errata/RHSA-2026:36215",
+            "https://access.redhat.com/errata/RHSA-2026:36217",
+            "https://access.redhat.com/errata/RHSA-2026:39009",
+            "https://access.redhat.com/errata/RHSA-2026:39012",
+            "https://access.redhat.com/errata/RHSA-2026:39981",
+            "https://access.redhat.com/errata/RHSA-2026:44438",
+            "https://access.redhat.com/errata/RHSA-2026:47735",
+            "https://access.redhat.com/errata/RHSA-2026:47737",
+            "https://access.redhat.com/errata/RHSA-2026:58563",
+            "https://access.redhat.com/errata/RHSA-2026:58981",
+            "https://access.redhat.com/errata/RHSA-2026:59831",
+            "https://access.redhat.com/errata/RHSA-2026:66524",
+            "https://access.redhat.com/security/cve/CVE-2026-45447",
+            "https://bugzilla.redhat.com/2481898",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481879",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481880",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481881",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481882",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481884",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481885",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481887",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481890",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481891",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481892",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481893",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481894",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481896",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481897",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481898",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34180",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34181",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34182",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34183",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42764",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42766",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42767",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42768",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42769",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42770",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-45445",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-45446",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-45447",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-7383",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-9076",
+            "https://errata.almalinux.org/9/ALSA-2026-44438.html",
+            "https://errata.rockylinux.org/RLSA-2026:25239",
+            "https://github.com/advisories/GHSA-f684-cpcq-j565",
+            "https://github.com/openssl/openssl/commit/3aad5eb7af4de4ee0633c30a8541a54d9bbde63c",
+            "https://github.com/openssl/openssl/commit/7d4a980c62258c5910cc883936e0c8dbab4d75a8",
+            "https://github.com/openssl/openssl/commit/9dfd688ad2290fc5075cacbc9bf0c9a93eefed54",
+            "https://github.com/openssl/openssl/commit/a541ae8bfe849a30cc885e8780715c0f488e496c",
+            "https://github.com/openssl/openssl/commit/c505d7559da5d5f9f2c3913c6883a5562ce7273e",
+            "https://github.com/openssl/security/commit/3aad5eb7af4de4ee0633c30a8541a54d9bbde63c",
+            "https://github.com/openssl/security/commit/7d4a980c62258c5910cc883936e0c8dbab4d75a8",
+            "https://github.com/openssl/security/commit/9dfd688ad2290fc5075cacbc9bf0c9a93eefed54",
+            "https://github.com/openssl/security/commit/a541ae8bfe849a30cc885e8780715c0f488e496c",
+            "https://github.com/openssl/security/commit/c505d7559da5d5f9f2c3913c6883a5562ce7273e",
+            "https://linux.oracle.com/cve/CVE-2026-45447.html",
+            "https://linux.oracle.com/errata/ELSA-2026-50379.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-45447",
+            "https://openssl-library.org/news/secadv/20260609.txt",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-45447.json",
+            "https://ubuntu.com/security/notices/USN-8414-1",
+            "https://ubuntu.com/security/notices/USN-8414-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-45447"
+          ],
+          "PublishedDate": "2026-06-09T17:17:19.277Z",
+          "LastModifiedDate": "2026-09-18T13:18:26.343Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-84782",
+          "PkgID": "libssl3t64@3.0.13-0ubuntu3.6",
+          "PkgName": "libssl3t64",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/ubuntu/libssl3t64@3.0.13-0ubuntu3.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "5677a0e459171b26"
+          },
+          "InstalledVersion": "3.0.13-0ubuntu3.6",
+          "FixedVersion": "3.0.13-0ubuntu3.16",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "SeveritySource": "ubuntu",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-84782",
+          "DataSource": {
+            "ID": "ubuntu",
+            "Name": "Ubuntu CVE Tracker",
+            "URL": "https://git.launchpad.net/ubuntu-cve-tracker"
+          },
+          "Fingerprint": "sha256:d292450541593bbb8029cb274b7e4a8169cde89a0d769c06938d6997dba25640",
+          "Title": "openssl: compat-openssl: openssl: Information disclosure via DTLS handshake retransmission",
+          "Description": "Issue summary: The DTLS retransmission logic does not correctly handle\na handshake message write that is suspended part-way through.\nThe retransmitted message can be read past the message buffer and\nthe retransmission overwrites the internal state the suspended write\nneeds to resume correctly.\n\nImpact summary: The retransmitted message can disclose a heap memory\nto the peer as plaintext handshake data or cause a crash and a Denial\nof Service when the read reaches an unmapped memory region.\n\nCWE: CWE-125: Out-of-bounds Read\n\nDescription: DTLS handshake messages can be written out in multiple\nfragments, and a write can suspend mid-message (returning WANT_WRITE)\nif the underlying transport temporarily cannot accept more data. While\nsuch a write is suspended, the DTLS retransmission timer may\nindependently fire and ask the retransmission logic to resend an\nearlier, already-acknowledged-as-sent message from its retransmit\nqueue.\n\nThe retransmission logic reused the same internal buffer and position\ntracking as the message that was still being written, without\nresetting the position back to the start of the message being\nretransmitted. As a result the retransmission was read starting from\nwherever the suspended write had left off, producing a mislabelled\nmessage whose body was leftover bytes from the other, larger message\nstill in flight - content that was never meant to be sent at that\npoint, and which could run past the end of the allocated buffer.\n\nSeparately, even when the retransmission is positioned correctly,\nallowing it to run to completion while another write is suspended\noverwrites the same shared bookkeeping that the suspended write\ndepends on to resume. When the application later resumes the\nsuspended write (via a subsequent SSL_read(), SSL_write(),\nSSL_accept(), or SSL_connect() call), it finds that bookkeeping in a\nstate inconsistent with the message and aborts the process in\na debugging build.\n\nThe fix resets the retransmission's read position to the start of the\nmessage before resending, and skips retransmission entirely whenever a\nhandshake write is still suspended, deferring to the next call that\nresumes it instead.\n\nFIPS impact: no\nThe affected code is outside the FIPS module boundary.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-125"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:H",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:77396",
+            "https://access.redhat.com/security/cve/CVE-2026-84782",
+            "https://bugzilla.redhat.com/2537080",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2537080",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-84782",
+            "https://errata.almalinux.org/9/ALSA-2026-77396.html",
+            "https://errata.rockylinux.org/RLSA-2026:77396",
+            "https://github.com/openssl/openssl/commit/906cf0ef1c85ca40ce69163e9086d6d3fe292943",
+            "https://github.com/openssl/openssl/commit/9f6b34422af7eb5dac61322e33dac1ae989fa628",
+            "https://github.com/openssl/openssl/commit/a383dafdd754eb5b22bf45e37e1bff9d07277a58",
+            "https://github.com/openssl/openssl/commit/d951e02ede8f6a6ff8150546db44b34f0518192c",
+            "https://linux.oracle.com/cve/CVE-2026-84782.html",
+            "https://linux.oracle.com/errata/ELSA-2026-77396.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-84782",
+            "https://openssl-library.org/news/secadv/20260929.txt",
+            "https://openssl-library.org/news/vulnerabilities/#CVE-2026-84782",
+            "https://ubuntu.com/security/notices/USN-8847-1",
+            "https://ubuntu.com/security/notices/USN-8847-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-84782"
+          ],
+          "PublishedDate": "2026-09-29T16:17:12.5Z",
+          "LastModifiedDate": "2026-10-08T01:20:56.003Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-45447",
+          "PkgID": "openssl@3.0.13-0ubuntu3.6",
+          "PkgName": "openssl",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/ubuntu/openssl@3.0.13-0ubuntu3.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "37896f69d9c875e8"
+          },
+          "InstalledVersion": "3.0.13-0ubuntu3.6",
+          "FixedVersion": "3.0.13-0ubuntu3.11",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "SeveritySource": "ubuntu",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-45447",
+          "DataSource": {
+            "ID": "ubuntu",
+            "Name": "Ubuntu CVE Tracker",
+            "URL": "https://git.launchpad.net/ubuntu-cve-tracker"
+          },
+          "Fingerprint": "sha256:921a37c9407c1def566973fbaa2676ce041d2ce6d0201dfb75c39b64ddbb75e6",
+          "Title": "openssl: Heap Use-After-Free in OpenSSL PKCS7_verify()",
+          "Description": "Issue summary: A specially crafted PKCS#7 or S/MIME signed message could\ntrigger a use-after-free during PKCS#7 signature verification.\n\nImpact summary: A use-after-free may result in process crashes, heap\ncorruption, or potentially remote code execution.\n\nWhen processing a PKCS#7 or S/MIME signed message, if the SignedData\ndigestAlgorithms field is present as an empty ASN.1 SET, OpenSSL may\nincorrectly free a caller-owned BIO during PKCS7_verify(). A subsequent\nuse of the BIO by the calling application results in a use-after-free\ncondition.\n\nIn the common case this occurs when the application later calls\nBIO_free() on the BIO originally passed to PKCS7_verify(). Depending\non allocator behavior and application-specific BIO usage patterns, this\nmay result in a crash or other memory corruption. In some application\ncontexts this may potentially be exploitable for remote code execution.\n\nApplications that process PKCS#7 or S/MIME signed messages using OpenSSL\nPKCS#7 APIs may be affected. Applications using the CMS APIs for this\nprocessing are not affected.\n\nThe FIPS modules in 4.0, 3.6, 3.5, 3.4, and 3.0 are not affected by this\nissue, as the affected code is outside the OpenSSL FIPS module boundary.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-416",
+            "CWE-825"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "amazon": 3,
+            "azure": 3,
+            "julia": 3,
+            "oracle-oval": 2,
+            "photon": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 3
+          },
+          "CVSS": {
+            "julia": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.8
+            },
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V3Score": 8.1
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:25237",
+            "https://access.redhat.com/errata/RHSA-2026:25239",
+            "https://access.redhat.com/errata/RHSA-2026:26275",
+            "https://access.redhat.com/errata/RHSA-2026:26319",
+            "https://access.redhat.com/errata/RHSA-2026:29197",
+            "https://access.redhat.com/errata/RHSA-2026:34102",
+            "https://access.redhat.com/errata/RHSA-2026:35869",
+            "https://access.redhat.com/errata/RHSA-2026:36215",
+            "https://access.redhat.com/errata/RHSA-2026:36217",
+            "https://access.redhat.com/errata/RHSA-2026:39009",
+            "https://access.redhat.com/errata/RHSA-2026:39012",
+            "https://access.redhat.com/errata/RHSA-2026:39981",
+            "https://access.redhat.com/errata/RHSA-2026:44438",
+            "https://access.redhat.com/errata/RHSA-2026:47735",
+            "https://access.redhat.com/errata/RHSA-2026:47737",
+            "https://access.redhat.com/errata/RHSA-2026:58563",
+            "https://access.redhat.com/errata/RHSA-2026:58981",
+            "https://access.redhat.com/errata/RHSA-2026:59831",
+            "https://access.redhat.com/errata/RHSA-2026:66524",
+            "https://access.redhat.com/security/cve/CVE-2026-45447",
+            "https://bugzilla.redhat.com/2481898",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481879",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481880",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481881",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481882",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481884",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481885",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481887",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481890",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481891",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481892",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481893",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481894",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481896",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481897",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2481898",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34180",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34181",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34182",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-34183",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42764",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42766",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42767",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42768",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42769",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-42770",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-45445",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-45446",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-45447",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-7383",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-9076",
+            "https://errata.almalinux.org/9/ALSA-2026-44438.html",
+            "https://errata.rockylinux.org/RLSA-2026:25239",
+            "https://github.com/advisories/GHSA-f684-cpcq-j565",
+            "https://github.com/openssl/openssl/commit/3aad5eb7af4de4ee0633c30a8541a54d9bbde63c",
+            "https://github.com/openssl/openssl/commit/7d4a980c62258c5910cc883936e0c8dbab4d75a8",
+            "https://github.com/openssl/openssl/commit/9dfd688ad2290fc5075cacbc9bf0c9a93eefed54",
+            "https://github.com/openssl/openssl/commit/a541ae8bfe849a30cc885e8780715c0f488e496c",
+            "https://github.com/openssl/openssl/commit/c505d7559da5d5f9f2c3913c6883a5562ce7273e",
+            "https://github.com/openssl/security/commit/3aad5eb7af4de4ee0633c30a8541a54d9bbde63c",
+            "https://github.com/openssl/security/commit/7d4a980c62258c5910cc883936e0c8dbab4d75a8",
+            "https://github.com/openssl/security/commit/9dfd688ad2290fc5075cacbc9bf0c9a93eefed54",
+            "https://github.com/openssl/security/commit/a541ae8bfe849a30cc885e8780715c0f488e496c",
+            "https://github.com/openssl/security/commit/c505d7559da5d5f9f2c3913c6883a5562ce7273e",
+            "https://linux.oracle.com/cve/CVE-2026-45447.html",
+            "https://linux.oracle.com/errata/ELSA-2026-50379.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-45447",
+            "https://openssl-library.org/news/secadv/20260609.txt",
+            "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-45447.json",
+            "https://ubuntu.com/security/notices/USN-8414-1",
+            "https://ubuntu.com/security/notices/USN-8414-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-45447"
+          ],
+          "PublishedDate": "2026-06-09T17:17:19.277Z",
+          "LastModifiedDate": "2026-09-18T13:18:26.343Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2026-84782",
+          "PkgID": "openssl@3.0.13-0ubuntu3.6",
+          "PkgName": "openssl",
+          "PkgIdentifier": {
+            "PURL": "pkg:deb/ubuntu/openssl@3.0.13-0ubuntu3.6?arch=amd64\u0026distro=ubuntu-24.04",
+            "UID": "37896f69d9c875e8"
+          },
+          "InstalledVersion": "3.0.13-0ubuntu3.6",
+          "FixedVersion": "3.0.13-0ubuntu3.16",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:168114f2b6eb286a46da1c1cc5407631da5310a0632c61bef8d677e8fa53a4d2"
+          },
+          "SeveritySource": "ubuntu",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2026-84782",
+          "DataSource": {
+            "ID": "ubuntu",
+            "Name": "Ubuntu CVE Tracker",
+            "URL": "https://git.launchpad.net/ubuntu-cve-tracker"
+          },
+          "Fingerprint": "sha256:142ea8106aab3c10bdc4f3b1208a302d7afddc4ac9738e37512ac286ce915676",
+          "Title": "openssl: compat-openssl: openssl: Information disclosure via DTLS handshake retransmission",
+          "Description": "Issue summary: The DTLS retransmission logic does not correctly handle\na handshake message write that is suspended part-way through.\nThe retransmitted message can be read past the message buffer and\nthe retransmission overwrites the internal state the suspended write\nneeds to resume correctly.\n\nImpact summary: The retransmitted message can disclose a heap memory\nto the peer as plaintext handshake data or cause a crash and a Denial\nof Service when the read reaches an unmapped memory region.\n\nCWE: CWE-125: Out-of-bounds Read\n\nDescription: DTLS handshake messages can be written out in multiple\nfragments, and a write can suspend mid-message (returning WANT_WRITE)\nif the underlying transport temporarily cannot accept more data. While\nsuch a write is suspended, the DTLS retransmission timer may\nindependently fire and ask the retransmission logic to resend an\nearlier, already-acknowledged-as-sent message from its retransmit\nqueue.\n\nThe retransmission logic reused the same internal buffer and position\ntracking as the message that was still being written, without\nresetting the position back to the start of the message being\nretransmitted. As a result the retransmission was read starting from\nwherever the suspended write had left off, producing a mislabelled\nmessage whose body was leftover bytes from the other, larger message\nstill in flight - content that was never meant to be sent at that\npoint, and which could run past the end of the allocated buffer.\n\nSeparately, even when the retransmission is positioned correctly,\nallowing it to run to completion while another write is suspended\noverwrites the same shared bookkeeping that the suspended write\ndepends on to resume. When the application later resumes the\nsuspended write (via a subsequent SSL_read(), SSL_write(),\nSSL_accept(), or SSL_connect() call), it finds that bookkeeping in a\nstate inconsistent with the message and aborts the process in\na debugging build.\n\nThe fix resets the retransmission's read position to the start of the\nmessage before resending, and skips retransmission entirely whenever a\nhandshake write is still suspended, deferring to the next call that\nresumes it instead.\n\nFIPS impact: no\nThe affected code is outside the FIPS module boundary.",
+          "Severity": "HIGH",
+          "CweIDs": [
+            "CWE-125"
+          ],
+          "VendorSeverity": {
+            "alma": 3,
+            "oracle-oval": 3,
+            "redhat": 3,
+            "rocky": 3,
+            "ubuntu": 3
+          },
+          "CVSS": {
+            "redhat": {
+              "V3Vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:H",
+              "V3Score": 7.4
+            }
+          },
+          "References": [
+            "https://access.redhat.com/errata/RHSA-2026:77396",
+            "https://access.redhat.com/security/cve/CVE-2026-84782",
+            "https://bugzilla.redhat.com/2537080",
+            "https://bugzilla.redhat.com/show_bug.cgi?id=2537080",
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-84782",
+            "https://errata.almalinux.org/9/ALSA-2026-77396.html",
+            "https://errata.rockylinux.org/RLSA-2026:77396",
+            "https://github.com/openssl/openssl/commit/906cf0ef1c85ca40ce69163e9086d6d3fe292943",
+            "https://github.com/openssl/openssl/commit/9f6b34422af7eb5dac61322e33dac1ae989fa628",
+            "https://github.com/openssl/openssl/commit/a383dafdd754eb5b22bf45e37e1bff9d07277a58",
+            "https://github.com/openssl/openssl/commit/d951e02ede8f6a6ff8150546db44b34f0518192c",
+            "https://linux.oracle.com/cve/CVE-2026-84782.html",
+            "https://linux.oracle.com/errata/ELSA-2026-77396.html",
+            "https://nvd.nist.gov/vuln/detail/CVE-2026-84782",
+            "https://openssl-library.org/news/secadv/20260929.txt",
+            "https://openssl-library.org/news/vulnerabilities/#CVE-2026-84782",
+            "https://ubuntu.com/security/notices/USN-8847-1",
+            "https://ubuntu.com/security/notices/USN-8847-2",
+            "https://www.cve.org/CVERecord?id=CVE-2026-84782"
+          ],
+          "PublishedDate": "2026-09-29T16:17:12.5Z",
+          "LastModifiedDate": "2026-10-08T01:20:56.003Z"
+        }
+      ]
+    }
+  ]
+}
