@@ -19,9 +19,9 @@ pipeline{
         CI_BOT_COMMIT_SIGN = "[skip ci]"
 
         // Trivy CVE scanner
-        CVE_SCAN_ENABLED = true
         CVE_SEVERITY = "HIGH,CRITICAL" // "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
-        CVE_FAILED_SCAN_EXT_CODE = 1 // 1 for stop at failed scan, 0 for just create report  
+        CVE_SCAN_REPORT_FORMAT = "json"
+        CVE_USE_VULNERABLE_IMAGE = false // "true" is just and only for pipeline testing, not for dev or prod
     }
     stages{
         stage("init"){ 
@@ -45,6 +45,17 @@ pipeline{
             steps{  
                 script{
                     utils.buildImages()
+                }
+            } 
+        } 
+
+        stage("Image CVE Scan"){ 
+            when { 
+                expression { env.CVE_SCAN_ENABLED.toBoolean() } 
+            } 
+            steps{  
+                script{
+                    utils.cveScan()
                 }
             } 
         } 

@@ -28,7 +28,7 @@ def buildImages(){
     env.APP_VERSION = "${BOUTIQUE_BRANCH.replace('/','-')}-${GIT_COMMIT[0..6]}-b${BUILD_NUMBER}"
 
     for (service in services.entrySet()){
-        service.value.imguri = "${ECR_REGISTER}/${service.value.repo}:${env.APP_VERSION}"
+        services[service.key].imguri = "${ECR_REGISTER}/${service.value.repo}:${env.APP_VERSION}"
 
         dir("${WORKSPACE}/microservices-demo/src/$service.value.srcDir"){
 
@@ -41,10 +41,6 @@ def buildImages(){
                     podman build -t ${service.value.imguri} --label "SCM_VERSION=${BOUTIQUE_BRANCH}" . 
                     podman image prune -f
                 """
-            // Scan CVE with Trivy
-            if (env.CVE_SCAN_ENABLED) {
-                cveScan(repo: service.value.repo, ver: env.APP_VERSION, imguri:service.value.imguri  )
-            }
         }
     }
 }
@@ -120,8 +116,6 @@ def helmChartLinting(){
   sh "helm lint boutique-helm"
 }
 
-
-
 def _addServiceVarToValuesYaml(Map service){
     // Modifying values.yaml
     sh """
@@ -168,7 +162,25 @@ def _addDeploymentAndServiceTemplate(Map service){
                 - name: AD_SERVICE_ADDR
                   value: "{{ .Values.adservice.name }}:{{ .Values.adservice.port }}"
                 - name: CART_SERVICE_ADDR
-                  value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"          
+                  value: "{{ .Values.cartservice.name }}:{{ .Values.cartservice.port }}"
+                - name: CHECKOUT_SERVICE_ADDR
+                  value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
+                - name: CURRENCY_SERVICE_ADDR
+                  value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
+                - name: EMAIL_SERVICE_ADDR
+                  value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
+                - name: FRONTEND_SERVICE_ADDR
+                  value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
+                - name: PAYMENT_SERVICE_ADDR
+                  value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
+                - name: PRODUCT_CATALOG_SERVICE_ADDR
+                  value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
+                - name: RECOMMENDATION_SERVICE_ADDR
+                  value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
+                - name: SHIPPING_SERVICE_ADDR
+                  value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
+                - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+                  value: "null"                        
                 - name: REDIS_ADDR
                   value: "redis-cart:6379"
                 - name: ENABLE_SHOPPING_ASSISTANT
@@ -265,21 +277,50 @@ def _addRedis(){
 
 }
 
-def cveScan(Map img){
-    String reportFile = "${img.repo}-${img.ver}.json"
+def cveScan(){
 
-    sh """
-        podman run --rm \
-        --security-opt label=disable \
-        -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
-        -v trivy-cache:/root/.cache \
-        docker.io/aquasec/trivy:latest image \
-        --image-src podman --format json\
-        --podman-host /run/podman/podman.sock \
-        --severity ${env.CVE_SEVERITY} --exit-code ${env.CVE_FAILED_SCAN_EXT_CODE} --ignore-unfixed \
-        ${img.imguri} > ${reportFile}
-    """
-    archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
+    for (service in services.entrySet()){
+        String reportFile = "${service.value.repo}-${env.APP_VERSION}_cve_scan_result.${env.CVE_SCAN_REPORT_FORMAT}"
+
+        services[service.key].cveScanPassed = sh( returnStatus: true, script:"""
+            podman run --rm \
+            --security-opt label=disable \
+            -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
+            -v trivy-cache:/root/.cache \
+            docker.io/aquasec/trivy:latest image \
+            --image-src podman --format ${env.CVE_SCAN_REPORT_FORMAT} \
+            --podman-host /run/podman/podman.sock \
+            --severity ${env.CVE_SEVERITY} --exit-code 1 --ignore-unfixed \
+            ${service.value.imguri} > ${reportFile}
+        """) == 0
+
+        archiveArtifacts artifacts: reportFile, allowEmptyArchive: true
+    }
+
+
+    def failed_scan_list = []
+
+    for (service in services.entrySet()){
+        if (!services[service.key].cveScanPassed){ 
+            failed_scan_list.add(service.key)
+            echo ">>> Image scan failed: ${service.value.imguri}"
+        }
+    }
+
+    if ( failed_scan_list.size() > 0 && !env.CVE_USE_VULNERABLE_IMAGE.toBoolean() ) { 
+        error("Pipeline is stopped because of failed CVE scan${failed_scan_list.size() > 1 ? 's.':'.'}")
+    }
+
+    if (failed_scan_list.size() > 0) {
+        echo """
+            ******************************************************************
+            *                                                                *
+            *                     !!!! CAUTION  !!!!                         *
+            *       THE BUILD IS CONTINUE WITH VULNERABLE IMAGE${failed_scan_list.size() > 1 ? 'S.':'. '}            *
+            *                                                                *
+            ******************************************************************
+        """
+    }
 
 }
 
@@ -300,21 +341,4 @@ return this
 
 
 
-                // - name: CHECKOUT_SERVICE_ADDR
-                //   value: "{{ .Values.checkoutservice.name }}:{{ .Values.checkoutservice.port }}"
-                // - name: CURRENCY_SERVICE_ADDR
-                //   value: "{{ .Values.currencyservice.name }}:{{ .Values.currencyservice.port }}"
-                // - name: EMAIL_SERVICE_ADDR
-                //   value: "{{ .Values.emailservice.name }}:{{ .Values.emailservice.port }}"
-                // - name: FRONTEND_SERVICE_ADDR
-                //   value: "{{ .Values.frontend.name }}:{{ .Values.frontend.port }}"
-                // - name: PAYMENT_SERVICE_ADDR
-                //   value: "{{ .Values.paymentservice.name }}:{{ .Values.paymentservice.port }}"
-                // - name: PRODUCT_CATALOG_SERVICE_ADDR
-                //   value: "{{ .Values.productcatalogservice.name }}:{{ .Values.productcatalogservice.port }}" 
-                // - name: RECOMMENDATION_SERVICE_ADDR
-                //   value: "{{ .Values.recommendationservice.name }}:{{ .Values.recommendationservice.port }}" 
-                // - name: SHIPPING_SERVICE_ADDR
-                //   value: "{{ .Values.shippingservice.name }}:{{ .Values.shippingservice.port }}" 
-                // - name: SHOPPING_ASSISTANT_SERVICE_ADDR
-                //   value: "null"        
+      
