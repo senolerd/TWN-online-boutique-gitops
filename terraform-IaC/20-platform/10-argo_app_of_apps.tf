@@ -202,3 +202,44 @@ resource "local_file" "boutique-helm-app" {
     }
   })
 }
+
+
+resource "local_file" "prometheus-helm-app" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/60-prometheus-app-${data.terraform_remote_state.infra.outputs.env}.app.yaml"
+  content = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name      = "prometheus-app-${data.terraform_remote_state.infra.outputs.env}-tf"
+      namespace = "argocd"
+      annotations = {
+        "argocd.argoproj.io/sync-wave" = "60"
+      }
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = "https://prometheus-community.github.io/helm-charts"
+        path           = "charts/kube-prometheus-stack"
+        targetRevision = "app-prometheus"
+      }
+      destination = {
+        namespace = "monitoring"
+        name      = "in-cluster"
+      }
+      syncPolicy = {
+        automated = {
+          prune    = true
+          selfHeal = true
+        }
+        syncOptions = [
+          "CreateNamespace=true",
+          "ServerSideApply=true"
+        ]
+      }
+    }
+  })
+}
+
+
