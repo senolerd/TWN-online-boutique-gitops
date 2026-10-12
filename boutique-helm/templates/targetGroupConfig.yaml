@@ -1,0 +1,13 @@
+"apiVersion": "gateway.k8s.aws/v1beta1"
+"kind": "TargetGroupConfiguration"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "10"
+  "name": "frontend-tg"
+"spec":
+  "defaultConfiguration":
+    "healthCheckConfig":
+      "healthCheckPath": "/_healthz"
+    "targetType": "ip"
+  "targetReference":
+    "name": "frontend"
