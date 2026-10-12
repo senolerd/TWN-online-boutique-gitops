@@ -221,7 +221,7 @@ resource "local_file" "prometheus-helm-app" {
       project = "default"
       source = {
         repoURL        = "https://prometheus-community.github.io/helm-charts"
-        path           = "kube-prometheus-stack"
+        chart           = "kube-prometheus-stack"
         targetRevision = "92.3.0"
       }
       destination = {
