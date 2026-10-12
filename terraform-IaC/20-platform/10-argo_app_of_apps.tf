@@ -222,7 +222,7 @@ resource "local_file" "prometheus-helm-app" {
       source = {
         repoURL        = "https://prometheus-community.github.io/helm-charts"
         path           = "charts/kube-prometheus-stack"
-        targetRevision = "app-prometheus"
+        targetRevision = "HEAD"
       }
       destination = {
         namespace = "monitoring"
