@@ -68,7 +68,18 @@ resource "aws_eks_addon" "vpc-cni" {
   cluster_name                = aws_eks_cluster.eks.name
   addon_name                  = "vpc-cni"
   addon_version               = "v1.22.3-eksbuild.1"
-  resolve_conflicts_on_update = "PRESERVE"
+  resolve_conflicts_on_update = "OVERWRITE"
+  
+  configuration_values = jsonencode({
+    env = {
+      ENABLE_PREFIX_DELEGATION = "true"
+      # By default, each pod uses one IP slot on the node’s network interfaces, and a t3.medium only has about 15 slots, 
+      # so it caps at 17 pods. Prefix delegation makes each slot hold a block of 16 IPs instead of one, so the same node 
+      # can run about 110 pods. I hit the 17-pod limit deploying kube-prometheus-stack, and this was the fix.”
+      WARM_PREFIX_TARGET       = "1"
+    }
+  })
+
   pod_identity_association {
     role_arn = aws_iam_role.vpc-cni-pod-identity-role.arn
     service_account = "aws-node"

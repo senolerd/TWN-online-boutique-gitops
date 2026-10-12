@@ -34,7 +34,7 @@ clean:
 	git commit -m "Deployment removed. ArgoCD apps are cleared. [skip ci]"
 	git push origin main
 
-	terraform -chdir=$(TARGET)/10-bootstrap-argocd destroy -auto-approve
+# 	terraform -chdir=$(TARGET)/10-bootstrap-argocd destroy -auto-approve
 	terraform -chdir=$(TARGET)/00-infra destroy -auto-approve; \
 	if [ $$? != 0 ] ; then \
 		echo "If the VPC couldn't deleted, check out Endpoints and Security Groups. Delete manually if there is any tagged for cluster"; \
