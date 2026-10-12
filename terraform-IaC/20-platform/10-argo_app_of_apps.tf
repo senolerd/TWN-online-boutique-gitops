@@ -243,3 +243,37 @@ resource "local_file" "prometheus-helm-app" {
 }
 
 
+resource "local_file" "prometheus-HTTPRoute" {
+  filename = "../../boutique-helm/templates/httproute.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name        = "boutique-${data.terraform_remote_state.infra.outputs.env}"
+      annotations = { "argocd.argoproj.io/sync-wave" = "20" }
+    }
+    spec = {
+      hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
+      parentRefs = [
+        {
+          group = "gateway.networking.k8s.io"
+          kind  = "Gateway"
+          name  = "public-gw",
+        namespace = "gateway-system" }
+      ]
+      rules = [
+        {
+          matches = [{ path = { type = "PathPrefix", value = "/" } }]
+          backendRefs = [{
+            name   = "frontend"
+            port   = 8080
+            group  = ""
+            kind   = "Service"
+            weight = 1
+          }]
+        }
+      ]
+    }
+  })
+}
