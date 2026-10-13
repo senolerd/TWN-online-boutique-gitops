@@ -4,6 +4,7 @@
   "annotations":
     "argocd.argoproj.io/sync-wave": "80"
   "name": "grafana-prod"
+  "namespace": "monitoring"
 "spec":
   "hostnames":
   - "grafana.senolerd.xyz"

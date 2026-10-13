@@ -219,6 +219,7 @@ resource "local_file" "prometheus-HTTPRoute" {
     metadata = {
       name        = "grafana-${data.terraform_remote_state.infra.outputs.env}"
       annotations = { "argocd.argoproj.io/sync-wave" = "80" }
+      namespace = "monitoring"
     }
     spec = {
       hostnames = ["grafana.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
