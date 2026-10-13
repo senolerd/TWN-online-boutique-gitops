@@ -30,8 +30,6 @@ output "eks_cluster_region" {
   value = module.eks.eks_cluster_region
 }
 
-
-
 output "argocd-dir" {
   value = var.argocd-dir
 }
@@ -39,5 +37,3 @@ output "argocd-dir" {
 output "hosted_zone_name" {
   value = var.hosted_zone_name
 }
-
-

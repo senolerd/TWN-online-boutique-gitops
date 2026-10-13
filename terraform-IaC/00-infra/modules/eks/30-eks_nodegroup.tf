@@ -85,5 +85,3 @@ resource "aws_eks_access_policy_association" "eks_access_policy_association_to_w
     type = "cluster"
   }
 }
-
-###############################################################################################

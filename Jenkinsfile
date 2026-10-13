@@ -25,7 +25,7 @@ pipeline{
         CVE_USE_VULNERABLE_IMAGE = false // "true" is just and only for pipeline testing, not for dev or prod
     }
     stages{
-        stage("init"){ 
+        stage("init") { 
             steps{  
                 script{
                     echo "init for Boutique ${BOUTIQUE_BRANCH} has started" 
@@ -34,7 +34,7 @@ pipeline{
             } 
         }
 
-        stage("Download Source"){ 
+        stage("Download Source") { 
             steps{
                 script{
                     utils.downloadSource(BOUTIQUE_BRANCH)
@@ -42,7 +42,7 @@ pipeline{
             } 
         } 
 
-        stage("Build Images"){ 
+        stage("Build Images") { 
             steps{  
                 script{
                     utils.buildImages()
@@ -50,7 +50,7 @@ pipeline{
             } 
         } 
 
-        stage("Image CVE Scan"){ 
+        stage("Image CVE Scan") { 
             when { 
                 expression { env.CVE_SCAN_ENABLED.toBoolean() } 
             } 
@@ -61,7 +61,7 @@ pipeline{
             } 
         } 
 
-        stage("Push images to ECR"){ 
+        stage("Push images to ECR") { 
             steps{  
                 script{
                     utils.pushImages()
@@ -69,17 +69,17 @@ pipeline{
             } 
         } 
 
-        stage("Helm chart creating"){ 
+        stage("Helm chart creating") { 
             steps{  
                 script{
                     utils.helmChartCreate() // creates new chart
-                    utils.helmChartLinting() // chart linging check
+                    utils.helmChartLinting() // new chart linting
                     
                 }
             } 
         } 
 
-        stage("Helm Chart Version Bump Up"){ 
+        stage("Helm Chart Version Bump Up") { 
             steps{  
                 script{
                     utils.updateGithubHelmChart()

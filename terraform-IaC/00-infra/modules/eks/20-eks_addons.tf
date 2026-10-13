@@ -147,11 +147,6 @@ resource "aws_eks_addon" "external-dns" {
   }
 }
 
-
-
-
-
-
 ###### kube-proxy (Default for installing with EKS console normal mode)
 resource "aws_eks_addon" "kube-proxy" {
   depends_on = [ aws_eks_cluster.eks ]
@@ -161,7 +156,6 @@ resource "aws_eks_addon" "kube-proxy" {
   resolve_conflicts_on_update = "PRESERVE"
 }
 
-
 ###### coredns (Default for installing with EKS console normal mode)
 resource "aws_eks_addon" "coredns" {
   depends_on = [ aws_eks_node_group.ng1 ]
@@ -170,5 +164,3 @@ resource "aws_eks_addon" "coredns" {
   addon_version = "v1.14.3-eksbuild.3"
   resolve_conflicts_on_update = "PRESERVE"
 }
-
-

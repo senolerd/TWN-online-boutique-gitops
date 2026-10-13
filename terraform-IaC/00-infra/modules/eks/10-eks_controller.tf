@@ -49,15 +49,3 @@ resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.cluster_role.name
 }
-
-
-# Adding EKS clusters default SG as allowd group to VPC Endpoint SG
-# for allowing incoming request from node groups to endpoints
-resource "aws_vpc_security_group_ingress_rule" "vpc_security_group_ingress_rule" {
-  count = var.environment == "dev" ? 1 : 0
-  security_group_id            = var.vpc_endpoint_sg_for_eks_id
-  referenced_security_group_id = aws_eks_cluster.eks.vpc_config[0].cluster_security_group_id
-  from_port                    = 443
-  to_port                      = 443
-  ip_protocol                  = "tcp"
-}

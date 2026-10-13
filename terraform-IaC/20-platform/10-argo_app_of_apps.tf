@@ -218,5 +218,3 @@ resource "local_file" "boutique-helm-app" {
     }
   })
 }
-
-

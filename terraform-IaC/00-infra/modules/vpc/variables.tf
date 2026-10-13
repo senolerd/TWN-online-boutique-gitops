@@ -19,18 +19,6 @@ variable "subnets" {
   }))
 }
 
-variable "endpoints_interface" {
-  # [ "ecr.api", "ecr.dkr", "ec2", "sts", "eks-auth", "elasticloadbalancing" ]
-  type    = set(string)
-}
-
-variable "is_production" {
-  # ToDo: For node group on private network; Nat Gateway for production, Endpoints for developmenet
-  type    = bool
-  default = false
-}
-
-
 variable "environment" {
   type = string
 }

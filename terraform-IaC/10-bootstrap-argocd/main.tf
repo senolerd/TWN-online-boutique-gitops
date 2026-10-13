@@ -52,6 +52,3 @@ resource "helm_release" "argocd" {
 }
 # Argocd CRD resources can be created after the Gateway Api CRDs are exist on Cluster. 
 # Those custom health checks will let Argo to track CRD installation state, Gateway Api CRDs in this project.
-
-
-

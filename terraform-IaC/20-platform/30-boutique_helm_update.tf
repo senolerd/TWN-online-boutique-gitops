@@ -54,6 +54,3 @@ resource "local_file" "boutique-HTTPRoute" {
     }
   })
 }
-
-
-

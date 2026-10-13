@@ -13,26 +13,11 @@ subnets = {
   public-1c  = { cidr = "10.10.66.0/24", az = "us-east-1c", is_public = true }
   public-1d  = { cidr = "10.10.67.0/24", az = "us-east-1d", is_public = true }
 }
-endpoints_interface = [ "ecr.api", "ecr.dkr", "ec2", "sts", "eks-auth", "elasticloadbalancing" ]
+
 instance_types = {
   dev =  ["t3.small"] 
   prod = ["t3.medium"]
 } 
+
 argocd-dir= "../../argocd"
-
-
 hosted_zone_name = "senolerd.xyz"
-
-
-  
-
-
-  # ToDo: Pull subnets to /22 or /21, 24 might be small sometimes 
-  # subnet1 = { cidr = "10.10.0.0/20", az = "us-east-1a", is_public = false } //4096
-  # subnet2 = { cidr = "10.10.64.0/24", az = "us-east-1a", is_public = true }
-  # subnet3 = { cidr = "10.10.16.0/20", az = "us-east-1b", is_public = false } //4096
-  # subnet4 = { cidr = "10.10.65.0/24", az = "us-east-1b", is_public = true }
-  # subnet5 = { cidr = "10.10.32.0/20", az = "us-east-1c", is_public = false } //4096
-  # subnet6 = { cidr = "10.10.66.0/24", az = "us-east-1c", is_public = true }
-  # subnet7 = { cidr = "10.10.48.0/20", az = "us-east-1d", is_public = false } //4096
-  # subnet8 = { cidr = "10.10.67.0/24", az = "us-east-1d", is_public = true }

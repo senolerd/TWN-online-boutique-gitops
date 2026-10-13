@@ -41,6 +41,7 @@ The point of this repo isn't the shopping app (that's Google's demo) — it's ev
 │   +- platform app            (wave 30) --> argocd/platform                 │
 │   |     +- GatewayClass / LoadBalancerConfiguration                        │
 │   |     +- Gateway + HTTPRoute + TargetGroupConfiguration                  │
+│   |     +- kube-prometheus-stack (Prometheus + Grafana)                    │
 │   +- boutique-helm app       (wave 50) --> boutique-helm/                  │
 │         +- 11 microservices + redis-cart                                   │
 └────────────────────────────────────────────────────────────────────────────┘
@@ -66,7 +67,7 @@ The point of this repo isn't the shopping app (that's Google's demo) — it's ev
 | `libs/utils.groovy` | Shared pipeline logic: clone source, build/push images, generate the Helm chart, CVE scan, commit chart bump |
 | `boutique-helm/` | The generated Helm chart for the Online Boutique app (deployments, services, `redis-cart`, and Gateway API `HTTPRoute`/`TargetGroupConfiguration` templates) |
 | `argocd/apps/` | App-of-apps child `Application` manifests, rendered by Terraform (`20-platform`) |
-| `argocd/platform/` | Platform-level Gateway API resources, also rendered by Terraform |
+| `argocd/platform/` | Platform-level resources (Gateway API wiring, ArgoCD UI and Grafana routes, monitoring stack), also rendered by Terraform |
 | `terraform-IaC/00-infra/` | VPC + EKS cluster + node group + core addons (modular: `vpc/`, `eks/`) |
 | `terraform-IaC/10-bootstrap-argocd/` | Installs ArgoCD onto the freshly created cluster via the `argo-cd` Helm chart |
 | `terraform-IaC/20-platform/` | Renders the app-of-apps root + child Application YAMLs and platform/ingress manifests |
@@ -115,20 +116,23 @@ CD follows the **app-of-apps** pattern, with sync waves controlling order:
 |---|---|---|
 | 10 | `gateway-api-crds` | Upstream `kubernetes-sigs/gateway-api` CRDs |
 | 20 | `aws-load-balancer-controller` | `aws/eks-charts` Helm chart, with Gateway API feature gate enabled |
-| 30 | `platform` | `argocd/platform` — GatewayClass, LoadBalancerConfiguration, Gateway, ArgoCD UI HTTPRoute |
+| 30 | `platform` | `argocd/platform` — GatewayClass, LoadBalancerConfiguration, Gateway, ArgoCD UI HTTPRoute, and the monitoring stack (`kube-prometheus-stack` Application + Grafana HTTPRoute) |
 | 50 | `boutique-helm` | `boutique-helm/` — the generated application chart |
 
 The root `app-of-apps` Application and every child Application/platform manifest are **not hand-written** — they're rendered by Terraform (`terraform-IaC/20-platform`) as `local_file` resources into `argocd/apps/` and `argocd/platform/`, then committed. This keeps the GitOps source of truth in Git while letting Terraform own templating logic (hosted zone, VPC name, environment, ACM certificate lookup, etc.) that would otherwise be duplicated by hand in YAML.
 
 A custom Argo CD health check (installed in `10-bootstrap-argocd`) teaches Argo how to assess the health of both `Application` and `Gateway` resources, so later sync waves correctly wait for earlier ones to actually become `Healthy` rather than just "created."
 
+**Monitoring.** Prometheus and Grafana come from the upstream `kube-prometheus-stack` Helm chart, deployed as a child Application inside the `platform` app (namespace `monitoring`). Like the ArgoCD UI, Grafana is exposed through the shared public Gateway with its own `TargetGroupConfiguration` (pod-IP targets, `/healthz` health check) and `HTTPRoute` at `grafana.<hosted_zone_name>`. Ordering inside the platform app is again handled by sync waves: the chart (wave 60) before its target group config (70) and route (80).
+
 ## Infrastructure (Terraform)
 
 Three independent state layers, applied in order (`terraform-IaC/00-infra` → `10-bootstrap-argocd` → `20-platform`):
 
-- **`00-infra`** — VPC module (public/private subnets across multiple AZs) + EKS module (cluster, IAM roles, managed node group, core addons: `vpc-cni`, `kube-proxy`, `coredns`, `eks-pod-identity-agent`, `external-dns`). Supports a `dev`/`prod` `environment` switch:
-  - `prod`: private subnets egress through a regional NAT Gateway (normal internet access).
-  - `dev`: private subnets have **no internet egress at all** — only VPC interface/gateway endpoints to specific AWS services (ECR, STS, EC2, ELB, etc.), to keep a scratch dev cluster cheap and locked down.
+- **`00-infra`** — VPC module (public/private subnets across multiple AZs) + EKS module (cluster, IAM roles, managed node group, core addons: `vpc-cni`, `kube-proxy`, `coredns`, `eks-pod-identity-agent`, `external-dns`). Supports a `dev`/`prod` `environment` switch that drives cluster/IAM naming, node instance size and the boutique namespace.
+  - In both environments, private subnets egress through a **regional NAT Gateway**. Since the GitOps stack pulls images and Helm charts from public registries (quay.io, ghcr.io, Helm repos), an endpoint-only, no-internet cluster would mean mirroring all of them into ECR — so `dev` uses the same egress path as `prod`.
+  - An **S3 gateway endpoint** on the private route table keeps S3 traffic (including ECR image layers, which are served from S3) off the NAT Gateway, avoiding NAT data-processing charges at no extra cost.
+  - The `vpc-cni` addon has **prefix delegation** enabled: each ENI slot holds a /28 block instead of a single IP, raising the per-node pod limit (a `t3.medium` goes from ~17 to ~110 pods). The default limit was hit while deploying `kube-prometheus-stack`.
 - **`10-bootstrap-argocd`** — installs ArgoCD via the official `argo-cd` Helm chart and wires up the resource health customizations mentioned above.
 - **`20-platform`** — reads outputs from `00-infra` via `terraform_remote_state`, then renders every ArgoCD Application/platform YAML described in the table above, plus the boutique chart's `HTTPRoute`/`TargetGroupConfiguration` templates.
 
@@ -158,7 +162,7 @@ Ingress is deliberately **not** part of the application Helm chart's day-1 scope
 - TLS is wired up by looking up an existing **ACM certificate** for the configured hosted zone and attaching it to the Gateway's HTTPS listener.
 - **ExternalDNS** (EKS addon, Pod Identity-authenticated) watches `Gateway`/`HTTPRoute` objects and manages the matching Route 53 records automatically.
 
-Both the ArgoCD UI and the boutique `frontend` get their own `HTTPRoute`, sharing one public `Gateway`.
+The ArgoCD UI, Grafana and the boutique `frontend` each get their own `HTTPRoute` (`argocd.`, `grafana.` and `boutique.<hosted_zone_name>`), sharing one public `Gateway`.
 
 ## Getting started
 
@@ -179,6 +183,9 @@ make platform
 
 # Fetch the ArgoCD initial admin password
 make argo-password
+
+# Fetch the Grafana admin password (user: admin)
+make grafana-password
 ```
 
 Tear everything down in reverse with `make clean`.
@@ -192,7 +199,7 @@ CI (Jenkins) is configured independently via the environment block at the top of
 - Every built image is scanned with **Trivy** for `HIGH`/`CRITICAL` CVEs, and the scan **gates the pipeline** — all images are scanned first, every failing image is reported, and then the build fails if any of them is vulnerable, so nothing vulnerable is pushed to ECR (unless `CVE_USE_VULNERABLE_IMAGE` is explicitly set for pipeline testing). Every report is archived as a Jenkins build artifact either way.
 - The CI job's git push (Helm chart version bump) authenticates with a **GitHub deploy key scoped to this one repository**, not a personal or account-wide credential — compromising the Jenkins credential store can't leak push access beyond this repo.
 - Node group and controller IAM roles/policies follow least-privilege, service-specific policies (`AmazonEKS_CNI_Policy`, `AmazonEC2ContainerRegistryReadOnly`, `AmazonEKSWorkerNodePolicy`, a dedicated AWS Load Balancer Controller policy, etc.) via **EKS Pod Identity** rather than broad node-instance permissions — and every such IAM role/policy name is suffixed with the cluster name (`${project_name}-${environment}`) so `dev` and `prod`, or a second project, can coexist in the same AWS account without an `EntityAlreadyExists` collision.
-- In `dev`, node group egress is restricted to explicit VPC endpoints only — no default internet access.
+- Worker nodes run in private subnets with no public IPs; outbound traffic leaves through the NAT Gateway, and nothing on the nodes is directly reachable from the internet — only the routes published on the ALB-backed Gateway.
 - ECR authentication for pulled images relies on the node group's IAM role (no static credentials baked into manifests); Terraform itself takes no AWS credentials as input either — it resolves auth from the standard AWS SDK credential chain active in the operator's shell (see [Getting started](#getting-started)).
 
 ## Credits

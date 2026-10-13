@@ -7,7 +7,6 @@ module "vpc" {
   environment         = var.environment
   subnets             = var.subnets
   vpc_cidr            = var.vpc_cidr
-  endpoints_interface = var.endpoints_interface
 }
 
 module "eks" {
@@ -17,7 +16,6 @@ module "eks" {
   environment                = var.environment
   region                     = var.region
   private_subnets            = module.vpc.private_subnets
-  vpc_endpoint_sg_for_eks_id = module.vpc.vpc_endpoint_sg_for_eks_id
   instance_types             = var.instance_types
   hosted_zone_name           = var.hosted_zone_name
 }
