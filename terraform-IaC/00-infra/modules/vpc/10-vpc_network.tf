@@ -40,7 +40,6 @@ resource "aws_subnet" "project_subnets" {
 #### Internet access for Public network
 
 resource "aws_internet_gateway" "IGV" {
-  # Every VPC need a internet gateway at some point
   vpc_id = aws_vpc.project_vpc.id
   tags = {
     "Name" : "${var.environment}-${var.project_name}_IGW"
