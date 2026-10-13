@@ -1,0 +1,26 @@
+"apiVersion": "gateway.networking.k8s.io/v1"
+"kind": "HTTPRoute"
+"metadata":
+  "annotations":
+    "argocd.argoproj.io/sync-wave": "80"
+  "name": "grafana-prod"
+  "namespace": "monitoring"
+"spec":
+  "hostnames":
+  - "grafana.senolerd.xyz"
+  "parentRefs":
+  - "group": "gateway.networking.k8s.io"
+    "kind": "Gateway"
+    "name": "public-gw"
+    "namespace": "gateway-system"
+  "rules":
+  - "backendRefs":
+    - "group": ""
+      "kind": "Service"
+      "name": "prometheus-app-prod-tf-grafana"
+      "port": 80
+      "weight": 1
+    "matches":
+    - "path":
+        "type": "PathPrefix"
+        "value": "/"
