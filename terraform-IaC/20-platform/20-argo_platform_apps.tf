@@ -83,9 +83,11 @@ resource "local_file" "gateway-yaml" {
   })
 }
 
+
+
 # ArgoCD: ArgoCD UI HTTPRoute and Target Group Configuration
 resource "local_file" "argocd-ui-targetGroupConfiguration" {
-  filename = "../../argocd/platform/50-argocd-tgc.yaml"
+  filename = "../../argocd/platform/40-argocd-tgc.yaml"
   content = yamlencode({
 
     apiVersion = "gateway.k8s.aws/v1beta1"
@@ -107,7 +109,7 @@ resource "local_file" "argocd-ui-targetGroupConfiguration" {
 }
 
 resource "local_file" "argocd-ui-HTTPRoute" {
-  filename = "../../argocd/platform/40-argocd-ui.yaml"
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/50-argocd-ui.yaml"
   content = yamlencode({
     apiVersion = "gateway.networking.k8s.io/v1"
     kind       = "HTTPRoute"
@@ -146,3 +148,99 @@ resource "local_file" "argocd-ui-HTTPRoute" {
 }
 
 
+
+# Prometheus/Grafana
+resource "local_file" "prometheus-helm-operator-app" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/60-prometheus-app-${data.terraform_remote_state.infra.outputs.env}.app.yaml"
+  content = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name      = "prometheus-app-${data.terraform_remote_state.infra.outputs.env}-tf"
+      namespace = "argocd"
+      annotations = {
+        "argocd.argoproj.io/sync-wave" = "60"
+      }
+      finalizers = ["resources-finalizer.argocd.argoproj.io"]
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = "https://prometheus-community.github.io/helm-charts"
+        chart          = "kube-prometheus-stack"
+        targetRevision = "92.3.0"
+      }
+      destination = {
+        namespace = "monitoring"
+        name      = "in-cluster"
+      }
+      syncPolicy = {
+        automated = {
+          prune    = true
+          selfHeal = true
+        }
+        syncOptions = [
+          "CreateNamespace=true",
+          "ServerSideApply=true"
+        ]
+      }
+    }
+  })
+}
+
+resource "local_file" "prometheus-ui-targetGroupConfiguration" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/70-prometheus-tgc.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.k8s.aws/v1beta1"
+    kind       = "TargetGroupConfiguration"
+    metadata = {
+      name        = "prometheus-tgc"
+      namespace   = "monitoring"
+      annotations = { "argocd.argoproj.io/sync-wave" = "70" }
+
+    }
+    spec = {
+      targetReference = { name = "prometheus-app-${data.terraform_remote_state.infra.outputs.env}-tf-grafana" }
+      defaultConfiguration = {
+        targetType        = "ip"
+        healthCheckConfig = { healthCheckPath = "/healthz" }
+      }
+    }
+  })
+}
+
+resource "local_file" "prometheus-HTTPRoute" {
+  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/platform/80-grafana-httproute.yaml"
+  content = yamlencode({
+
+    apiVersion = "gateway.networking.k8s.io/v1"
+    kind       = "HTTPRoute"
+    metadata = {
+      name        = "grafana-${data.terraform_remote_state.infra.outputs.env}"
+      annotations = { "argocd.argoproj.io/sync-wave" = "80" }
+    }
+    spec = {
+      hostnames = ["grafana.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
+      parentRefs = [
+        {
+          group = "gateway.networking.k8s.io"
+          kind  = "Gateway"
+          name  = "public-gw",
+        namespace = "gateway-system" }
+      ]
+      rules = [
+        {
+          matches = [{ path = { type = "PathPrefix", value = "/" } }]
+          backendRefs = [{
+            name   = "prometheus-app-${data.terraform_remote_state.infra.outputs.env}-tf-grafana"
+            port   = 80
+            group  = ""
+            kind   = "Service"
+            weight = 1
+          }]
+        }
+      ]
+    }
+  })
+}

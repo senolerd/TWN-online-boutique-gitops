@@ -1,3 +1,18 @@
+# Only App-of-apps Is authorized and controls installs with sync-wave
+
+# Installation order:
+# 1- Gateway Api CRDs (LBC will need them)
+# 2- AWS LBC installation
+# 3- Platform resources
+#  3.10- gatewayClass
+#  3.20- LoadBalancerConfiguration to make a gateway (ALB) internet facing 
+#  3.30- Actual gateway (ALB)
+#  3.40- targetGroupConfiguration for ArgoCD UI: it should be created before the httpRoute to mark "pod IPs will be used, not node IPs for the service that will be used in httpRoute"
+#  3.50- httpRoute for ArgoCD UI 
+#  3.60- Prometheus/Grafana Operator install
+#  3.70- targetGroupConfiguration for Grafana UI: it should be created before the httpRoute same reason with 3.40
+#  3.80- httpRoute for Grafana UI
+
 
 #### APP of APPS pattern root application
 resource "kubernetes_manifest" "app-of-apps" {
@@ -165,6 +180,7 @@ resource "local_file" "platform-app" {
   })
 }
 
+
 resource "local_file" "boutique-helm-app" {
   filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/50-boutique-app-${data.terraform_remote_state.infra.outputs.env}.app.yaml"
   content = yamlencode({
@@ -204,76 +220,3 @@ resource "local_file" "boutique-helm-app" {
 }
 
 
-resource "local_file" "prometheus-helm-app" {
-  filename = "${data.terraform_remote_state.infra.outputs.argocd-dir}/apps/60-prometheus-app-${data.terraform_remote_state.infra.outputs.env}.app.yaml"
-  content = yamlencode({
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata = {
-      name      = "prometheus-app-${data.terraform_remote_state.infra.outputs.env}-tf"
-      namespace = "argocd"
-      annotations = {
-        "argocd.argoproj.io/sync-wave" = "60"
-      }
-      finalizers = ["resources-finalizer.argocd.argoproj.io"]
-    }
-    spec = {
-      project = "default"
-      source = {
-        repoURL        = "https://prometheus-community.github.io/helm-charts"
-        chart           = "kube-prometheus-stack"
-        targetRevision = "92.3.0"
-      }
-      destination = {
-        namespace = "monitoring"
-        name      = "in-cluster"
-      }
-      syncPolicy = {
-        automated = {
-          prune    = true
-          selfHeal = true
-        }
-        syncOptions = [
-          "CreateNamespace=true",
-          "ServerSideApply=true"
-        ]
-      }
-    }
-  })
-}
-
-
-resource "local_file" "prometheus-HTTPRoute" {
-  filename = "../../boutique-helm/templates/httproute.yaml"
-  content = yamlencode({
-
-    apiVersion = "gateway.networking.k8s.io/v1"
-    kind       = "HTTPRoute"
-    metadata = {
-      name        = "boutique-${data.terraform_remote_state.infra.outputs.env}"
-      annotations = { "argocd.argoproj.io/sync-wave" = "20" }
-    }
-    spec = {
-      hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
-      parentRefs = [
-        {
-          group = "gateway.networking.k8s.io"
-          kind  = "Gateway"
-          name  = "public-gw",
-        namespace = "gateway-system" }
-      ]
-      rules = [
-        {
-          matches = [{ path = { type = "PathPrefix", value = "/" } }]
-          backendRefs = [{
-            name   = "frontend"
-            port   = 8080
-            group  = ""
-            kind   = "Service"
-            weight = 1
-          }]
-        }
-      ]
-    }
-  })
-}
