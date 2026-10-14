@@ -4,7 +4,7 @@
   "annotations":
     "argocd.argoproj.io/sync-wave": "10"
   "labels":
-    "created": "2026-10-14T16-05-22Z"
+    "created": "2026-10-14T16-25-28Z"
   "name": "frontend-tg"
 "spec":
   "defaultConfiguration":
