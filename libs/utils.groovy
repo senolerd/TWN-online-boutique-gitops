@@ -285,7 +285,7 @@ def cveScan(){
         services[service.key].cveScanPassed = sh( returnStatus: true, script:"""
             podman run --rm \
             --security-opt label=disable \
-            -v /run/user/1000/podman/podman.sock:/run/podman/podman.sock \
+            -v /run/user/\$(id -u)/podman/podman.sock:/run/podman/podman.sock \
             -v trivy-cache:/root/.cache \
             docker.io/aquasec/trivy:latest image \
             --image-src podman --format ${env.CVE_SCAN_REPORT_FORMAT} \
