@@ -4,7 +4,7 @@
   "annotations":
     "argocd.argoproj.io/sync-wave": "20"
   "labels":
-    "created": "2026-10-14T16:05:22Z"
+    "created": "2026-10-14T16-05-22Z"
   "name": "boutique-prod"
 "spec":
   "hostnames":
