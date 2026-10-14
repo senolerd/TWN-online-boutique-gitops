@@ -4,8 +4,19 @@ A portfolio project that takes Google's [Online Boutique](https://github.com/Goo
 
 The point of this repo isn't the shopping app (that's Google's demo) — it's everything *around* it: how images get built and scanned, how a Helm chart is produced instead of hand-maintained, how an app-of-apps GitOps pattern is bootstrapped from Terraform, and how ingress/networking is kept decoupled from the application pipeline.
 
+## Technologies used
+
+- **Cloud (AWS):** EKS, VPC (NAT Gateway, S3 gateway endpoint), ECR, IAM / EKS Pod Identity, ALB, ACM, Route 53
+- **Infrastructure as Code:** Terraform (modular, layered state)
+- **Containers & Kubernetes:** Podman (Docker-compatible), Kubernetes, Helm, Gateway API, AWS Load Balancer Controller, ExternalDNS
+- **CI/CD & GitOps:** Jenkins (declarative pipeline + Groovy helper script), ArgoCD (app-of-apps, sync waves), Git/GitHub
+- **Security:** Trivy image CVE scanning, repo-scoped deploy keys, least-privilege IAM
+- **Observability:** Prometheus, Grafana (kube-prometheus-stack)
+- **Tooling:** Make, Bash, Linux
+
 ## Table of contents
 
+- [Technologies used](#technologies-used)
 - [Architecture](#architecture)
 - [Repository layout](#repository-layout)
 - [CI pipeline (Jenkins)](#ci-pipeline-jenkins)
@@ -75,6 +86,8 @@ The point of this repo isn't the shopping app (that's Google's demo) — it's ev
 | `Makefile` | Convenience wrapper to run the three Terraform layers in order (and tear them down in reverse) |
 
 ## CI pipeline (Jenkins)
+
+The pipeline logic lives in [`libs/utils.groovy`](libs/utils.groovy), loaded with `load` rather than packaged as a Jenkins Shared Library. Shared Libraries are meant for code reused across many pipelines and repos; these helpers are specific to this project, so keeping them in the same repo keeps them versioned together with the `Jenkinsfile` without the overhead of a separate library repo.
 
 Defined in [`Jenkinsfile`](Jenkinsfile), stages run on a single Jenkins agent:
 
