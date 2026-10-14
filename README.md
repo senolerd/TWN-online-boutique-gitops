@@ -25,6 +25,7 @@ The point of this repo isn't the shopping app (that's Google's demo) — it's ev
 - [Networking](#networking)
 - [Getting started](#getting-started)
 - [Security notes](#security-notes)
+- [Known limitations / next steps](#known-limitations--next-steps)
 - [Credits](#credits)
 
 ## Architecture
@@ -214,6 +215,15 @@ CI (Jenkins) is configured independently via the environment block at the top of
 - Node group and controller IAM roles/policies follow least-privilege, service-specific policies (`AmazonEKS_CNI_Policy`, `AmazonEC2ContainerRegistryReadOnly`, `AmazonEKSWorkerNodePolicy`, a dedicated AWS Load Balancer Controller policy, etc.) via **EKS Pod Identity** rather than broad node-instance permissions — and every such IAM role/policy name is suffixed with the cluster name (`${project_name}-${environment}`) so `dev` and `prod`, or a second project, can coexist in the same AWS account without an `EntityAlreadyExists` collision.
 - Worker nodes run in private subnets with no public IPs; outbound traffic leaves through the NAT Gateway, and nothing on the nodes is directly reachable from the internet — only the routes published on the ALB-backed Gateway.
 - ECR authentication for pulled images relies on the node group's IAM role (no static credentials baked into manifests); Terraform itself takes no AWS credentials as input either — it resolves auth from the standard AWS SDK credential chain active in the operator's shell (see [Getting started](#getting-started)).
+
+## Known limitations / next steps
+
+This is a single-operator portfolio setup; a few things are deliberately kept simple and would change for team or production use:
+
+- **Terraform state is local.** For shared use it would move to an **S3 backend with native state locking** (`use_lockfile`, Terraform 1.10+). Since the bucket must exist before `terraform init`, it would be created by a small bootstrap layer with local state (versioning, encryption, `prevent_destroy`) that runs before `00-infra`, and kept out of `make clean`.
+- **CVE reports are archived, not delivered.** Trivy reports are stored as Jenkins build artifacts; the next step would be sending them to where the team works (chat notifications, a ticketing system or a vulnerability dashboard).
+- **Jenkins runs on a single agent using the host's Podman socket.** A production setup would use ephemeral build agents.
+- **Grafana and the ArgoCD UI are public**, protected only by their admin logins. A production setup would put them behind SSO or restrict access to them.
 
 ## Credits
 
