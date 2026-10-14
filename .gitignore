@@ -3,3 +3,4 @@ microservices-demo
 terraform.tfstate
 terraform.tfstate.backup
 .DS_Store
+*cve_scan_result.json

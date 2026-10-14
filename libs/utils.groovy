@@ -106,6 +106,8 @@ def helmChartCreate(){
 
         // Create new Chart.yaml
         _createHelmChartYaml(env.APP_VERSION)
+        _addTargetGroupConfig()
+        _addHttoRoute()
     }
 
     // Adding aux services template
@@ -230,6 +232,59 @@ def _createHelmChartYaml(appver){
     """.stripIndent()
 }
 
+def _addTargetGroupConfig(){
+    sh """
+        cat <<- EOF >> templates/targetGroupConfig.yaml
+        apiVersion: "gateway.k8s.aws/v1beta1"
+        kind: TargetGroupConfiguration
+        metadata:
+            name: "frontend-tgc"
+            annotations: 
+                "argocd.argoproj.io/sync-wave" = "10" 
+        spec:
+            targetReference:
+                name: "frontend"
+            defaultConfiguration:
+                targetType: "ip"     
+                healthCheckConfig:
+                    healthCheckPath: "/_healthz" 
+    """.stripIndent()
+}
+
+
+def _addHttoRoute(domain){
+    sh """
+        cat <<- EOF >> templates/httproute.yaml
+        apiVersion: "gateway.networking.k8s.io/v1"
+        kind: HTTPRoute
+        metadata:
+            name: "boutique-httproute"
+            annotations: 
+                "argocd.argoproj.io/sync-wave" = "20" 
+        spec:
+            hostnames: 
+                - "boutique.${domain}"
+            parentRefs: 
+                - group: "gateway.networking.k8s.io"
+                  kind : "Gateway"
+                  name : "public-gw",
+                  namespace: "gateway-system"
+            rules:
+                - matches: 
+                  - path: 
+                      type: "PathPrefix"
+                      value: "/" 
+                  backendRefs:
+                  - name: frontend
+                    port: 8080
+                    group: ""
+                    kind: "Service"
+                    weight: 1
+
+    """.stripIndent()
+}
+
+
 def _addRedis(){
 
     sh """
@@ -269,15 +324,8 @@ def _addRedis(){
           targetPort: 6379
       EOF
     """.stripIndent()
-
-
-
-
-
-
-
-
 }
+
 
 def cveScan(){
 

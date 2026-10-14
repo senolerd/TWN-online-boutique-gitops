@@ -11,6 +11,7 @@ pipeline{
         // AWS
         AWS_CRED_ID = "aws_devops_cred" //
         AWS_REGION = "us-east-1"
+        AWS_ROUTE53_DOMAIN = "senolerd.xyz"
 
         // Jenkins server's GitHub bot identity for helm chart version bump Up
         CI_BOT_GITHUB_CRED = 'boutique_git_devops_bot' // GitHub repo scoped SSH key
