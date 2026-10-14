@@ -183,6 +183,8 @@ def _addDeploymentAndServiceTemplate(Map service){
                   value: "null"                        
                 - name: REDIS_ADDR
                   value: "redis-cart:6379"
+                - name: ENV_PLATFORM
+                  value: "aws"
                 - name: ENABLE_SHOPPING_ASSISTANT
                   value: "false"
                 - name: DISABLE_PROFILER

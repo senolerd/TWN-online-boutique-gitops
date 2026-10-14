@@ -7,6 +7,8 @@ help:
 	@printf "  2 - make bootstrap  : Argo CD on EKS\n"
 	@printf "  3 - make platform   : root app (platform + apps via Argo CD)\n"
 	@printf "      make clean      : ordered teardown\n\n"
+	@printf "      make argo-password : Get argo admin initial password (after 'aws eks update-kubeconfig')\n"
+	@printf "      make grafana-password : Get grafana admin initial password (after 'aws eks update-kubeconfig')\n"
 
 infra:
 	terraform -chdir=$(TARGET)/00-infra init
