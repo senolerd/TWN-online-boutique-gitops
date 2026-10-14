@@ -8,6 +8,7 @@ resource "local_file" "boutique-TargetGroupConfiguration" {
     metadata = {
       name        = "frontend-tg"
       annotations = { "argocd.argoproj.io/sync-wave" = "10" }
+      labels = { created = timestamp() }
     }
 
     spec = {
@@ -29,6 +30,7 @@ resource "local_file" "boutique-HTTPRoute" {
     metadata = {
       name        = "boutique-${data.terraform_remote_state.infra.outputs.env}"
       annotations = { "argocd.argoproj.io/sync-wave" = "20" }
+      labels = { created = timestamp() }
     }
     spec = {
       hostnames = ["boutique.${data.terraform_remote_state.infra.outputs.hosted_zone_name}"]
