@@ -2,5 +2,5 @@ apiVersion: v2
 name: boutique-helm
 description: A Helm chart for Kubernetes
 type: application
-version: "0.1.1+release-v0.10.7-69f8f31-b282"
-appVersion: "release-v0.10.7-69f8f31-b282"
+version: "0.1.1+release-v0.10.7-febd754-b283"
+appVersion: "release-v0.10.7-febd754-b283"
