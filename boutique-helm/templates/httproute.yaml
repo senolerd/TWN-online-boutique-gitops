@@ -14,12 +14,12 @@ spec:
           namespace: "gateway-system"
     rules:
         - matches: 
-          - path: 
-              type: "PathPrefix"
-              value: "/" 
-          backendRefs:
-          - name: frontend
-            port: 8080
-            group: ""
-            kind: "Service"
-            weight: 1
+            - path: 
+                type: "PathPrefix"
+                value: "/" 
+              backendRefs:
+              - name: frontend
+                port: 8080
+                group: ""
+                kind: "Service"
+                weight: 1
