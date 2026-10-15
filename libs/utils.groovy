@@ -252,7 +252,7 @@ def _addTargetGroupConfig(){
 }
 
 
-def _addHttoRoute(domain){
+def _addHttoRoute(){
     sh """
     cat <<- EOF >> templates/httproute.yaml
     apiVersion: "gateway.networking.k8s.io/v1"
