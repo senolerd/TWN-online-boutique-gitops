@@ -23,6 +23,7 @@ platform:
 	echo "platform"
 	terraform -chdir=$(TARGET)/20-platform init
 	terraform -chdir=$(TARGET)/20-platform apply
+	echo "*** \n\nArgoCD App of Apps resources ready to push\n\n"
 # 	git add .
 # 	git commit -m "ArgoCD apps added [skip ci]"
 # 	git push origin main
