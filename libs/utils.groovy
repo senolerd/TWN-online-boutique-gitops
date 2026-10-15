@@ -266,20 +266,20 @@ def _addHttoRoute(domain){
             - "boutique.${domain}"
         parentRefs: 
             - group: "gateway.networking.k8s.io"
-                kind : "Gateway"
-                name : "public-gw"
-                namespace: "gateway-system"
+              kind : "Gateway"
+              name : "public-gw"
+              namespace: "gateway-system"
         rules:
             - matches: 
                 - path: 
                     type: "PathPrefix"
                     value: "/" 
-                backendRefs:
-                - name: frontend
-                port: 8080
-                group: ""
-                kind: "Service"
-                weight: 1
+                  backendRefs:
+                  - name: frontend
+                    port: 8080
+                    group: ""
+                    kind: "Service"
+                    weight: 1
     """.stripIndent()
 }
 
@@ -306,9 +306,9 @@ def _addRedis(){
             spec:
                 containers:
                 - name: "redis-cart"
-                image: "docker.io/redis:latest"
-                ports:
-                - containerPort: 6379
+                  image: "docker.io/redis:latest"
+                  ports:
+                  - containerPort: 6379
     ---
     apiVersion: v1
     kind: Service
