@@ -8,11 +8,11 @@ spec:
     replicas: 1
     selector:
         matchLabels:
-        app: "redis-cart"
-template:
-    metadata:
-        labels:
             app: "redis-cart"
+    template:
+        metadata:
+            labels:
+                app: "redis-cart"
     spec:
         containers:
         - name: "redis-cart"
