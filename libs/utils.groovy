@@ -269,17 +269,17 @@ def _addHttoRoute(domain){
               kind : "Gateway"
               name : "${env.K8S_GATEWAY}"
               namespace: "gateway-system"
-        rules:
-            - matches: 
-                - path: 
-                    type: "PathPrefix"
-                    value: "/" 
-                  backendRefs:
-                  - name: frontend
-                    port: 8080
-                    group: ""
-                    kind: "Service"
-                    weight: 1
+        rules: 
+        - matches: 
+          - path: 
+              type: "PathPrefix"
+              value: "/" 
+          backendRefs:
+          - name: frontend
+            port: 8080
+            group: ""
+            kind: "Service"
+            weight: 1
     """.stripIndent()
 }
 
