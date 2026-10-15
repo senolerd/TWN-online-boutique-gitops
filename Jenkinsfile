@@ -12,6 +12,7 @@ pipeline{
         AWS_CRED_ID = "aws_devops_cred" //
         AWS_REGION = "us-east-1"
         AWS_ROUTE53_DOMAIN = "senolerd.xyz"
+        K8S_GATEWAY = "public-gw"
 
         // Jenkins server's GitHub bot identity for helm chart version bump Up
         CI_BOT_GITHUB_CRED = 'boutique_git_devops_bot' // GitHub repo scoped SSH key
@@ -23,7 +24,7 @@ pipeline{
         CVE_SCAN_ENABLED = true
         CVE_SEVERITY = "HIGH,CRITICAL" // "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
         CVE_SCAN_REPORT_FORMAT = "json"
-        CVE_USE_VULNERABLE_IMAGE = true // "true" is just and only for pipeline testing, not for dev or prod
+        CVE_USE_VULNERABLE_IMAGE = true // "true" for pipeline testing, "false" for normal operation
     }
     stages{
         stage("init") { 

@@ -108,7 +108,7 @@ def helmChartCreate(){
         
         // Gateeay API and ALB resources
         _addTargetGroupConfig()
-        _addHttoRoute(env.AWS_ROUTE53_DOMAIN)
+        _addHttoRoute()
 
         // Adding Redis deployment and service
         _addRedis()
@@ -263,11 +263,11 @@ def _addHttoRoute(domain){
             "argocd.argoproj.io/sync-wave": "20" 
     spec:
         hostnames: 
-            - "boutique.${domain}"
+            - "boutique.${env.AWS_ROUTE53_DOMAIN}"
         parentRefs: 
             - group: "gateway.networking.k8s.io"
               kind : "Gateway"
-              name : "public-gw"
+              name : "${env.K8S_GATEWAY}"
               namespace: "gateway-system"
         rules:
             - matches: 
