@@ -97,26 +97,26 @@ def helmChartCreate(){
             rm -rf templates/*
             echo "" > values.yaml
         """
+        // Create new Chart.yaml
+        _createHelmChartYaml(env.APP_VERSION)
         
-        // Creating templates and values.yaml 
+        // Creating templates and values.yaml per service
         for (service in services.entrySet()){ 
             _addServiceVarToValuesYaml(service.value)
             _addDeploymentAndServiceTemplate(service.value)
         }
-
-        // Create new Chart.yaml
-        _createHelmChartYaml(env.APP_VERSION)
+        
+        // Gateeay API and ALB resources
         _addTargetGroupConfig()
-        _addHttoRoute()
+        _addHttoRoute(env.AWS_ROUTE53_DOMAIN)
+
+        // Adding Redis deployment and service
+        _addRedis()
     }
-
-    // Adding aux services template
-    _addRedis()
 }
 
-def helmChartLinting(){
-  sh "helm lint boutique-helm"
-}
+
+
 
 def _addServiceVarToValuesYaml(Map service){
     // Modifying values.yaml
@@ -221,7 +221,7 @@ def _addDeploymentAndServiceTemplate(Map service){
 
 def _createHelmChartYaml(appver){
     sh """
-        cat << EOF > Chart.yaml
+        cat <<- EOF > Chart.yaml
         apiVersion: v2
         name: boutique-helm
         description: A Helm chart for Kubernetes
@@ -240,7 +240,7 @@ def _addTargetGroupConfig(){
         metadata:
             name: "frontend-tgc"
             annotations: 
-                "argocd.argoproj.io/sync-wave" = "10" 
+                "argocd.argoproj.io/sync-wave": "10" 
         spec:
             targetReference:
                 name: "frontend"
@@ -260,14 +260,14 @@ def _addHttoRoute(domain){
         metadata:
             name: "boutique-httproute"
             annotations: 
-                "argocd.argoproj.io/sync-wave" = "20" 
+                "argocd.argoproj.io/sync-wave": "20" 
         spec:
             hostnames: 
                 - "boutique.${domain}"
             parentRefs: 
                 - group: "gateway.networking.k8s.io"
                   kind : "Gateway"
-                  name : "public-gw",
+                  name : "public-gw"
                   namespace: "gateway-system"
             rules:
                 - matches: 
@@ -280,7 +280,7 @@ def _addHttoRoute(domain){
                     group: ""
                     kind: "Service"
                     weight: 1
-
+        EOF
     """.stripIndent()
 }
 
@@ -288,44 +288,46 @@ def _addHttoRoute(domain){
 def _addRedis(){
 
     sh """
-      cat << EOF > ${env.BOUTIQUE_HELM_CHART_NAME}/templates/redis-cart.yaml
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
+    cat << EOF > templates/redis-cart.yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
         name: "redis-cart-deployment"
         labels:
-          app: "redis-cart"
-      spec:
+            app: "redis-cart"
+    spec:
         replicas: 1
         selector:
-          matchLabels:
+            matchLabels:
             app: "redis-cart"
-        template:
-          metadata:
+    template:
+        metadata:
             labels:
-              app: "redis-cart"
-          spec:
+                app: "redis-cart"
+        spec:
             containers:
             - name: "redis-cart"
               image: "docker.io/redis:latest"
               ports:
               - containerPort: 6379
-      ---
-      apiVersion: v1
-      kind: Service
-      metadata:
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
         name: "redis-cart"
-      spec:
+    spec:
         selector:
-          app: "redis-cart"
+            app: "redis-cart"
         ports:
         - protocol: TCP
           port: 6379
           targetPort: 6379
-      EOF
     """.stripIndent()
 }
 
+def helmChartLinting(){
+  sh "helm lint boutique-helm"
+}
 
 def cveScan(){
 
@@ -388,7 +390,3 @@ def updateGithubHelmChart(){
 }
 
 return this
-
-
-
-      
