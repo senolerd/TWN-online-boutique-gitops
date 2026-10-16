@@ -106,9 +106,9 @@ def helmChartCreate(){
             _addDeploymentAndServiceTemplate(service.value)
         }
         
-        // Gateeay API and ALB resources
+        // Gateway API and ALB resources
         _addTargetGroupConfig()
-        _addHttoRoute()
+        _addHttpRoute()
 
         // Adding Redis deployment and service
         _addRedis()
@@ -248,11 +248,12 @@ def _addTargetGroupConfig(){
             targetType: "ip"     
             healthCheckConfig:
                 healthCheckPath: "/_healthz" 
+    EOF
     """.stripIndent()
 }
 
 
-def _addHttoRoute(){
+def _addHttpRoute(){
     sh """
     cat <<- EOF >> templates/httproute.yaml
     apiVersion: "gateway.networking.k8s.io/v1"
@@ -280,6 +281,7 @@ def _addHttoRoute(){
             group: ""
             kind: "Service"
             weight: 1
+    EOF
     """.stripIndent()
 }
 
@@ -321,6 +323,7 @@ def _addRedis(){
         - protocol: TCP
           port: 6379
           targetPort: 6379
+    EOF
     """.stripIndent()
 }
 

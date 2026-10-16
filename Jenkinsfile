@@ -24,7 +24,7 @@ pipeline{
         CVE_SCAN_ENABLED = true
         CVE_SEVERITY = "HIGH,CRITICAL" // "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
         CVE_SCAN_REPORT_FORMAT = "json"
-        CVE_USE_VULNERABLE_IMAGE = true // "true" for pipeline testing, "false" for normal operation
+        CVE_USE_VULNERABLE_IMAGE = false // "true" for pipeline testing, "false" for normal operation
     }
     stages{
         stage("init") { 
