@@ -249,5 +249,5 @@ This is a single-operator portfolio setup; a few things are deliberately kept si
 
 ## Credits
 
-- Application code and original Helm chart baseline: [GoogleCloudPlatform/microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo) ("Online Boutique").
-- Everything else (CI, CD/GitOps wiring, Terraform IaC, networking) is this project's own work, built as a hands-on DevOps/platform-engineering portfolio piece.
+- Application source code and Dockerfiles: [GoogleCloudPlatform/microservices-demo](https://github.com/GoogleCloudPlatform/microservices-demo) ("Online Boutique").
+- Everything else (CI, the generated Helm chart, CD/GitOps wiring, Terraform IaC, networking) is this project's own work, built as a hands-on DevOps/platform-engineering portfolio piece.
